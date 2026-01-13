@@ -21,6 +21,8 @@ class _EditorState extends State<Editor> {
   Offset? _nodeDragStart;
   Offset? _nodeOffsetStart;
   bool _nodeDragging = false;
+  Size? _lastSize;
+  bool _sizeInitialized = false;
 
   void _onPointerDown(PointerDownEvent event) {
     // Handle node dragging with left mouse button
@@ -79,6 +81,22 @@ class _EditorState extends State<Editor> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    if (!_sizeInitialized) {
+      _offset = Offset(size.width / 2, size.height / 2);
+      _sizeInitialized = true;
+      _lastSize = size;
+    } else if (_lastSize != null && (_lastSize!.width != size.width || _lastSize!.height != size.height)) {
+      final oldCenter = Offset(_lastSize!.width / 2, _lastSize!.height / 2);
+      final newCenter = Offset(size.width / 2, size.height / 2);
+      final delta = newCenter - oldCenter;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        setState(() {
+          _offset += delta;
+          _lastSize = size;
+        });
+      });
+    }
     return Listener(
       onPointerDown: _onPointerDown,
       onPointerMove: _onPointerMove,
