@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:touch_of_the_unknown/editor/editor_state.dart';
+import 'dart:math';
 
 class TransitionPainter extends CustomPainter {
   final Offset offset;
@@ -31,8 +32,12 @@ class TransitionPainter extends CustomPainter {
         toNode.y.toDouble(),
       ) + offset;
 
+      final double angle = atan2(end.dy - start.dy, end.dx - start.dx);
       paint.shader = LinearGradient(
         colors: [Colors.black.withAlpha(26), Colors.black],
+        begin: Alignment.centerLeft,
+        end: Alignment.centerRight,
+        transform: GradientRotation(angle),
       ).createShader(Rect.fromPoints(start, end));
 
       final key = '${transition.from}->${transition.to}';
