@@ -59,8 +59,8 @@ class _EditorState extends State<Editor> {
               ),
             ),
             ...EditorState.nodes.values.map((node) {
-              final left = node.x.toDouble() + _offset.dx;
-              final top = node.y.toDouble() + _offset.dy;
+              final left = node.x.toDouble() - 5 + _offset.dx;
+              final top = node.y.toDouble() - 5 + _offset.dy;
               return Positioned(
                 left: left,
                 top: top,
