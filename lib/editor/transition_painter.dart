@@ -32,7 +32,7 @@ class TransitionPainter extends CustomPainter {
       ) + offset;
 
       paint.shader = LinearGradient(
-        colors: [Colors.black.withAlpha(20), Colors.black],
+        colors: [Colors.black.withAlpha(26), Colors.black],
       ).createShader(Rect.fromPoints(start, end));
 
       final key = '${transition.from}->${transition.to}';
