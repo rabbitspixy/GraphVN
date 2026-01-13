@@ -3,7 +3,8 @@ import 'package:touch_of_the_unknown/editor/editor_state.dart';
 
 class TransitionPainter extends CustomPainter {
   final Offset offset;
-  TransitionPainter({required this.offset});
+  final int transitionCount;
+  TransitionPainter({required this.offset}) : transitionCount = EditorState.transitions.length;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -64,5 +65,5 @@ class TransitionPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant TransitionPainter oldDelegate) =>
-      oldDelegate.offset != offset;
+      oldDelegate.offset != offset || oldDelegate.transitionCount != transitionCount;
 }
