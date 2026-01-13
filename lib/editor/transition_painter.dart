@@ -48,10 +48,10 @@ class TransitionPainter extends CustomPainter {
         // and increases the deviation every two transitions.
         final magnitude = 50 * (((index - 2) ~/ 2) + 1);
         final sign = (index % 2 == 0) ? 1 : -1;
-        final control = Offset(
-          mid.dx,
-          mid.dy + sign * magnitude,
-        );
+        final bool isVertical = start.dx == end.dx;
+        final Offset control = isVertical
+            ? Offset(mid.dx + sign * magnitude, mid.dy)
+            : Offset(mid.dx, mid.dy + sign * magnitude);
 
         final path = Path()
           ..moveTo(start.dx, start.dy)
