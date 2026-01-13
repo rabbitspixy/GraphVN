@@ -133,6 +133,7 @@ class _EditorState extends State<Editor> {
         ),
       ),
     );
+  }
   @override
   void dispose() {
     EditorState.storedOffset = _offset;
