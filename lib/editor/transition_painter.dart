@@ -50,7 +50,7 @@ class TransitionPainter extends CustomPainter {
         final Offset d = end - start;
         final Offset perp = Offset(-d.dy, d.dx);
         final double perpLength = perp.distance;
-        final double magnitude = 50 * (((index - 2) ~/ 2) + 1);
+        final double magnitude = 50.0 * (((index - 2) ~/ 2) + 1);
         final Offset unitPerp = perpLength == 0 ? Offset.zero : Offset(perp.dx / perpLength, perp.dy / perpLength);
         final Offset control = mid + unitPerp * sign * magnitude;
 
