@@ -1,4 +1,5 @@
 import 'package:flutter/gestures.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:touch_of_the_unknown/editor/editor_state.dart';
@@ -53,7 +54,7 @@ class _EditorState extends State<Editor> {
     // Handle node dragging with left mouse button
     if (event.buttons & kPrimaryMouseButton != 0) {
       // If Ctrl is pressed, start linking
-      if (event.modifiers.contains(ModifierKey.controlModifier)) {
+      if (event.modifiers?.contains(ModifierKey.controlModifier) ?? false) {
         for (final node in EditorState.nodes.values) {
           final left = node.x.toDouble() - 5 + _offset.dx;
           final top = node.y.toDouble() - 5 + _offset.dy;
