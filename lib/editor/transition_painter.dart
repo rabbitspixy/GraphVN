@@ -25,16 +25,19 @@ class TransitionPainter extends CustomPainter {
         fromNode.x.toDouble(),
         fromNode.y.toDouble(),
       ) + offset;
-      paint.shader = LinearGradient(
-        colors: [Colors.black.withOpacity(0.4), Colors.black],
-      ).createShader(Rect.fromPoints(start, end));
+      
       final end = Offset(
         toNode.x.toDouble(),
         toNode.y.toDouble(),
       ) + offset;
 
+      paint.shader = LinearGradient(
+        colors: [Colors.black.withAlpha(20), Colors.black],
+      ).createShader(Rect.fromPoints(start, end));
+
       final key = '${transition.from}->${transition.to}';
-      final index = pairCount.update(key, (v) => v + 1, ifAbsent: () => 1);
+      final keyReversed = '${transition.to}->${transition.from}';
+      final index = (pairCount.update(key, (v) => v + 1, ifAbsent: () => 1) + pairCount.update(keyReversed, (v) => v + 1, ifAbsent: () => 1)) / 2;
 
       if (index == 1) {
         // Single transition – draw a straight line
