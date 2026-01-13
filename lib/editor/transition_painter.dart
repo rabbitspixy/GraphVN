@@ -25,6 +25,9 @@ class TransitionPainter extends CustomPainter {
         fromNode.x.toDouble(),
         fromNode.y.toDouble(),
       ) + offset;
+      paint.shader = LinearGradient(
+        colors: [Colors.black.withOpacity(0.4), Colors.black],
+      ).createShader(Rect.fromPoints(start, end));
       final end = Offset(
         toNode.x.toDouble(),
         toNode.y.toDouble(),
