@@ -9,11 +9,6 @@ class Editor extends StatefulWidget {
 
   @override
   State<Editor> createState() => _EditorState();
-  @override
-  void dispose() {
-    EditorState.storedOffset = _offset;
-    super.dispose();
-  }
 }
 
 class _EditorState extends State<Editor> {
@@ -138,5 +133,9 @@ class _EditorState extends State<Editor> {
         ),
       ),
     );
+  @override
+  void dispose() {
+    EditorState.storedOffset = _offset;
+    super.dispose();
   }
 }
