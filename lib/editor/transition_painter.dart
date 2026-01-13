@@ -44,9 +44,13 @@ class TransitionPainter extends CustomPainter {
           (start.dx + end.dx) / 2,
           (start.dy + end.dy) / 2,
         );
+        // Calculate a control point that alternates sides of the straight line
+        // and increases the deviation every two transitions.
+        final magnitude = 50 * (((index - 2) ~/ 2) + 1);
+        final sign = (index % 2 == 0) ? 1 : -1;
         final control = Offset(
           mid.dx,
-          mid.dy - 50 * index, // increase offset for each subsequent transition
+          mid.dy + sign * magnitude,
         );
 
         final path = Path()
