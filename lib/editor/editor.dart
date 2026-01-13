@@ -55,7 +55,7 @@ class _EditorState extends State<Editor> {
             ValueListenableBuilder<List<EditorTransition>>(
               valueListenable: EditorState.transitionsNotifier,
               builder: (context, _, __) => CustomPaint(
-                painter: TransitionPainter(),
+                painter: TransitionPainter(offset: _offset),
               ),
             ),
             ...EditorState.nodes.values.map((node) {

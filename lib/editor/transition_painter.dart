@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:touch_of_the_unknown/editor/editor_state.dart';
 
 class TransitionPainter extends CustomPainter {
+  final Offset offset;
+  TransitionPainter({required this.offset});
+
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
@@ -17,11 +20,11 @@ class TransitionPainter extends CustomPainter {
       final start = Offset(
         fromNode.x.toDouble(),
         fromNode.y.toDouble(),
-      );
+      ) + offset;
       final end = Offset(
         toNode.x.toDouble(),
         toNode.y.toDouble(),
-      );
+      ) + offset;
 
       final mid = Offset(
         (start.dx + end.dx) / 2,
@@ -41,5 +44,6 @@ class TransitionPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
+  bool shouldRepaint(covariant TransitionPainter oldDelegate) =>
+      oldDelegate.offset != offset;
 }
