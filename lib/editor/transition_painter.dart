@@ -46,7 +46,6 @@ class TransitionPainter extends CustomPainter {
         );
         // Calculate a control point that alternates sides of the straight line
         // and increases the deviation every two transitions.
-        final magnitude = 50 * (((index - 2) ~/ 2) + 1);
         final sign = (index % 2 == 0) ? 1 : -1;
         final double deltaX = end.dx - start.dx;
         final double deltaY = end.dy - start.dy;
