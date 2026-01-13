@@ -4,7 +4,7 @@ import 'package:touch_of_the_unknown/editor/editor_node.dart';
 import 'package:touch_of_the_unknown/editor/editor_transition.dart';
 
 class EditorState {
-  static final Map<String, EditorNode> nodes = Map.identity();
+  static final Map<String, EditorNode> nodes = <String, EditorNode>{};
   static final List<EditorTransition> transitions = List.empty(growable: true);
 
   static void load() {
