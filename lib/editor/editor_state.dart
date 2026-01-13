@@ -1,5 +1,6 @@
 
 
+import 'package:flutter/foundation.dart';
 import 'package:touch_of_the_unknown/editor/editor_node.dart';
 import 'package:touch_of_the_unknown/editor/editor_transition.dart';
 
@@ -21,6 +22,8 @@ class EditorState {
 
     nodes[n1.id] = n1;
     nodes[n2.id] = n2;
+    transitions.add(EditorTransition()..from=n1.id..to=n2.id);
+    transitions.add(EditorTransition()..from=n1.id..to=n2.id);
     transitions.add(EditorTransition()..from=n1.id..to=n2.id);
     transitionsNotifier.value = List.from(transitions);
   }
