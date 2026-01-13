@@ -50,22 +50,28 @@ class _EditorState extends State<Editor> {
       behavior: HitTestBehavior.translucent,
       child: SizedBox.expand(
         child: Stack(
-          children: EditorState.nodes.values.map((node) {
-            final left = node.x.toDouble() + _offset.dx;
-            final top = node.y.toDouble() + _offset.dy;
-            return Positioned(
-              left: left,
-              top: top,
-              child: Container(
-                width: 10,
-                height: 10,
-                decoration: const BoxDecoration(
-                  color: Colors.blue,
-                  shape: BoxShape.circle,
+          children: [
+            CustomPaint(
+              size: Size.infinite,
+              painter: TransitionPainter(),
+            ),
+            ...EditorState.nodes.values.map((node) {
+              final left = node.x.toDouble() + _offset.dx;
+              final top = node.y.toDouble() + _offset.dy;
+              return Positioned(
+                left: left,
+                top: top,
+                child: Container(
+                  width: 10,
+                  height: 10,
+                  decoration: const BoxDecoration(
+                    color: Colors.blue,
+                    shape: BoxShape.circle,
+                  ),
                 ),
-              ),
-            );
-          }).toList(),
+              );
+            }).toList(),
+          ],
         ),
       ),
     );
