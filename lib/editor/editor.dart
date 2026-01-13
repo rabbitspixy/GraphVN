@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:touch_of_the_unknown/editor/editor_state.dart';
+import 'package:touch_of_the_unknown/editor/transition_painter.dart';
 
 class Editor extends StatefulWidget {
   const Editor({super.key});
