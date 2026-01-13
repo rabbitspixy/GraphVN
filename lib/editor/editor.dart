@@ -83,7 +83,9 @@ class _EditorState extends State<Editor> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     if (!_sizeInitialized) {
-      _offset = Offset(size.width / 2, size.height / 2);
+      // use the stored offset if we have one, otherwise centre
+      _offset = EditorState.storedOffset ??
+          Offset(size.width / 2, size.height / 2);
       _sizeInitialized = true;
       _lastSize = size;
     } else if (_lastSize != null && (_lastSize!.width != size.width || _lastSize!.height != size.height)) {
