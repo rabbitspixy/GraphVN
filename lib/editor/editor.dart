@@ -21,10 +21,32 @@ class _EditorState extends State<Editor> {
   Offset? _nodeDragStart;
   Offset? _nodeOffsetStart;
   bool _nodeDragging = false;
+  Duration _lastClickTime = Duration.zero;
+  Offset? _lastClickPosition;
   Size? _lastSize;
   bool _sizeInitialized = false;
 
   void _onPointerDown(PointerDownEvent event) {
+    // Double-click detection for creating a new node
+    if (event.buttons & kPrimaryMouseButton != 0) {
+      if (event.timeStamp - _lastClickTime < const Duration(milliseconds: 300)) {
+        // Create new node at click position
+        final localPos = event.position - _offset;
+        final gridX = ((localPos.dx / 25).round() * 25);
+        final gridY = ((localPos.dy / 25).round() * 25);
+        final newNode = EditorNode()
+          ..x = gridX
+          ..y = gridY;
+        EditorState.nodes[newNode.id] = newNode;
+        setState(() {});
+        _lastClickTime = event.timeStamp;
+        _lastClickPosition = event.position;
+        return;
+      }
+      _lastClickTime = event.timeStamp;
+      _lastClickPosition = event.position;
+    }
+
     // Handle node dragging with left mouse button
     if (event.buttons & kPrimaryMouseButton != 0) {
       for (final node in EditorState.nodes.values) {
