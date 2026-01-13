@@ -52,7 +52,6 @@ class _EditorState extends State<Editor> {
         child: Stack(
           children: [
             CustomPaint(
-              size: Size.infinite,
               painter: TransitionPainter(),
             ),
             ...EditorState.nodes.values.map((node) {
