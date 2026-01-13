@@ -9,6 +9,10 @@ class EditorState {
   static final Map<String, EditorNode> nodes = <String, EditorNode>{};
   static final List<EditorTransition> transitions = List.empty(growable: true);
   static final ValueNotifier<List<EditorTransition>> transitionsNotifier = ValueNotifier<List<EditorTransition>>([]);
+  // <‑‑ NEW: store the last canvas offset
+  static Offset? _storedOffset;
+  static Offset? get storedOffset => _storedOffset;
+  static set storedOffset(Offset? value) => _storedOffset = value;
 
   static void load() {
     final n1 = EditorNode()
