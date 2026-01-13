@@ -51,8 +51,11 @@ class _EditorState extends State<Editor> {
       child: SizedBox.expand(
         child: Stack(
           children: [
-            CustomPaint(
-              painter: TransitionPainter(),
+            ValueListenableBuilder<List<EditorTransition>>(
+              valueListenable: EditorState.transitionsNotifier,
+              builder: (context, _, __) => CustomPaint(
+                painter: TransitionPainter(),
+              ),
             ),
             ...EditorState.nodes.values.map((node) {
               final left = node.x.toDouble() + _offset.dx;

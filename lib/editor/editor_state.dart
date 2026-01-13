@@ -6,6 +6,7 @@ import 'package:touch_of_the_unknown/editor/editor_transition.dart';
 class EditorState {
   static final Map<String, EditorNode> nodes = <String, EditorNode>{};
   static final List<EditorTransition> transitions = List.empty(growable: true);
+  static final ValueNotifier<List<EditorTransition>> transitionsNotifier = ValueNotifier<List<EditorTransition>>([]);
 
   static void load() {
     final n1 = EditorNode()
@@ -21,5 +22,6 @@ class EditorState {
     nodes[n1.id] = n1;
     nodes[n2.id] = n2;
     transitions.add(EditorTransition()..from=n1.id..to=n2.id);
+    transitionsNotifier.value = List.from(transitions);
   }
 }
