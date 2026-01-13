@@ -16,8 +16,29 @@ class _EditorState extends State<Editor> {
   Offset? _dragStart;
   Offset? _offsetStart;
   bool _dragging = false;
+  // Node dragging state
+  String? _draggingNodeId;
+  Offset? _nodeDragStart;
+  Offset? _nodeOffsetStart;
+  bool _nodeDragging = false;
 
   void _onPointerDown(PointerDownEvent event) {
+    // Handle node dragging with left mouse button
+    if (event.buttons & kPrimaryMouseButton != 0) {
+      for (final node in EditorState.nodes.values) {
+        final left = node.x.toDouble() - 5 + _offset.dx;
+        final top = node.y.toDouble() - 5 + _offset.dy;
+        final rect = Rect.fromLTWH(left, top, 10, 10);
+        if (rect.contains(event.position)) {
+          _draggingNodeId = node.id;
+          _nodeDragStart = event.position;
+          _nodeOffsetStart = Offset(node.x.toDouble(), node.y.toDouble());
+          _nodeDragging = true;
+          return;
+        }
+      }
+    }
+    // Handle canvas panning with middle mouse button
     if (event.buttons & kMiddleMouseButton != 0) {
       _dragStart = event.position;
       _offsetStart = _offset;
@@ -26,7 +47,16 @@ class _EditorState extends State<Editor> {
   }
 
   void _onPointerMove(PointerMoveEvent event) {
-    if (_dragging && _dragStart != null && _offsetStart != null) {
+    if (_nodeDragging && _draggingNodeId != null && _nodeDragStart != null && _nodeOffsetStart != null) {
+      final delta = event.position - _nodeDragStart!;
+      setState(() {
+        final node = EditorState.nodes[_draggingNodeId!];
+        if (node != null) {
+          node.x = (_nodeOffsetStart!.dx + delta.dx).round();
+          node.y = (_nodeOffsetStart!.dy + delta.dy).round();
+        }
+      });
+    } else if (_dragging && _dragStart != null && _offsetStart != null) {
       final delta = event.position - _dragStart!;
       setState(() {
         _offset = _offsetStart! + delta;
@@ -35,7 +65,12 @@ class _EditorState extends State<Editor> {
   }
 
   void _onPointerUp(PointerUpEvent event) {
-    if (_dragging) {
+    if (_nodeDragging) {
+      _nodeDragging = false;
+      _draggingNodeId = null;
+      _nodeDragStart = null;
+      _nodeOffsetStart = null;
+    } else if (_dragging) {
       _dragging = false;
       _dragStart = null;
       _offsetStart = null;
