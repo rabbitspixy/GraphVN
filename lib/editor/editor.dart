@@ -52,8 +52,8 @@ class _EditorState extends State<Editor> {
       setState(() {
         final node = EditorState.nodes[_draggingNodeId!];
         if (node != null) {
-          node.x = (_nodeOffsetStart!.dx + delta.dx).round();
-          node.y = (_nodeOffsetStart!.dy + delta.dy).round();
+          node.x = (((_nodeOffsetStart!.dx + delta.dx).round() + 12) ~/ 25) * 25;
+          node.y = (((_nodeOffsetStart!.dy + delta.dy).round() + 12) ~/ 25) * 25;
         }
       });
     } else if (_dragging && _dragStart != null && _offsetStart != null) {
