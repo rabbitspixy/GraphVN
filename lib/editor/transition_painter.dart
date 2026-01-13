@@ -48,7 +48,10 @@ class TransitionPainter extends CustomPainter {
         // and increases the deviation every two transitions.
         final magnitude = 50 * (((index - 2) ~/ 2) + 1);
         final sign = (index % 2 == 0) ? 1 : -1;
-        final bool isVertical = start.dx == end.dx;
+        final double deltaX = end.dx - start.dx;
+        final double deltaY = end.dy - start.dy;
+        final bool isVertical = start.dx == end.dx || (deltaX.abs() < 10 && deltaY.abs() > 0);
+        final double magnitude = 50 * (((index - 2) ~/ 2) + 1) * (1 + (deltaX.abs() / (deltaY.abs() + 1e-6)));
         final Offset control = isVertical
             ? Offset(mid.dx + sign * magnitude, mid.dy)
             : Offset(mid.dx, mid.dy + sign * magnitude);
