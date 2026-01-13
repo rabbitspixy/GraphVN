@@ -3,6 +3,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:touch_of_the_unknown/editor/editor_node.dart';
 import 'package:touch_of_the_unknown/editor/editor_transition.dart';
+import 'dart:ui';
 
 class EditorState {
   static final Map<String, EditorNode> nodes = <String, EditorNode>{};

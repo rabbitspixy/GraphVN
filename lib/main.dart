@@ -26,6 +26,8 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void dispose() {
+    // remember the current offset before the widget is destroyed
+    EditorState.storedOffset = _offset;
     _focusNode.dispose();
     super.dispose();
   }
