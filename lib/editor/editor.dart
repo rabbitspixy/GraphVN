@@ -52,7 +52,7 @@ class _EditorState extends State<Editor> {
     // Handle node dragging with left mouse button
     if (event.buttons & kPrimaryMouseButton != 0) {
       // If Ctrl is pressed, start linking
-      if (event.isControlPressed) {
+      if (event.modifiers.contains(ModifierKey.controlModifier)) {
         for (final node in EditorState.nodes.values) {
           final left = node.x.toDouble() - 5 + _offset.dx;
           final top = node.y.toDouble() - 5 + _offset.dy;
