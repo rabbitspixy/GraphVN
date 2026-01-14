@@ -234,8 +234,9 @@ class _EditorState extends State<Editor> {
               }).toList(),
               if (_hoveredTransitionText != null && _hoverPosition != null)
                 Positioned(
-                  left: _hoverPosition!.dx,
+                  left: _hoverPosition!.dx - 200.0,
                   top: _hoverPosition!.dy,
+                  width: 400.0,
                   child: Material(
                     color: Colors.transparent,
                     child: Container(
