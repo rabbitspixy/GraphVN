@@ -232,7 +232,8 @@ class _EditorState extends State<Editor> {
                 builder: (context, _, __) => CustomPaint(
                   painter: TransitionPainter(offset: _offset),
                 ),
-                if (_hoveredNodeText != null && _hoverNodePosition != null)
+              ),
+              if (_hoveredNodeText != null && _hoverNodePosition != null)
                 Positioned(
                   left: _hoverNodePosition!.dx - 200.0,
                   top: _hoverNodePosition!.dy - 30.0,
@@ -252,7 +253,6 @@ class _EditorState extends State<Editor> {
                     ),
                   ),
                 ),
-              ),
               ...EditorState.nodes.values.map((node) {
                 final left = node.x.toDouble() - 5 + _offset.dx;
                 final top = node.y.toDouble() - 5 + _offset.dy;
