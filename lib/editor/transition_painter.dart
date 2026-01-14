@@ -49,7 +49,10 @@ class TransitionPainter extends CustomPainter {
         final path = Path()
           ..moveTo(start.dx, start.dy)
           ..lineTo(end.dx, end.dy);
+        final center = Offset((start.dx + end.dx) / 2, (start.dy + end.dy) / 2);
         canvas.drawPath(path, paint);
+        final pointPaint = Paint()..color = Colors.black..style = PaintingStyle.fill;
+        canvas.drawCircle(center, 3, pointPaint);
       } else {
         // Multiple transitions – add increasing curvature
         final mid = Offset(
@@ -69,7 +72,13 @@ class TransitionPainter extends CustomPainter {
         final path = Path()
           ..moveTo(start.dx, start.dy)
           ..quadraticBezierTo(control.dx, control.dy, end.dx, end.dy);
+        final center = Offset(
+          0.25 * start.dx + 0.5 * control.dx + 0.25 * end.dx,
+          0.25 * start.dy + 0.5 * control.dy + 0.25 * end.dy,
+        );
         canvas.drawPath(path, paint);
+        final pointPaint = Paint()..color = Colors.black..style = PaintingStyle.fill;
+        canvas.drawCircle(center, 3, pointPaint);
       }
     }
   }
