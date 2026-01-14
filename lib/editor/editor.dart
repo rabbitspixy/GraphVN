@@ -197,37 +197,62 @@ class _EditorState extends State<Editor> {
         });
       });
     }
-    return Listener(
-      onPointerDown: _onPointerDown,
-      onPointerMove: _onPointerMove,
-      onPointerUp: _onPointerUp,
-      behavior: HitTestBehavior.translucent,
-      child: SizedBox.expand(
-        child: Stack(
-          children: [
-            ValueListenableBuilder<List<EditorTransition>>(
-              valueListenable: EditorState.transitionsNotifier,
-              builder: (context, _, __) => CustomPaint(
-                painter: TransitionPainter(offset: _offset),
+    return MouseRegion(
+      onHover: _onHover,
+      child: Listener(
+        onPointerDown: _onPointerDown,
+        onPointerMove: _onPointerMove,
+        onPointerUp: _onPointerUp,
+        behavior: HitTestBehavior.translucent,
+        child: SizedBox.expand(
+          child: Stack(
+            children: [
+              ValueListenableBuilder<List<EditorTransition>>(
+                valueListenable: EditorState.transitionsNotifier,
+                builder: (context, _, __) => CustomPaint(
+                  painter: TransitionPainter(offset: _offset),
+                ),
               ),
-            ),
-            ...EditorState.nodes.values.map((node) {
-              final left = node.x.toDouble() - 5 + _offset.dx;
-              final top = node.y.toDouble() - 5 + _offset.dy;
-              return Positioned(
-                left: left,
-                top: top,
-                child: Container(
-                  width: 10,
-                  height: 10,
-                  decoration: const BoxDecoration(
-                    color: Colors.blue,
-                    shape: BoxShape.circle,
+              ...EditorState.nodes.values.map((node) {
+                final left = node.x.toDouble() - 5 + _offset.dx;
+                final top = node.y.toDouble() - 5 + _offset.dy;
+                return Positioned(
+                  left: left,
+                  top: top,
+                  child: Tooltip(
+                    message: node.text,
+                    child: Container(
+                      width: 10,
+                      height: 10,
+                      decoration: const BoxDecoration(
+                        color: Colors.blue,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                  ),
+                );
+              }).toList(),
+              if (_hoveredTransitionText != null && _hoverPosition != null)
+                Positioned(
+                  left: _hoverPosition!.dx,
+                  top: _hoverPosition!.dy,
+                  child: Material(
+                    color: Colors.transparent,
+                    child: Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.7),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Text(
+                        _hoveredTransitionText!,
+                        style: const TextStyle(color: Colors.white, fontSize: 12),
+                      ),
+                    ),
                   ),
                 ),
-              );
-            }).toList(),
-          ],
+            ],
+          ),
         ),
       ),
     );
