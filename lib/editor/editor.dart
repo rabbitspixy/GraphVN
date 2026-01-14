@@ -29,6 +29,8 @@ class _EditorState extends State<Editor> {
   bool _sizeInitialized = false;
   String? _hoveredTransitionText;
   Offset? _hoverPosition;
+  String? _hoveredNodeText;
+  Offset? _hoverNodePosition;
 
   void _onPointerDown(PointerDownEvent event) {
     // Double-click detection for creating a new node
@@ -162,6 +164,17 @@ class _EditorState extends State<Editor> {
         nearest = transition;
       }
     }
+    // Node hover detection
+    EditorNode? nearestNode;
+    double nearestNodeDist = double.infinity;
+    for (final node in EditorState.nodes.values) {
+      final nodeCenter = Offset(node.x.toDouble(), node.y.toDouble()) + _offset;
+      final dist = (globalPosition - nodeCenter).distance;
+      if (dist < nearestNodeDist && dist <= 5.0) {
+        nearestNodeDist = dist;
+        nearestNode = node;
+      }
+    }
     setState(() {
       if (nearest != null) {
         _hoveredTransitionText = nearest.text;
@@ -169,6 +182,13 @@ class _EditorState extends State<Editor> {
       } else {
         _hoveredTransitionText = null;
         _hoverPosition = null;
+      }
+      if (nearestNode != null) {
+        _hoveredNodeText = nearestNode.text;
+        _hoverNodePosition = globalPosition;
+      } else {
+        _hoveredNodeText = null;
+        _hoverNodePosition = null;
       }
     });
   }
@@ -212,6 +232,26 @@ class _EditorState extends State<Editor> {
                 builder: (context, _, __) => CustomPaint(
                   painter: TransitionPainter(offset: _offset),
                 ),
+                if (_hoveredNodeText != null && _hoverNodePosition != null)
+                Positioned(
+                  left: _hoverNodePosition!.dx - 200.0,
+                  top: _hoverNodePosition!.dy - 30.0,
+                  width: 400.0,
+                  child: Material(
+                    color: Colors.transparent,
+                    child: Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.7),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Text(
+                        _hoveredNodeText!,
+                        style: const TextStyle(color: Colors.white, fontSize: 12),
+                      ),
+                    ),
+                  ),
+                ),
               ),
               ...EditorState.nodes.values.map((node) {
                 final left = node.x.toDouble() - 5 + _offset.dx;
@@ -219,15 +259,12 @@ class _EditorState extends State<Editor> {
                 return Positioned(
                   left: left,
                   top: top,
-                  child: Tooltip(
-                    message: node.text,
-                    child: Container(
-                      width: 10,
-                      height: 10,
-                      decoration: const BoxDecoration(
-                        color: Colors.blue,
-                        shape: BoxShape.circle,
-                      ),
+                  child: Container(
+                    width: 10,
+                    height: 10,
+                    decoration: const BoxDecoration(
+                      color: Colors.blue,
+                      shape: BoxShape.circle,
                     ),
                   ),
                 );
