@@ -11,7 +11,7 @@ class TransitionPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
       ..color = Colors.black
-      ..strokeWidth = 1
+      ..strokeWidth = 2
       ..style = PaintingStyle.stroke;
 
     // Map to keep track of how many transitions have been drawn between each pair

@@ -25,7 +25,6 @@ class _EditorState extends State<Editor> {
   bool _nodeDragging = false;
   String? _linkingNodeId;
   Duration _lastClickTime = Duration.zero;
-  Offset? _lastClickPosition;
   Size? _lastSize;
   bool _sizeInitialized = false;
 
@@ -43,11 +42,9 @@ class _EditorState extends State<Editor> {
         EditorState.nodes[newNode.id] = newNode;
         setState(() {});
         _lastClickTime = event.timeStamp;
-        _lastClickPosition = event.position;
         return;
       }
       _lastClickTime = event.timeStamp;
-      _lastClickPosition = event.position;
     }
 
     // Handle node dragging with left mouse button
