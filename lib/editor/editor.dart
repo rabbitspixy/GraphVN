@@ -27,6 +27,8 @@ class _EditorState extends State<Editor> {
   Duration _lastClickTime = Duration.zero;
   Size? _lastSize;
   bool _sizeInitialized = false;
+  String? _hoveredTransitionText;
+  Offset? _hoverPosition;
 
   void _onPointerDown(PointerDownEvent event) {
     // Double-click detection for creating a new node
@@ -128,6 +130,51 @@ class _EditorState extends State<Editor> {
       _dragStart = null;
       _offsetStart = null;
     }
+  }
+
+  void _updateHover(Offset globalPosition) {
+    // Find nearest transition within threshold
+    const double threshold = 10.0;
+    EditorTransition? nearest;
+    double nearestDist = double.infinity;
+    for (final transition in EditorState.transitions) {
+      final fromNode = EditorState.nodes[transition.from];
+      final toNode = EditorState.nodes[transition.to];
+      if (fromNode == null || toNode == null) continue;
+      final start = Offset(
+        fromNode.x.toDouble(),
+        fromNode.y.toDouble(),
+      ) + _offset;
+      final end = Offset(
+        toNode.x.toDouble(),
+        toNode.y.toDouble(),
+      ) + _offset;
+      // Distance to line segment
+      final dx = end.dx - start.dx;
+      final dy = end.dy - start.dy;
+      final lengthSq = dx * dx + dy * dy;
+      double t = ((globalPosition.dx - start.dx) * dx + (globalPosition.dy - start.dy) * dy) / lengthSq;
+      t = t.clamp(0.0, 1.0);
+      final projection = Offset(start.dx + t * dx, start.dy + t * dy);
+      final dist = (globalPosition - projection).distance;
+      if (dist < nearestDist && dist <= threshold) {
+        nearestDist = dist;
+        nearest = transition;
+      }
+    }
+    setState(() {
+      if (nearest != null) {
+        _hoveredTransitionText = nearest.text;
+        _hoverPosition = globalPosition;
+      } else {
+        _hoveredTransitionText = null;
+        _hoverPosition = null;
+      }
+    });
+  }
+
+  void _onHover(PointerHoverEvent event) {
+    _updateHover(event.position);
   }
 
   @override
