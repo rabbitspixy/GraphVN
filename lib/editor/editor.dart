@@ -139,6 +139,7 @@ class _EditorState extends State<Editor> {
     const double threshold = 10.0;
     EditorTransition? nearest;
     double nearestDist = double.infinity;
+    final Map<String, int> pairCount = {};
     for (final transition in EditorState.transitions) {
       final fromNode = EditorState.nodes[transition.from];
       final toNode = EditorState.nodes[transition.to];
@@ -151,17 +152,50 @@ class _EditorState extends State<Editor> {
         toNode.x.toDouble(),
         toNode.y.toDouble(),
       ) + _offset;
-      // Distance to line segment
-      final dx = end.dx - start.dx;
-      final dy = end.dy - start.dy;
-      final lengthSq = dx * dx + dy * dy;
-      double t = ((globalPosition.dx - start.dx) * dx + (globalPosition.dy - start.dy) * dy) / lengthSq;
-      t = t.clamp(0.0, 1.0);
-      final projection = Offset(start.dx + t * dx, start.dy + t * dy);
-      final dist = (globalPosition - projection).distance;
-      if (dist < nearestDist && dist <= threshold) {
-        nearestDist = dist;
-        nearest = transition;
+      final key = '${transition.from}->${transition.to}';
+      final keyReversed = '${transition.to}->${transition.from}';
+      final index = (pairCount.update(key, (v) => v + 1, ifAbsent: () => 1) + pairCount.update(keyReversed, (v) => v + 1, ifAbsent: () => 1)) / 2;
+      if (index == 1) {
+        // Straight line distance
+        final dx = end.dx - start.dx;
+        final dy = end.dy - start.dy;
+        final lengthSq = dx * dx + dy * dy;
+        double t = ((globalPosition.dx - start.dx) * dx + (globalPosition.dy - start.dy) * dy) / lengthSq;
+        t = t.clamp(0.0, 1.0);
+        final projection = Offset(start.dx + t * dx, start.dy + t * dy);
+        final dist = (globalPosition - projection).distance;
+        if (dist < nearestDist && dist <= threshold) {
+          nearestDist = dist;
+          nearest = transition;
+        }
+      } else {
+        // Curved line distance approximation
+        final mid = Offset(
+          (start.dx + end.dx) / 2,
+          (start.dy + end.dy) / 2,
+        );
+        final sign = (index % 2 == 0) ? 1 : -1;
+        final d = end - start;
+        final perp = Offset(-d.dy, d.dx);
+        final perpLength = perp.distance;
+        final magnitude = 50.0 * (((index - 2) ~/ 2) + 1);
+        final unitPerp = perpLength == 0 ? Offset.zero : Offset(perp.dx / perpLength, perp.dy / perpLength);
+        final control = mid + unitPerp * (sign.toDouble() * magnitude);
+        const int samples = 20;
+        double minDist = double.infinity;
+        for (int i = 0; i <= samples; i++) {
+          final t = i / samples;
+          final point = Offset(
+            (1 - t) * (1 - t) * start.dx + 2 * (1 - t) * t * control.dx + t * t * end.dx,
+            (1 - t) * (1 - t) * start.dy + 2 * (1 - t) * t * control.dy + t * t * end.dy,
+          );
+          final dist = (globalPosition - point).distance;
+          if (dist < minDist) minDist = dist;
+        }
+        if (minDist < nearestDist && minDist <= threshold) {
+          nearestDist = minDist;
+          nearest = transition;
+        }
       }
     }
     // Node hover detection
