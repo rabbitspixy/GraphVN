@@ -8,7 +8,7 @@ import 'package:flutter/services.dart';
 import 'editor/editor.dart';
 
 void main() {
-  initGame();
+  updateNode();
   EditorState.load();
   runApp(const MyApp());
 }
@@ -24,6 +24,20 @@ class _MyAppState extends State<MyApp> {
   bool _showEditor = false;
   final FocusNode _focusNode = FocusNode();
 
+  void toggleEditor() {
+    if (_showEditor) {
+      updateNode();
+      setState(() {
+        _showEditor = false;
+      });
+    } else {
+      setState(() {
+        _showEditor = true;
+      });
+    }
+    
+  }
+
   @override
   void dispose() {
     // remember the current offset before the widget is destroyed
@@ -36,14 +50,13 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: 'Touch of the unknown',
       home: Scaffold(
-        body: RawKeyboardListener(
+        body: KeyboardListener(
           focusNode: _focusNode,
           autofocus: true,
-          onKey: (RawKeyEvent event) {
-            if (event.isKeyPressed(LogicalKeyboardKey.f1)) {
-              setState(() {
-                _showEditor = !_showEditor;
-              });
+          onKeyEvent: (KeyEvent event) {
+            print("${event.physicalKey}");
+            if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.f1) {
+              toggleEditor();
             }
           },
           child: _showEditor

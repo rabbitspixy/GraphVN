@@ -80,7 +80,7 @@ class _TransitionButtonsState extends State<TransitionButtons> {
               elevation: 0,
             ),
             onPressed: transition.go,
-            child: Text(transition.text()),
+            child: Text(transition.text),
           ),
         );
       }),

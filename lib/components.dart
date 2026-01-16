@@ -18,25 +18,16 @@ class Node {
 }
 
 class Transition {
-  final String Function() text;
-  final Node Function() nextNode;
-  final VoidCallback? onTransition;
-  final bool Function()? condition;
+  final String text;
+  final String nextNode;
 
   Transition({
     required this.text,
     required this.nextNode,
-    this.onTransition,
-    this.condition,
   });
 
   void go() {
-    onTransition?.call();
-    enterNode(nextNode());
-  }
-
-  bool canGo() {
-    return condition?.call() ?? true;
+    goToNode(nextNode);
   }
 }
 
