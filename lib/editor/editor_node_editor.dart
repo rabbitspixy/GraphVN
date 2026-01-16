@@ -73,7 +73,7 @@ class _EditorNodeEditorState extends State<EditorNodeEditor> {
             }
           },
           child: const Text('Delete Node'),
-          style: ElevatedButton.styleFrom(primary: Colors.red),
+          style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
         ),
       ],
     );

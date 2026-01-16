@@ -51,7 +51,7 @@ class _EditorTransitionEditorState extends State<EditorTransitionEditor> {
             }
           },
           child: const Text('Delete Transition'),
-          style: ElevatedButton.styleFrom(primary: Colors.red),
+          style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
         ),
       ],
     );
