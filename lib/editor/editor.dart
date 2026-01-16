@@ -340,6 +340,7 @@ class _EditorState extends State<Editor> {
                   child: Material(
                     color: Colors.transparent,
                     child: Container(
+                      width: 400.0,
                       padding: const EdgeInsets.all(4),
                       decoration: BoxDecoration(
                         color: Colors.black.withOpacity(0.7),
@@ -348,6 +349,8 @@ class _EditorState extends State<Editor> {
                       child: Text(
                         _hoveredNodeText!,
                         style: const TextStyle(color: Colors.white, fontSize: 12),
+                        softWrap: true,
+                        overflow: TextOverflow.visible,
                       ),
                     ),
                   ),
@@ -374,6 +377,7 @@ class _EditorState extends State<Editor> {
                   child: Material(
                     color: Colors.transparent,
                     child: Container(
+                      width: 400.0,
                       padding: const EdgeInsets.all(4),
                       decoration: BoxDecoration(
                         color: Colors.black.withOpacity(0.7),
@@ -382,6 +386,8 @@ class _EditorState extends State<Editor> {
                       child: Text(
                         _hoveredTransitionText!,
                         style: const TextStyle(color: Colors.white, fontSize: 12),
+                        softWrap: true,
+                        overflow: TextOverflow.visible,
                       ),
                     ),
                   ),
