@@ -389,6 +389,21 @@ class _EditorState extends State<Editor> {
                     ),
                   ),
                 ),
+                Positioned(
+                  left: size.width * 0.7,
+                  top: 0,
+                  bottom: 0,
+                  child: Container(
+                    width: size.width * 0.3,
+                    color: Colors.white.withOpacity(0.1),
+                    padding: const EdgeInsets.all(8.0),
+                    child: _selectedNodeId != null
+                        ? EditorNodeEditor(nodeId: _selectedNodeId!)
+                        : _selectedTransitionId != null
+                            ? EditorTransitionEditor(transitionId: _selectedTransitionId!)
+                            : const SizedBox.shrink(),
+                  ),
+                ),
             ],
           ),
         ),
