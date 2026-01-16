@@ -363,7 +363,7 @@ class _EditorState extends State<Editor> {
                     width: 10,
                     height: 10,
                     decoration: BoxDecoration(
-                      color: node.isStart ? Colors.green : Colors.blue,
+                      color: node.isStart ? const Color.fromARGB(255, 37, 224, 43) : Colors.blue,
                       shape: BoxShape.circle,
                     ),
                   ),
