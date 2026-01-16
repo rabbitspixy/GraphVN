@@ -362,8 +362,8 @@ class _EditorState extends State<Editor> {
                   child: Container(
                     width: 10,
                     height: 10,
-                    decoration: const BoxDecoration(
-                      color: Colors.blue,
+                    decoration: BoxDecoration(
+                      color: node.isStart ? Colors.green : Colors.blue,
                       shape: BoxShape.circle,
                     ),
                   ),

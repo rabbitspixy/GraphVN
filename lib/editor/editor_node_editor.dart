@@ -12,12 +12,14 @@ class EditorNodeEditor extends StatefulWidget {
 
 class _EditorNodeEditorState extends State<EditorNodeEditor> {
   late TextEditingController _controller;
+  bool _isStart = false;
 
   @override
   void initState() {
     super.initState();
     final node = EditorState.nodes[widget.nodeId];
     _controller = TextEditingController(text: node?.text ?? '');
+    _isStart = node?.isStart ?? false;
     _controller.addListener(() {
       if (node != null) {
         node.text = _controller.text;
@@ -42,6 +44,23 @@ class _EditorNodeEditorState extends State<EditorNodeEditor> {
           controller: _controller,
           maxLines: null,
           decoration: const InputDecoration(border: OutlineInputBorder()),
+        ),
+        Row(
+          children: [
+            Checkbox(
+              value: _isStart,
+              onChanged: (bool? value) {
+                setState(() {
+                  _isStart = value ?? false;
+                  final node = EditorState.nodes[widget.nodeId];
+                  if (node != null) {
+                    node.isStart = _isStart;
+                  }
+                });
+              },
+            ),
+            const Text('Start Node'),
+          ],
         ),
       ],
     );
