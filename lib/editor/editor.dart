@@ -335,10 +335,8 @@ class _EditorState extends State<Editor> {
                 ),
               ),
               if (_hoveredNodeText != null && _hoverNodePosition != null)
-                Positioned(
-                  left: _hoverNodePosition!.dx - 200.0,
-                  top: _hoverNodePosition!.dy - 30.0,
-                  width: 400.0,
+                TooltipPositioned(
+                  position: _hoverNodePosition!,
                   child: Material(
                     color: Colors.transparent,
                     child: Container(
@@ -371,10 +369,8 @@ class _EditorState extends State<Editor> {
                 );
               }).toList(),
               if (_hoveredTransitionText != null && _hoverPosition != null)
-                Positioned(
-                  left: _hoverPosition!.dx - 200.0,
-                  top: _hoverPosition!.dy - 30.0,
-                  width: 400.0,
+                TooltipPositioned(
+                  position: _hoverPosition!,
                   child: Material(
                     color: Colors.transparent,
                     child: Container(
