@@ -5,6 +5,8 @@ import 'package:touch_of_the_unknown/editor/editor_state.dart';
 import 'package:touch_of_the_unknown/editor/editor_node.dart';
 import 'package:touch_of_the_unknown/editor/editor_transition.dart';
 import 'package:touch_of_the_unknown/editor/transition_painter.dart';
+import 'package:touch_of_the_unknown/editor/editor_node_editor.dart';
+import 'package:touch_of_the_unknown/editor/editor_transition_editor.dart';
 
 class Editor extends StatefulWidget {
   const Editor({super.key});
@@ -30,9 +32,32 @@ class _EditorState extends State<Editor> {
   String? _hoveredTransitionText;
   Offset? _hoverPosition;
   String? _hoveredNodeText;
+  String? _selectedNodeId;
+  String? _selectedTransitionId;
   Offset? _hoverNodePosition;
 
   void _onPointerDown(PointerDownEvent event) {
+    // Right-click detection for editing
+    if (event.buttons & kSecondaryMouseButton != 0) {
+      final node = _getNodeAtPosition(event.position);
+      if (node != null) {
+        _selectedNodeId = node.id;
+        _selectedTransitionId = null;
+        setState(() {});
+        return;
+      }
+      final transition = _getTransitionAtPosition(event.position);
+      if (transition != null) {
+        _selectedTransitionId = transition.id;
+        _selectedNodeId = null;
+        setState(() {});
+        return;
+      }
+      _selectedNodeId = null;
+      _selectedTransitionId = null;
+      setState(() {});
+      return;
+    }
     // Double-click detection for creating a new node
     if (event.buttons & kPrimaryMouseButton != 0) {
       if (event.timeStamp - _lastClickTime < const Duration(milliseconds: 300)) {
@@ -211,6 +236,65 @@ class _EditorState extends State<Editor> {
 
   void _onHover(PointerHoverEvent event) {
     _updateHover(event.position);
+  }
+
+  EditorNode? _getNodeAtPosition(Offset pos) {
+    for (final node in EditorState.nodes.values) {
+      final center = Offset(node.x.toDouble(), node.y.toDouble()) + _offset;
+      if ((pos - center).distance <= 5.0) {
+        return node;
+      }
+    }
+    return null;
+  }
+
+  EditorTransition? _getTransitionAtPosition(Offset pos) {
+    const double threshold = 5.0;
+    EditorTransition? nearest;
+    double nearestDist = double.infinity;
+    final Map<String, int> pairCount = {};
+    for (final transition in EditorState.transitions) {
+      final fromNode = EditorState.nodes[transition.from];
+      final toNode = EditorState.nodes[transition.to];
+      if (fromNode == null || toNode == null) continue;
+      final start = Offset(
+        fromNode.x.toDouble(),
+        fromNode.y.toDouble(),
+      ) + _offset;
+      final end = Offset(
+        toNode.x.toDouble(),
+        toNode.y.toDouble(),
+      ) + _offset;
+      final key = '${transition.from}->${transition.to}';
+      final keyReversed = '${transition.to}->${transition.from}';
+      final index = (pairCount.update(key, (v) => v + 1, ifAbsent: () => 1) + pairCount.update(keyReversed, (v) => v + 1, ifAbsent: () => 1)) / 2;
+      Offset center;
+      if (index == 1) {
+        center = Offset((start.dx + end.dx) / 2, (start.dy + end.dy) / 2);
+      } else {
+        final mid = Offset(
+          (start.dx + end.dx) / 2,
+          (start.dy + end.dy) / 2,
+        );
+        final sign = (index % 2 == 0) ? 1 : -1;
+        final d = end - start;
+        final perp = Offset(-d.dy, d.dx);
+        final perpLength = perp.distance;
+        final magnitude = 50.0 * (((index - 2) ~/ 2) + 1);
+        final unitPerp = perpLength == 0 ? Offset.zero : Offset(perp.dx / perpLength, perp.dy / perpLength);
+        final control = mid + unitPerp * (sign.toDouble() * magnitude);
+        center = Offset(
+          0.25 * start.dx + 0.5 * control.dx + 0.25 * end.dx,
+          0.25 * start.dy + 0.5 * control.dy + 0.25 * end.dy,
+        );
+      }
+      final dist = (pos - center).distance;
+      if (dist < nearestDist && dist <= threshold) {
+        nearestDist = dist;
+        nearest = transition;
+      }
+    }
+    return nearest;
   }
 
   @override
