@@ -41,6 +41,18 @@ class _EditorTransitionEditorState extends State<EditorTransitionEditor> {
           maxLines: null,
           decoration: const InputDecoration(border: OutlineInputBorder()),
         ),
+        const SizedBox(height: 8),
+        ElevatedButton(
+          onPressed: () {
+            final idx = EditorState.transitions.indexWhere((t) => t.id == widget.transitionId);
+            if (idx != -1) {
+              EditorState.transitions.removeAt(idx);
+              EditorState.transitionsNotifier.value = List.from(EditorState.transitions);
+            }
+          },
+          child: const Text('Delete Transition'),
+          style: ElevatedButton.styleFrom(primary: Colors.red),
+        ),
       ],
     );
   }

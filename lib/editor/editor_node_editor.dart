@@ -62,6 +62,19 @@ class _EditorNodeEditorState extends State<EditorNodeEditor> {
             const Text('Start Node'),
           ],
         ),
+        const SizedBox(height: 8),
+        ElevatedButton(
+          onPressed: () {
+            final node = EditorState.nodes[widget.nodeId];
+            if (node != null) {
+              EditorState.nodes.remove(widget.nodeId);
+              EditorState.transitions.removeWhere((t) => t.from == widget.nodeId || t.to == widget.nodeId);
+              EditorState.transitionsNotifier.value = List.from(EditorState.transitions);
+            }
+          },
+          child: const Text('Delete Node'),
+          style: ElevatedButton.styleFrom(primary: Colors.red),
+        ),
       ],
     );
   }
