@@ -37,11 +37,18 @@ class _MyAppState extends State<MyApp> {
     }
     
   }
-
+  
+  void _handleKey(KeyEvent event) {
+    if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.f1) {
+      toggleEditor();
+    }
+  }
+  
   @override
   void dispose() {
     // remember the current offset before the widget is destroyed
     _focusNode.dispose();
+    RawKeyboard.instance.removeListener(_handleKey);
     super.dispose();
   }
 
