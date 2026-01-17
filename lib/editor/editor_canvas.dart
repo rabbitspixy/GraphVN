@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:touch_of_the_unknown/editor/editor_constants.dart';
 import 'package:touch_of_the_unknown/editor/editor_node.dart';
 import 'package:touch_of_the_unknown/editor/editor_state.dart';
 import 'package:touch_of_the_unknown/editor/editor_transition.dart';
@@ -214,7 +215,7 @@ class _EditorCanvasState extends State<EditorCanvas> {
       final d = end - start;
       final perp = Offset(-d.dy, d.dx);
       final perpLength = perp.distance;
-      final magnitude = 50.0 * index;
+      final magnitude = EditorConstants.transitionDeviationMagnitude * index;
       final unitPerp = perpLength == 0 ? Offset.zero : Offset(perp.dx / perpLength, perp.dy / perpLength);
       final control = mid + unitPerp * magnitude;
       center = Offset(
