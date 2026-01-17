@@ -26,17 +26,11 @@ class _EditorTransitionEditorState extends State<EditorTransitionEditor> {
     _controller.addListener(() {
       if (transition.text != _controller.text) {
         transition.text = _controller.text;
+        widget.onChange();
         setState(() {});
       }
     });
   }
-
-  // @override
-  // void didUpdateWidget(covariant EditorTransitionEditor oldWidget) {
-  //   super.didUpdateWidget(oldWidget);
-  //   final transition = EditorState.transitions.firstWhere((t) => t.id == widget.transitionId, orElse: () => EditorTransition());
-  //   _controller.text = transition.text;
-  // }
 
   @override
   void dispose() {
@@ -59,6 +53,7 @@ class _EditorTransitionEditorState extends State<EditorTransitionEditor> {
         ElevatedButton(
           onPressed: () {
             EditorState.deleteTransition(widget.transitionId);
+            widget.onChange();
           },
           child: const Text('Delete Transition'),
           style: ElevatedButton.styleFrom(backgroundColor: Colors.red),

@@ -15,7 +15,6 @@ class Editor extends StatefulWidget {
 class _EditorState extends State<Editor> {
   String? _beingEditedNode;
   String? _beingEditedTransition;
-  int _editCounter = 0;
 
   void _onStartNodeEdit(EditorNode node) {
     setState(() {
@@ -32,15 +31,11 @@ class _EditorState extends State<Editor> {
   }
 
   void _onNodeEdited() {
-    setState(() {
-      _editCounter++;
-    });
+    setState(() {});
   }
 
   void _onTransitionEdited() {
-    setState(() {
-      _editCounter++;
-    });
+    setState(() {});
   }
 
   @override
@@ -49,7 +44,6 @@ class _EditorState extends State<Editor> {
     return Stack(
       children: [
         EditorCanvas(
-          key: ValueKey(_editCounter),
           startNodeEdit: _onStartNodeEdit,
           startTransitionEdit: _onStartTransitionEdit,
         ),

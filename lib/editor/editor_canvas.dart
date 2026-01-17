@@ -40,28 +40,16 @@ class _EditorCanvasState extends State<EditorCanvas> {
   Offset? _hoverNodePosition;
 
   void _onPointerDown(PointerDownEvent event) {
-    if (event.buttons & kSecondaryMouseButton != 0) {
+    if (event.buttons & kPrimaryMouseButton != 0) {
       if (_hoveredNode != null) {
         widget.startNodeEdit(_hoveredNode!);
       }
       if (_hoveredTransition != null) {
         widget.startTransitionEdit(_hoveredTransition!);
       }
-      return;
-    }
-    // Double-click detection for creating a new node
-    if (event.buttons & kPrimaryMouseButton != 0) {
       if (event.timeStamp - _lastClickTime < const Duration(milliseconds: 300)) {
-        // Create new node at click position
-        final localPos = event.position - _offset;
-        final gridX = ((localPos.dx / 25).round() * 25);
-        final gridY = ((localPos.dy / 25).round() * 25);
-        final newNode = EditorNode()
-          ..x = gridX
-          ..y = gridY;
-        EditorState.nodes[newNode.id] = newNode;
-        setState(() {});
-        _lastClickTime = event.timeStamp;
+        _createNewNodeAt(event.position - _offset);
+        _lastClickTime = Duration(milliseconds: 0);
         return;
       }
       _lastClickTime = event.timeStamp;
@@ -101,6 +89,15 @@ class _EditorCanvasState extends State<EditorCanvas> {
       _offsetStart = _offset;
       _dragging = true;
     }
+  }
+
+  void _createNewNodeAt(Offset localPos) {
+    final gridX = ((localPos.dx / 25).round() * 25);
+    final gridY = ((localPos.dy / 25).round() * 25);
+    final newNode = EditorNode()
+      ..x = gridX
+      ..y = gridY;
+    EditorState.nodes[newNode.id] = newNode;
   }
 
   void _onPointerMove(PointerMoveEvent event) {
@@ -292,7 +289,7 @@ class _EditorCanvasState extends State<EditorCanvas> {
                       ),
                     );
                   }).toList(),
-                  if (_hoveredNode != null && _hoverNodePosition != null)
+                  if (_hoveredNode != null && _hoverNodePosition != null && !_nodeDragging)
                     NodeTooltip(
                       position: _hoverNodePosition!,
                       node: _hoveredNode!,

@@ -27,20 +27,11 @@ class _EditorNodeEditorState extends State<EditorNodeEditor> {
     _controller.addListener(() {
       if (node != null && _controller.text != node.text) {
         node.text = _controller.text;
+        widget.onChange();
         setState(() {});
       }
     });
   }
-
-  // @override
-  // void didUpdateWidget(covariant EditorNodeEditor oldWidget) {
-  //   super.didUpdateWidget(oldWidget);
-  //   final node = EditorState.nodes[widget.nodeId];
-  //   if (node != null) {
-  //     _controller.text = node.text;
-  //     _isStart = node.isStart;
-  //   }
-  // }
 
   @override
   void dispose() {
@@ -66,10 +57,8 @@ class _EditorNodeEditorState extends State<EditorNodeEditor> {
               onChanged: (bool? value) {
                 setState(() {
                   _isStart = value ?? false;
-                  final node = EditorState.nodes[widget.nodeId];
-                  if (node != null) {
-                    node.isStart = _isStart;
-                  }
+                  EditorState.nodes[widget.nodeId]?.isStart = _isStart;
+                  widget.onChange();
                 });
               },
             ),
@@ -80,6 +69,7 @@ class _EditorNodeEditorState extends State<EditorNodeEditor> {
         ElevatedButton(
           onPressed: () {
             EditorState.deleteNode(widget.nodeId);
+            widget.onChange();
           },
           child: const Text('Delete Node'),
           style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
