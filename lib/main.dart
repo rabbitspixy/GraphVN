@@ -69,9 +69,6 @@ class _MyAppState extends State<MyApp> {
           autofocus: true,
           onKeyEvent: (KeyEvent event) {
             print("${event.physicalKey}");
-            if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.f1) {
-              toggleEditor();
-            }
           },
           child: _showEditor
               ? const Editor()
