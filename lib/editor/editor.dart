@@ -297,46 +297,14 @@ class _EditorState extends State<Editor> {
                 );
               }).toList(),
               if (_hoveredNode != null && _hoverNodePosition != null)
-                TooltipPositioned(
+                NodeTooltip(
                   position: _hoverNodePosition!,
-                  child: Material(
-                    color: Colors.transparent,
-                    child: Container(
-                      width: 400.0,
-                      padding: const EdgeInsets.all(4),
-                      decoration: BoxDecoration(
-                        color: Colors.black.withAlpha(180),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Text(
-                        _hoveredNode!.text,
-                        style: const TextStyle(color: Colors.white, fontSize: 12),
-                        softWrap: true,
-                        overflow: TextOverflow.visible,
-                      ),
-                    ),
-                  ),
+                  node: _hoveredNode!,
                 ),
               if (_hoveredTransition != null && _hoverPosition != null)
-                TooltipPositioned(
+                TransitionTooltip(
                   position: _hoverPosition!,
-                  child: Material(
-                    color: Colors.transparent,
-                    child: Container(
-                      width: 400.0,
-                      padding: const EdgeInsets.all(4),
-                      decoration: BoxDecoration(
-                        color: Colors.black.withAlpha(180),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Text(
-                        _hoveredTransition!.text,
-                        style: const TextStyle(color: Colors.white, fontSize: 12),
-                        softWrap: true,
-                        overflow: TextOverflow.visible,
-                      ),
-                    ),
-                  ),
+                  transition: _hoveredTransition!,
                 ),
                 Positioned(
                   left: size.width * 0.7,
