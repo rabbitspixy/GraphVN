@@ -9,10 +9,15 @@ import 'package:touch_of_the_unknown/editor/transition_painter.dart';
 import 'package:touch_of_the_unknown/editor/transition_tooltip.dart';
 
 class EditorCanvas extends StatefulWidget {
+  final EditorNode? selectedNode;
+  final EditorTransition? selectedTransition;
   final Function(EditorNode) startNodeEdit;
   final Function(EditorTransition) startTransitionEdit;
+
   const EditorCanvas({
     super.key,
+    required this.selectedNode,
+    required this.selectedTransition,
     required this.startNodeEdit,
     required this.startTransitionEdit,
   });
@@ -288,7 +293,7 @@ class _EditorCanvasState extends State<EditorCanvas> {
                         ),
                       ),
                     );
-                  }).toList(),
+                  }),
                   if (_hoveredNode != null && _hoverNodePosition != null && !_nodeDragging)
                     NodeTooltip(
                       position: _hoverNodePosition!,

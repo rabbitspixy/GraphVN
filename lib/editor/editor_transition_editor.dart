@@ -3,13 +3,13 @@ import 'package:touch_of_the_unknown/editor/editor_state.dart';
 import 'package:touch_of_the_unknown/editor/editor_transition.dart';
 
 class EditorTransitionEditor extends StatefulWidget {
-  final String transitionId;
+  final EditorTransition transition;
   final VoidCallback onChange;
 
   EditorTransitionEditor({
-    required this.transitionId,
+    required this.transition,
     required this.onChange,
-  }) : super(key: ValueKey(transitionId));
+  }) : super(key: ValueKey(transition));
 
   @override
   State<EditorTransitionEditor> createState() => _EditorTransitionEditorState();
@@ -21,11 +21,10 @@ class _EditorTransitionEditorState extends State<EditorTransitionEditor> {
   @override
   void initState() {
     super.initState();
-    final transition = EditorState.transitions.firstWhere((t) => t.id == widget.transitionId, orElse: () => EditorTransition());
-    _controller = TextEditingController(text: transition.text);
+    _controller = TextEditingController(text: widget.transition.text);
     _controller.addListener(() {
-      if (transition.text != _controller.text) {
-        transition.text = _controller.text;
+      if (widget.transition.text != _controller.text) {
+        widget.transition.text = _controller.text;
         widget.onChange();
         setState(() {});
       }
@@ -52,11 +51,11 @@ class _EditorTransitionEditorState extends State<EditorTransitionEditor> {
         const SizedBox(height: 8),
         ElevatedButton(
           onPressed: () {
-            EditorState.deleteTransition(widget.transitionId);
+            EditorState.deleteTransition(widget.transition.id);
             widget.onChange();
           },
-          child: const Text('Delete Transition'),
           style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+          child: const Text('Delete Transition'),
         ),
       ],
     );

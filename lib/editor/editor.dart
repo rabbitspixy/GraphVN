@@ -13,20 +13,20 @@ class Editor extends StatefulWidget {
 }
 
 class _EditorState extends State<Editor> {
-  String? _beingEditedNode;
-  String? _beingEditedTransition;
+  EditorNode? _selectedNode;
+  EditorTransition? _selectedTransition;
 
   void _onStartNodeEdit(EditorNode node) {
     setState(() {
-      _beingEditedNode = node.id;
-      _beingEditedTransition = null;
+      _selectedNode = node;
+      _selectedTransition = null;
     });
   }
 
   void _onStartTransitionEdit(EditorTransition transition) {
     setState(() {
-      _beingEditedNode = null;
-      _beingEditedTransition = transition.id;
+      _selectedNode = null;
+      _selectedTransition = transition;
     });
   }
 
@@ -44,6 +44,8 @@ class _EditorState extends State<Editor> {
     return Stack(
       children: [
         EditorCanvas(
+          selectedNode: _selectedNode,
+          selectedTransition: _selectedTransition,
           startNodeEdit: _onStartNodeEdit,
           startTransitionEdit: _onStartTransitionEdit,
         ),
@@ -55,10 +57,10 @@ class _EditorState extends State<Editor> {
             width: size.width * 0.3,
             color: Colors.black.withAlpha(20),
             padding: const EdgeInsets.all(8.0),
-            child: _beingEditedNode != null
-                ? EditorNodeEditor(nodeId: _beingEditedNode!, onChange: _onNodeEdited,)
-                : _beingEditedTransition != null
-                    ? EditorTransitionEditor(transitionId: _beingEditedTransition!, onChange: _onTransitionEdited,)
+            child: _selectedNode != null
+                ? EditorNodeEditor(node: _selectedNode!, onChange: _onNodeEdited,)
+                : _selectedTransition != null
+                    ? EditorTransitionEditor(transition: _selectedTransition!, onChange: _onTransitionEdited,)
                     : const SizedBox.shrink(),
           ),
         ),

@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:touch_of_the_unknown/editor/editor_node.dart';
 import 'package:touch_of_the_unknown/editor/editor_state.dart';
 
 class EditorNodeEditor extends StatefulWidget {
-  final String nodeId;
+  final EditorNode node;
   final VoidCallback onChange;
 
   EditorNodeEditor({
-    required this.nodeId,
+    required this.node,
     required this.onChange,
-  }) : super(key: ValueKey(nodeId));
+  }) : super(key: ValueKey(node));
 
   @override
   State<EditorNodeEditor> createState() => _EditorNodeEditorState();
@@ -21,12 +22,11 @@ class _EditorNodeEditorState extends State<EditorNodeEditor> {
   @override
   void initState() {
     super.initState();
-    final node = EditorState.nodes[widget.nodeId];
-    _controller = TextEditingController(text: node?.text ?? '');
-    _isStart = node?.isStart ?? false;
+    _controller = TextEditingController(text: widget.node.text);
+    _isStart = widget.node.isStart;
     _controller.addListener(() {
-      if (node != null && _controller.text != node.text) {
-        node.text = _controller.text;
+      if (_controller.text != widget.node.text) {
+        widget.node.text = _controller.text;
         widget.onChange();
         setState(() {});
       }
@@ -57,7 +57,7 @@ class _EditorNodeEditorState extends State<EditorNodeEditor> {
               onChanged: (bool? value) {
                 setState(() {
                   _isStart = value ?? false;
-                  EditorState.nodes[widget.nodeId]?.isStart = _isStart;
+                  widget.node.isStart = _isStart;
                   widget.onChange();
                 });
               },
@@ -68,11 +68,11 @@ class _EditorNodeEditorState extends State<EditorNodeEditor> {
         const SizedBox(height: 8),
         ElevatedButton(
           onPressed: () {
-            EditorState.deleteNode(widget.nodeId);
+            EditorState.deleteNode(widget.node.id);
             widget.onChange();
           },
-          child: const Text('Delete Node'),
           style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+          child: const Text('Delete Node'),
         ),
       ],
     );
