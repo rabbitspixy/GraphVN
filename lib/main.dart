@@ -77,9 +77,20 @@ class _RootWidgetState extends State<RootWidget> {
         body: KeyboardListener(
           focusNode: _focusNode,
           autofocus: true,
-          child: _showEditor
-              ? const Editor()
-              : const GamePlayer(),
+          child: Stack(
+            children: [
+              Visibility(
+                visible: _showEditor,
+                maintainState: true,
+                child: const Editor(),
+              ),
+              Visibility(
+                visible: !_showEditor,
+                maintainState: true,
+                child: const GamePlayer(),
+              ),
+            ],
+          ),
         ),
       ),
     );
