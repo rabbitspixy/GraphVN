@@ -28,6 +28,16 @@ class _EditorNodeEditorState extends State<EditorNodeEditor> {
   }
 
   @override
+  void didUpdateWidget(covariant EditorNodeEditor oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final node = EditorState.nodes[widget.nodeId];
+    if (node != null) {
+      _controller.text = node.text;
+      _isStart = node.isStart;
+    }
+  }
+
+  @override
   void dispose() {
     _controller.dispose();
     super.dispose();

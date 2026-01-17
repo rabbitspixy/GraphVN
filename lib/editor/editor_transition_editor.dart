@@ -25,6 +25,13 @@ class _EditorTransitionEditorState extends State<EditorTransitionEditor> {
   }
 
   @override
+  void didUpdateWidget(covariant EditorTransitionEditor oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final transition = EditorState.transitions.firstWhere((t) => t.id == widget.transitionId, orElse: () => EditorTransition());
+    _controller.text = transition.text;
+  }
+
+  @override
   void dispose() {
     _controller.dispose();
     super.dispose();
