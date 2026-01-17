@@ -7,6 +7,7 @@ import 'package:touch_of_the_unknown/editor/editor_transition.dart';
 import 'package:touch_of_the_unknown/editor/node_tooltip.dart';
 import 'package:touch_of_the_unknown/editor/transition_painter.dart';
 import 'package:touch_of_the_unknown/editor/transition_tooltip.dart';
+import 'package:touch_of_the_unknown/editor/selected_highlight_painter.dart';
 
 class EditorCanvas extends StatefulWidget {
   final EditorNode? selectedNode;
@@ -294,6 +295,13 @@ class _EditorCanvasState extends State<EditorCanvas> {
                       ),
                     );
                   }),
+                  CustomPaint(
+                    painter: SelectedHighlightPainter(
+                      selectedNode: widget.selectedNode,
+                      selectedTransition: widget.selectedTransition,
+                      offset: _offset,
+                    ),
+                  ),
                   if (_hoveredNode != null && _hoverNodePosition != null && !_nodeDragging)
                     NodeTooltip(
                       position: _hoverNodePosition!,
