@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_window_close/flutter_window_close.dart';
 import 'package:touch_of_the_unknown/editor/editor_state.dart';
 import 'engine.dart';
 import 'package:flutter/services.dart';
@@ -8,17 +9,25 @@ import 'game_player.dart';
 void main() {
   updateNode();
   EditorState.load();
-  runApp(const MyApp());
+  initWindowCloseHandler();
+  runApp(const RootWidget());
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+void initWindowCloseHandler() {
+  FlutterWindowClose.setWindowShouldCloseHandler(() async {
+    await EditorState.save();
+    return true;
+  });
+}
+
+class RootWidget extends StatefulWidget {
+  const RootWidget({super.key});
 
   @override
-  State<MyApp> createState() => _MyAppState();
+  State<RootWidget> createState() => _RootWidgetState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _RootWidgetState extends State<RootWidget> {
   bool _showEditor = false;
   final FocusNode _focusNode = FocusNode();
 
@@ -40,6 +49,10 @@ class _MyAppState extends State<MyApp> {
       toggleEditor();
       return true;
     }
+    if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.keyS && HardwareKeyboard.instance.isControlPressed) {
+      EditorState.save();
+      return true;
+    }
     return false;
   }
   
@@ -48,10 +61,9 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     HardwareKeyboard.instance.addHandler(_handleKey);
   }
-  
+
   @override
   void dispose() {
-    // remember the current offset before the widget is destroyed
     _focusNode.dispose();
     HardwareKeyboard.instance.removeHandler(_handleKey);
     super.dispose();
