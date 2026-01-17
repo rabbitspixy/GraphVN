@@ -265,67 +265,71 @@ class _EditorState extends State<Editor> {
         });
       });
     }
-    return MouseRegion(
-      onHover: _onHover,
-      child: Listener(
-        onPointerDown: _onPointerDown,
-        onPointerMove: _onPointerMove,
-        onPointerUp: _onPointerUp,
-        behavior: HitTestBehavior.translucent,
-        child: SizedBox.expand(
-          child: Stack(
-            children: [
-              ValueListenableBuilder<List<EditorTransition>>(
-                valueListenable: EditorState.transitionsNotifier,
-                builder: (context, _, __) => CustomPaint(
-                  painter: TransitionPainter(offset: _offset),
-                ),
-              ),
-              ...EditorState.nodes.values.map((node) {
-                final left = node.x.toDouble() - 5 + _offset.dx;
-                final top = node.y.toDouble() - 5 + _offset.dy;
-                return Positioned(
-                  left: left,
-                  top: top,
-                  child: Container(
-                    width: 10,
-                    height: 10,
-                    decoration: BoxDecoration(
-                      color: node.isStart ? const Color.fromARGB(255, 37, 224, 43) : Colors.blue,
-                      shape: BoxShape.circle,
+    return Stack(
+      children: [
+        MouseRegion(
+          onHover: _onHover,
+          child: Listener(
+            onPointerDown: _onPointerDown,
+            onPointerMove: _onPointerMove,
+            onPointerUp: _onPointerUp,
+            behavior: HitTestBehavior.translucent,
+            child: SizedBox.expand(
+              child: Stack(
+                children: [
+                  ValueListenableBuilder<List<EditorTransition>>(
+                    valueListenable: EditorState.transitionsNotifier,
+                    builder: (context, _, __) => CustomPaint(
+                      painter: TransitionPainter(offset: _offset),
                     ),
                   ),
-                );
-              }).toList(),
-              if (_hoveredNode != null && _hoverNodePosition != null)
-                NodeTooltip(
-                  position: _hoverNodePosition!,
-                  node: _hoveredNode!,
-                ),
-              if (_hoveredTransition != null && _hoverPosition != null)
-                TransitionTooltip(
-                  position: _hoverPosition!,
-                  transition: _hoveredTransition!,
-                ),
-                Positioned(
-                  left: size.width * 0.7,
-                  top: 0,
-                  bottom: 0,
-                  child: Container(
-                    width: size.width * 0.3,
-                    color: Colors.black.withAlpha(20),
-                    padding: const EdgeInsets.all(8.0),
-                    child: _selectedNodeId != null
-                        ? EditorNodeEditor(nodeId: _selectedNodeId!)
-                        : _selectedTransitionId != null
-                            ? EditorTransitionEditor(transitionId: _selectedTransitionId!)
-                            : const SizedBox.shrink(),
-                  ),
-                ),
-            ],
+                  ...EditorState.nodes.values.map((node) {
+                    final left = node.x.toDouble() - 5 + _offset.dx;
+                    final top = node.y.toDouble() - 5 + _offset.dy;
+                    return Positioned(
+                      left: left,
+                      top: top,
+                      child: Container(
+                        width: 10,
+                        height: 10,
+                        decoration: BoxDecoration(
+                          color: node.isStart ? const Color.fromARGB(255, 37, 224, 43) : Colors.blue,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                  if (_hoveredNode != null && _hoverNodePosition != null)
+                    NodeTooltip(
+                      position: _hoverNodePosition!,
+                      node: _hoveredNode!,
+                    ),
+                  if (_hoveredTransition != null && _hoverPosition != null)
+                    TransitionTooltip(
+                      position: _hoverPosition!,
+                      transition: _hoveredTransition!,
+                    ),
+                ],
+              ),
+            ),
           ),
         ),
-      ),
+        Positioned(
+          left: size.width * 0.7,
+          top: 0,
+          bottom: 0,
+          child: Container(
+            width: size.width * 0.3,
+            color: Colors.black.withAlpha(20),
+            padding: const EdgeInsets.all(8.0),
+            child: _selectedNodeId != null
+                ? EditorNodeEditor(nodeId: _selectedNodeId!)
+                : _selectedTransitionId != null
+                    ? EditorTransitionEditor(transitionId: _selectedTransitionId!)
+                    : const SizedBox.shrink(),
+          ),
+        ),
+      ],
     );
   }
   @override
