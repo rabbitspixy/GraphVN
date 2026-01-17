@@ -67,9 +67,6 @@ class _MyAppState extends State<MyApp> {
         body: KeyboardListener(
           focusNode: _focusNode,
           autofocus: true,
-          onKeyEvent: (KeyEvent event) {
-            print("${event.physicalKey}");
-          },
           child: _showEditor
               ? const Editor()
               : Stack(
