@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:touch_of_the_unknown/components.dart';
+import 'package:graph_vn/components.dart';
 import 'background_image.dart';
 import 'transition_buttons.dart';
 import 'engine.dart';

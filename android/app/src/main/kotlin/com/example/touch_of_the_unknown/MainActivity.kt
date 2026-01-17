@@ -1,4 +1,4 @@
-package com.example.touch_of_the_unknown
+package com.example.graph_vn
 
 import io.flutter.embedding.android.FlutterActivity
 

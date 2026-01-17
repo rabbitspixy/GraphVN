@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="touch_of_the_unknown"
+        android:label="graph_vn"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

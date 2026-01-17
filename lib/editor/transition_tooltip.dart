@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:touch_of_the_unknown/editor/editor_transition.dart';
-import 'package:touch_of_the_unknown/editor/tooltip_positioned.dart';
+import 'package:graph_vn/editor/editor_transition.dart';
+import 'package:graph_vn/editor/tooltip_positioned.dart';
 
 class TransitionTooltip extends StatelessWidget {
   final Offset position;

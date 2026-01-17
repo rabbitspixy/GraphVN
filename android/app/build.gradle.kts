@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.touch_of_the_unknown"
+    namespace = "com.example.graph_vn"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -21,7 +21,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.touch_of_the_unknown"
+        applicationId = "com.example.graph_vn"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion

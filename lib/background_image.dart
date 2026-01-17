@@ -1,8 +1,8 @@
 import 'dart:math';
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:touch_of_the_unknown/components.dart';
-import 'package:touch_of_the_unknown/engine.dart';
+import 'package:graph_vn/components.dart';
+import 'package:graph_vn/engine.dart';
 
 class BackgroundImageWidget extends StatefulWidget {
   const BackgroundImageWidget({Key? key}) : super(key: key);

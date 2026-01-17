@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:touch_of_the_unknown/editor/editor_state.dart';
-import 'package:touch_of_the_unknown/editor/editor_transition.dart';
+import 'package:graph_vn/editor/editor_state.dart';
+import 'package:graph_vn/editor/editor_transition.dart';
 
 class EditorTransitionEditor extends StatefulWidget {
   final EditorTransition transition;

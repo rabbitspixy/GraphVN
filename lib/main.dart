@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_window_close/flutter_window_close.dart';
-import 'package:touch_of_the_unknown/editor/editor_state.dart';
+import 'package:graph_vn/editor/editor_state.dart';
 import 'engine.dart';
 import 'package:flutter/services.dart';
 import 'editor/editor.dart';
@@ -72,7 +72,7 @@ class _RootWidgetState extends State<RootWidget> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Touch of the unknown',
+      title: 'Graph VN',
       home: Scaffold(
         body: KeyboardListener(
           focusNode: _focusNode,

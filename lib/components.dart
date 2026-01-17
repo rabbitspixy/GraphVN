@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:touch_of_the_unknown/engine.dart';
+import 'package:graph_vn/engine.dart';
 
 class Node {
   final NodeImageInfo Function() imageInfo;

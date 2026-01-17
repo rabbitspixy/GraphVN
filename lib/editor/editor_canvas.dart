@@ -1,14 +1,14 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:touch_of_the_unknown/editor/editor_constants.dart';
-import 'package:touch_of_the_unknown/editor/editor_node.dart';
-import 'package:touch_of_the_unknown/editor/editor_state.dart';
-import 'package:touch_of_the_unknown/editor/editor_transition.dart';
-import 'package:touch_of_the_unknown/editor/node_painter.dart';
-import 'package:touch_of_the_unknown/editor/node_tooltip.dart';
-import 'package:touch_of_the_unknown/editor/transition_painter.dart';
-import 'package:touch_of_the_unknown/editor/transition_tooltip.dart';
+import 'package:graph_vn/editor/editor_constants.dart';
+import 'package:graph_vn/editor/editor_node.dart';
+import 'package:graph_vn/editor/editor_state.dart';
+import 'package:graph_vn/editor/editor_transition.dart';
+import 'package:graph_vn/editor/node_painter.dart';
+import 'package:graph_vn/editor/node_tooltip.dart';
+import 'package:graph_vn/editor/transition_painter.dart';
+import 'package:graph_vn/editor/transition_tooltip.dart';
 
 class EditorCanvas extends StatefulWidget {
   final EditorNode? selectedNode;

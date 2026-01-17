@@ -3,9 +3,9 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
-import 'package:touch_of_the_unknown/editor/editor_constants.dart';
-import 'package:touch_of_the_unknown/editor/editor_node.dart';
-import 'package:touch_of_the_unknown/editor/editor_transition.dart';
+import 'package:graph_vn/editor/editor_constants.dart';
+import 'package:graph_vn/editor/editor_node.dart';
+import 'package:graph_vn/editor/editor_transition.dart';
 import 'dart:ui';
 
 import 'package:xml/xml.dart';

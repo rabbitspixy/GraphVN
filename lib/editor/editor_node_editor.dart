@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:touch_of_the_unknown/editor/editor_node.dart';
-import 'package:touch_of_the_unknown/editor/editor_state.dart';
+import 'package:graph_vn/editor/editor_node.dart';
+import 'package:graph_vn/editor/editor_state.dart';
 
 class EditorNodeEditor extends StatefulWidget {
   final EditorNode node;

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:touch_of_the_unknown/editor/editor_canvas.dart';
-import 'package:touch_of_the_unknown/editor/editor_node.dart';
-import 'package:touch_of_the_unknown/editor/editor_state.dart';
-import 'package:touch_of_the_unknown/editor/editor_transition.dart';
-import 'package:touch_of_the_unknown/editor/editor_node_editor.dart';
-import 'package:touch_of_the_unknown/editor/editor_transition_editor.dart';
+import 'package:graph_vn/editor/editor_canvas.dart';
+import 'package:graph_vn/editor/editor_node.dart';
+import 'package:graph_vn/editor/editor_state.dart';
+import 'package:graph_vn/editor/editor_transition.dart';
+import 'package:graph_vn/editor/editor_node_editor.dart';
+import 'package:graph_vn/editor/editor_transition_editor.dart';
 
 class Editor extends StatefulWidget {
   const Editor({super.key});
