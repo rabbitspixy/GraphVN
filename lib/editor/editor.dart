@@ -4,10 +4,11 @@ import 'package:flutter/services.dart';
 import 'package:touch_of_the_unknown/editor/editor_state.dart';
 import 'package:touch_of_the_unknown/editor/editor_node.dart';
 import 'package:touch_of_the_unknown/editor/editor_transition.dart';
+import 'package:touch_of_the_unknown/editor/node_tooltip.dart';
 import 'package:touch_of_the_unknown/editor/transition_painter.dart';
 import 'package:touch_of_the_unknown/editor/editor_node_editor.dart';
 import 'package:touch_of_the_unknown/editor/editor_transition_editor.dart';
-import 'package:touch_of_the_unknown/editor/tooltip_positioned.dart';
+import 'package:touch_of_the_unknown/editor/transition_tooltip.dart';
 
 class Editor extends StatefulWidget {
   const Editor({super.key});
