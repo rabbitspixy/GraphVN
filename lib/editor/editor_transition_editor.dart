@@ -19,8 +19,10 @@ class _EditorTransitionEditorState extends State<EditorTransitionEditor> {
     final transition = EditorState.transitions.firstWhere((t) => t.id == widget.transitionId, orElse: () => EditorTransition());
     _controller = TextEditingController(text: transition.text);
     _controller.addListener(() {
-      transition.text = _controller.text;
-      setState(() {});
+      if (transition.text != _controller.text) {
+        transition.text = _controller.text;
+        setState(() {});
+      }
     });
   }
 
@@ -51,11 +53,7 @@ class _EditorTransitionEditorState extends State<EditorTransitionEditor> {
         const SizedBox(height: 8),
         ElevatedButton(
           onPressed: () {
-            final idx = EditorState.transitions.indexWhere((t) => t.id == widget.transitionId);
-            if (idx != -1) {
-              EditorState.transitions.removeAt(idx);
-              EditorState.transitionsNotifier.value = List.from(EditorState.transitions);
-            }
+            EditorState.deleteTransition(widget.transitionId);
           },
           child: const Text('Delete Transition'),
           style: ElevatedButton.styleFrom(backgroundColor: Colors.red),

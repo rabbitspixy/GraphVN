@@ -48,4 +48,21 @@ class EditorState {
 
     nodes[n3.id] = n3;
   }
+
+  static void deleteTransition(String id) {
+    final idx = EditorState.transitions.indexWhere((t) => t.id == id);
+    if (idx != -1) {
+      EditorState.transitions.removeAt(idx);
+      EditorState.transitionsNotifier.value = List.from(EditorState.transitions);
+    }
+  }
+
+  static void deleteNode(String id) {
+    final node = EditorState.nodes[id];
+    if (node != null) {
+      EditorState.nodes.remove(node.id);
+      EditorState.transitions.removeWhere((t) => t.from == node.id || t.to == node.id);
+      EditorState.transitionsNotifier.value = List.from(EditorState.transitions);
+    }
+  }
 }

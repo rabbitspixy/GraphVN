@@ -30,9 +30,9 @@ class _EditorState extends State<Editor> {
   Duration _lastClickTime = Duration.zero;
   Size? _lastSize;
   bool _sizeInitialized = false;
-  String? _hoveredTransitionText;
+  EditorTransition? _hoveredTransition;
   Offset? _hoverPosition;
-  String? _hoveredNodeText;
+  EditorNode? _hoveredNode;
   String? _selectedNodeId;
   String? _selectedTransitionId;
   Offset? _hoverNodePosition;
@@ -161,75 +161,21 @@ class _EditorState extends State<Editor> {
   }
 
   void _updateHover(Offset globalPosition) {
-    const double threshold = 5.0;
-    EditorTransition? nearest;
-    double nearestDist = double.infinity;
-    final Map<String, int> pairCount = {};
-    for (final transition in EditorState.transitions) {
-      final fromNode = EditorState.nodes[transition.from];
-      final toNode = EditorState.nodes[transition.to];
-      if (fromNode == null || toNode == null) continue;
-      final start = Offset(
-        fromNode.x.toDouble(),
-        fromNode.y.toDouble(),
-      ) + _offset;
-      final end = Offset(
-        toNode.x.toDouble(),
-        toNode.y.toDouble(),
-      ) + _offset;
-      final key = '${transition.from}->${transition.to}';
-      final keyReversed = '${transition.to}->${transition.from}';
-      final index = (pairCount.update(key, (v) => v + 1, ifAbsent: () => 1) + pairCount.update(keyReversed, (v) => v + 1, ifAbsent: () => 1)) / 2;
-      Offset center;
-      if (index == 1) {
-        center = Offset((start.dx + end.dx) / 2, (start.dy + end.dy) / 2);
-      } else {
-        final mid = Offset(
-          (start.dx + end.dx) / 2,
-          (start.dy + end.dy) / 2,
-        );
-        final sign = (index % 2 == 0) ? 1 : -1;
-        final d = end - start;
-        final perp = Offset(-d.dy, d.dx);
-        final perpLength = perp.distance;
-        final magnitude = 50.0 * (((index - 2) ~/ 2) + 1);
-        final unitPerp = perpLength == 0 ? Offset.zero : Offset(perp.dx / perpLength, perp.dy / perpLength);
-        final control = mid + unitPerp * (sign.toDouble() * magnitude);
-        center = Offset(
-          0.25 * start.dx + 0.5 * control.dx + 0.25 * end.dx,
-          0.25 * start.dy + 0.5 * control.dy + 0.25 * end.dy,
-        );
-      }
-      final dist = (globalPosition - center).distance;
-      if (dist < nearestDist && dist <= threshold) {
-        nearestDist = dist;
-        nearest = transition;
-      }
-    }
-    // Node hover detection
-    EditorNode? nearestNode;
-    double nearestNodeDist = double.infinity;
-    for (final node in EditorState.nodes.values) {
-      final nodeCenter = Offset(node.x.toDouble(), node.y.toDouble()) + _offset;
-      final dist = (globalPosition - nodeCenter).distance;
-      if (dist < nearestNodeDist && dist <= 5.0) {
-        nearestNodeDist = dist;
-        nearestNode = node;
-      }
-    }
+    EditorTransition? nearestTransition = _getTransitionAtPosition(globalPosition);
+    EditorNode? nearestNode = _getNodeAtPosition(globalPosition);
     setState(() {
-      if (nearest != null) {
-        _hoveredTransitionText = nearest.text;
+      if (nearestTransition != null) {
+        _hoveredTransition = nearestTransition;
         _hoverPosition = globalPosition;
       } else {
-        _hoveredTransitionText = null;
+        _hoveredTransition = null;
         _hoverPosition = null;
       }
       if (nearestNode != null) {
-        _hoveredNodeText = nearestNode.text;
+        _hoveredNode = nearestNode;
         _hoverNodePosition = globalPosition;
       } else {
-        _hoveredNodeText = null;
+        _hoveredNode = null;
         _hoverNodePosition = null;
       }
     });
@@ -334,27 +280,6 @@ class _EditorState extends State<Editor> {
                   painter: TransitionPainter(offset: _offset),
                 ),
               ),
-              if (_hoveredNodeText != null && _hoverNodePosition != null)
-                TooltipPositioned(
-                  position: _hoverNodePosition!,
-                  child: Material(
-                    color: Colors.transparent,
-                    child: Container(
-                      width: 400.0,
-                      padding: const EdgeInsets.all(4),
-                      decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.7),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Text(
-                        _hoveredNodeText!,
-                        style: const TextStyle(color: Colors.white, fontSize: 12),
-                        softWrap: true,
-                        overflow: TextOverflow.visible,
-                      ),
-                    ),
-                  ),
-                ),
               ...EditorState.nodes.values.map((node) {
                 final left = node.x.toDouble() - 5 + _offset.dx;
                 final top = node.y.toDouble() - 5 + _offset.dy;
@@ -371,7 +296,28 @@ class _EditorState extends State<Editor> {
                   ),
                 );
               }).toList(),
-              if (_hoveredTransitionText != null && _hoverPosition != null)
+              if (_hoveredNode != null && _hoverNodePosition != null)
+                TooltipPositioned(
+                  position: _hoverNodePosition!,
+                  child: Material(
+                    color: Colors.transparent,
+                    child: Container(
+                      width: 400.0,
+                      padding: const EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withAlpha(180),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Text(
+                        _hoveredNode!.text,
+                        style: const TextStyle(color: Colors.white, fontSize: 12),
+                        softWrap: true,
+                        overflow: TextOverflow.visible,
+                      ),
+                    ),
+                  ),
+                ),
+              if (_hoveredTransition != null && _hoverPosition != null)
                 TooltipPositioned(
                   position: _hoverPosition!,
                   child: Material(
@@ -380,11 +326,11 @@ class _EditorState extends State<Editor> {
                       width: 400.0,
                       padding: const EdgeInsets.all(4),
                       decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.7),
+                        color: Colors.black.withAlpha(180),
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: Text(
-                        _hoveredTransitionText!,
+                        _hoveredTransition!.text,
                         style: const TextStyle(color: Colors.white, fontSize: 12),
                         softWrap: true,
                         overflow: TextOverflow.visible,
@@ -398,7 +344,7 @@ class _EditorState extends State<Editor> {
                   bottom: 0,
                   child: Container(
                     width: size.width * 0.3,
-                    color: Colors.white.withOpacity(0.1),
+                    color: Colors.black.withAlpha(20),
                     padding: const EdgeInsets.all(8.0),
                     child: _selectedNodeId != null
                         ? EditorNodeEditor(nodeId: _selectedNodeId!)

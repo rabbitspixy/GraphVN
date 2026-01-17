@@ -20,7 +20,7 @@ class _EditorNodeEditorState extends State<EditorNodeEditor> {
     _controller = TextEditingController(text: node?.text ?? '');
     _isStart = node?.isStart ?? false;
     _controller.addListener(() {
-      if (node != null) {
+      if (node != null && _controller.text != node.text) {
         node.text = _controller.text;
         setState(() {});
       }
@@ -74,12 +74,7 @@ class _EditorNodeEditorState extends State<EditorNodeEditor> {
         const SizedBox(height: 8),
         ElevatedButton(
           onPressed: () {
-            final node = EditorState.nodes[widget.nodeId];
-            if (node != null) {
-              EditorState.nodes.remove(widget.nodeId);
-              EditorState.transitions.removeWhere((t) => t.from == widget.nodeId || t.to == widget.nodeId);
-              EditorState.transitionsNotifier.value = List.from(EditorState.transitions);
-            }
+            EditorState.deleteNode(widget.nodeId);
           },
           child: const Text('Delete Node'),
           style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
