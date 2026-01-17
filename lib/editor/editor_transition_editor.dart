@@ -4,7 +4,12 @@ import 'package:touch_of_the_unknown/editor/editor_transition.dart';
 
 class EditorTransitionEditor extends StatefulWidget {
   final String transitionId;
-  const EditorTransitionEditor({Key? key, required this.transitionId}) : super(key: key);
+  final VoidCallback onChange;
+
+  EditorTransitionEditor({
+    required this.transitionId,
+    required this.onChange,
+  }) : super(key: ValueKey(transitionId));
 
   @override
   State<EditorTransitionEditor> createState() => _EditorTransitionEditorState();
@@ -26,12 +31,12 @@ class _EditorTransitionEditorState extends State<EditorTransitionEditor> {
     });
   }
 
-  @override
-  void didUpdateWidget(covariant EditorTransitionEditor oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    final transition = EditorState.transitions.firstWhere((t) => t.id == widget.transitionId, orElse: () => EditorTransition());
-    _controller.text = transition.text;
-  }
+  // @override
+  // void didUpdateWidget(covariant EditorTransitionEditor oldWidget) {
+  //   super.didUpdateWidget(oldWidget);
+  //   final transition = EditorState.transitions.firstWhere((t) => t.id == widget.transitionId, orElse: () => EditorTransition());
+  //   _controller.text = transition.text;
+  // }
 
   @override
   void dispose() {

@@ -3,7 +3,12 @@ import 'package:touch_of_the_unknown/editor/editor_state.dart';
 
 class EditorNodeEditor extends StatefulWidget {
   final String nodeId;
-  const EditorNodeEditor({Key? key, required this.nodeId}) : super(key: key);
+  final VoidCallback onChange;
+
+  EditorNodeEditor({
+    required this.nodeId,
+    required this.onChange,
+  }) : super(key: ValueKey(nodeId));
 
   @override
   State<EditorNodeEditor> createState() => _EditorNodeEditorState();
@@ -27,15 +32,15 @@ class _EditorNodeEditorState extends State<EditorNodeEditor> {
     });
   }
 
-  @override
-  void didUpdateWidget(covariant EditorNodeEditor oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    final node = EditorState.nodes[widget.nodeId];
-    if (node != null) {
-      _controller.text = node.text;
-      _isStart = node.isStart;
-    }
-  }
+  // @override
+  // void didUpdateWidget(covariant EditorNodeEditor oldWidget) {
+  //   super.didUpdateWidget(oldWidget);
+  //   final node = EditorState.nodes[widget.nodeId];
+  //   if (node != null) {
+  //     _controller.text = node.text;
+  //     _isStart = node.isStart;
+  //   }
+  // }
 
   @override
   void dispose() {
