@@ -6,6 +6,7 @@ import 'transition_buttons.dart';
 import 'background_image.dart';
 import 'package:flutter/services.dart';
 import 'editor/editor.dart';
+import 'game_player.dart';
 
 void main() {
   updateNode();
