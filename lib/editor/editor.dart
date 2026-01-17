@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:touch_of_the_unknown/editor/editor_canvas.dart';
 import 'package:touch_of_the_unknown/editor/editor_node.dart';
+import 'package:touch_of_the_unknown/editor/editor_state.dart';
 import 'package:touch_of_the_unknown/editor/editor_transition.dart';
 import 'package:touch_of_the_unknown/editor/editor_node_editor.dart';
 import 'package:touch_of_the_unknown/editor/editor_transition_editor.dart';
@@ -13,20 +14,17 @@ class Editor extends StatefulWidget {
 }
 
 class _EditorState extends State<Editor> {
-  EditorNode? _selectedNode;
-  EditorTransition? _selectedTransition;
-
   void _onStartNodeEdit(EditorNode node) {
     setState(() {
-      _selectedNode = node;
-      _selectedTransition = null;
+      EditorState.selectedNode = node;
+      EditorState.selectedTransition = null;
     });
   }
 
   void _onStartTransitionEdit(EditorTransition transition) {
     setState(() {
-      _selectedNode = null;
-      _selectedTransition = transition;
+      EditorState.selectedNode = null;
+      EditorState.selectedTransition = transition;
     });
   }
 
@@ -44,8 +42,8 @@ class _EditorState extends State<Editor> {
     return Stack(
       children: [
         EditorCanvas(
-          selectedNode: _selectedNode,
-          selectedTransition: _selectedTransition,
+          selectedNode: EditorState.selectedNode,
+          selectedTransition: EditorState.selectedTransition,
           startNodeEdit: _onStartNodeEdit,
           startTransitionEdit: _onStartTransitionEdit,
         ),
@@ -57,10 +55,10 @@ class _EditorState extends State<Editor> {
             width: size.width * 0.3,
             color: Colors.black.withAlpha(20),
             padding: const EdgeInsets.all(8.0),
-            child: _selectedNode != null
-                ? EditorNodeEditor(node: _selectedNode!, onChange: _onNodeEdited,)
-                : _selectedTransition != null
-                    ? EditorTransitionEditor(transition: _selectedTransition!, onChange: _onTransitionEdited,)
+            child: EditorState.selectedNode != null
+                ? EditorNodeEditor(node: EditorState.selectedNode!, onChange: _onNodeEdited,)
+                : EditorState.selectedTransition != null
+                    ? EditorTransitionEditor(transition: EditorState.selectedTransition!, onChange: _onTransitionEdited,)
                     : const SizedBox.shrink(),
           ),
         ),

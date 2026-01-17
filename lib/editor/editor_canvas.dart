@@ -4,10 +4,10 @@ import 'package:flutter/services.dart';
 import 'package:touch_of_the_unknown/editor/editor_node.dart';
 import 'package:touch_of_the_unknown/editor/editor_state.dart';
 import 'package:touch_of_the_unknown/editor/editor_transition.dart';
+import 'package:touch_of_the_unknown/editor/node_painter.dart';
 import 'package:touch_of_the_unknown/editor/node_tooltip.dart';
 import 'package:touch_of_the_unknown/editor/transition_painter.dart';
 import 'package:touch_of_the_unknown/editor/transition_tooltip.dart';
-import 'package:touch_of_the_unknown/editor/selected_highlight_painter.dart';
 
 class EditorCanvas extends StatefulWidget {
   final EditorNode? selectedNode;
@@ -44,6 +44,7 @@ class _EditorCanvasState extends State<EditorCanvas> {
   Offset? _hoverPosition;
   EditorNode? _hoveredNode;
   Offset? _hoverNodePosition;
+  int _forcedRepaint = 0;
 
   void _onPointerDown(PointerDownEvent event) {
     if (event.buttons & kPrimaryMouseButton != 0) {
@@ -110,11 +111,8 @@ class _EditorCanvasState extends State<EditorCanvas> {
     if (_linkingNodeId == null && _nodeDragging && _draggingNodeId != null && _nodeDragStart != null && _nodeOffsetStart != null) {
       final delta = event.position - _nodeDragStart!;
       setState(() {
-        final node = EditorState.nodes[_draggingNodeId!];
-        if (node != null) {
-          node.x = (((_nodeOffsetStart!.dx + delta.dx).round() + 12) ~/ 25) * 25;
-          node.y = (((_nodeOffsetStart!.dy + delta.dy).round() + 12) ~/ 25) * 25;
-        }
+        EditorState.trySetNodePosition(_draggingNodeId!, (_nodeOffsetStart!.dx + delta.dx).round(), (_nodeOffsetStart!.dy + delta.dy).round());
+        _forcedRepaint++;
       });
     } else if (_dragging && _dragStart != null && _offsetStart != null) {
       final delta = event.position - _dragStart!;
@@ -206,28 +204,23 @@ class _EditorCanvasState extends State<EditorCanvas> {
         toNode.y.toDouble(),
       ) + _offset;
       final key = '${transition.from}->${transition.to}';
-      final keyReversed = '${transition.to}->${transition.from}';
-      final index = (pairCount.update(key, (v) => v + 1, ifAbsent: () => 1) + pairCount.update(keyReversed, (v) => v + 1, ifAbsent: () => 1)) / 2;
+      final index = pairCount.update(key, (v) => v + 1, ifAbsent: () => 1);
+
       Offset center;
-      if (index == 1) {
-        center = Offset((start.dx + end.dx) / 2, (start.dy + end.dy) / 2);
-      } else {
-        final mid = Offset(
-          (start.dx + end.dx) / 2,
-          (start.dy + end.dy) / 2,
-        );
-        final sign = (index % 2 == 0) ? 1 : -1;
-        final d = end - start;
-        final perp = Offset(-d.dy, d.dx);
-        final perpLength = perp.distance;
-        final magnitude = 50.0 * (((index - 2) ~/ 2) + 1);
-        final unitPerp = perpLength == 0 ? Offset.zero : Offset(perp.dx / perpLength, perp.dy / perpLength);
-        final control = mid + unitPerp * (sign.toDouble() * magnitude);
-        center = Offset(
-          0.25 * start.dx + 0.5 * control.dx + 0.25 * end.dx,
-          0.25 * start.dy + 0.5 * control.dy + 0.25 * end.dy,
-        );
-      }
+      final mid = Offset(
+        (start.dx + end.dx) / 2,
+        (start.dy + end.dy) / 2,
+      );
+      final d = end - start;
+      final perp = Offset(-d.dy, d.dx);
+      final perpLength = perp.distance;
+      final magnitude = 50.0 * index;
+      final unitPerp = perpLength == 0 ? Offset.zero : Offset(perp.dx / perpLength, perp.dy / perpLength);
+      final control = mid + unitPerp * magnitude;
+      center = Offset(
+        0.25 * start.dx + 0.5 * control.dx + 0.25 * end.dx,
+        0.25 * start.dy + 0.5 * control.dy + 0.25 * end.dy,
+      );
       final dist = (pos - center).distance;
       if (dist < nearestDist && dist <= threshold) {
         nearestDist = dist;
@@ -264,58 +257,35 @@ class _EditorCanvasState extends State<EditorCanvas> {
       });
     }
     return MouseRegion(
-          onHover: _onHover,
-          child: Listener(
-            onPointerDown: _onPointerDown,
-            onPointerMove: _onPointerMove,
-            onPointerUp: _onPointerUp,
-            behavior: HitTestBehavior.translucent,
-            child: SizedBox.expand(
-              child: Stack(
-                children: [
-                  ValueListenableBuilder<List<EditorTransition>>(
-                    valueListenable: EditorState.transitionsNotifier,
-                    builder: (context, _, __) => CustomPaint(
-                      painter: TransitionPainter(offset: _offset),
-                    ),
-                  ),
-                  ...EditorState.nodes.values.map((node) {
-                    final left = node.x.toDouble() - 5 + _offset.dx;
-                    final top = node.y.toDouble() - 5 + _offset.dy;
-                    return Positioned(
-                      left: left,
-                      top: top,
-                      child: Container(
-                        width: 10,
-                        height: 10,
-                        decoration: BoxDecoration(
-                          color: node.isStart ? const Color.fromARGB(255, 37, 224, 43) : Colors.blue,
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                    );
-                  }),
-                  CustomPaint(
-                    painter: SelectedHighlightPainter(
-                      selectedNode: widget.selectedNode,
-                      selectedTransition: widget.selectedTransition,
-                      offset: _offset,
-                    ),
-                  ),
-                  if (_hoveredNode != null && _hoverNodePosition != null && !_nodeDragging)
-                    NodeTooltip(
-                      position: _hoverNodePosition!,
-                      node: _hoveredNode!,
-                    ),
-                  if (_hoveredTransition != null && _hoverPosition != null)
-                    TransitionTooltip(
-                      position: _hoverPosition!,
-                      transition: _hoveredTransition!,
-                    ),
-                ],
+      onHover: _onHover,
+      child: Listener(
+        onPointerDown: _onPointerDown,
+        onPointerMove: _onPointerMove,
+        onPointerUp: _onPointerUp,
+        behavior: HitTestBehavior.translucent,
+        child: SizedBox.expand(
+          child: Stack(
+            children: [
+              CustomPaint(
+                painter: TransitionPainter(offset: _offset, selectedTransition: widget.selectedTransition),
               ),
-            ),
+              CustomPaint(
+                painter: NodePainter(offset: _offset, selectedNode: widget.selectedNode, forcedRepaint: _forcedRepaint),
+              ),
+              if (_hoveredNode != null && _hoverNodePosition != null && !_nodeDragging)
+                NodeTooltip(
+                  position: _hoverNodePosition!,
+                  node: _hoveredNode!,
+                ),
+              if (_hoveredTransition != null && _hoverPosition != null)
+                TransitionTooltip(
+                  position: _hoverPosition!,
+                  transition: _hoveredTransition!,
+                ),
+            ],
           ),
-        );
+        ),
+      ),
+    );
   }
 }

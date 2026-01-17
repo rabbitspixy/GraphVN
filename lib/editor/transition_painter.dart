@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:touch_of_the_unknown/editor/editor_state.dart';
 import 'dart:math';
 
+import 'package:touch_of_the_unknown/editor/editor_transition.dart';
+
 class TransitionPainter extends CustomPainter {
   final Offset offset;
   final int transitionCount;
-  TransitionPainter({required this.offset}) : transitionCount = EditorState.transitions.length;
+  final EditorTransition? selectedTransition;
+  TransitionPainter({required this.offset, required this.selectedTransition}) : transitionCount = EditorState.transitions.length;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -34,56 +37,45 @@ class TransitionPainter extends CustomPainter {
 
       final double angle = atan2(end.dy - start.dy, end.dx - start.dx);
       paint.shader = LinearGradient(
-        colors: [Colors.black.withAlpha(26), Colors.black],
+        colors: [Colors.black.withAlpha(26), Colors.black.withAlpha(50), Colors.black],
         begin: Alignment.centerLeft,
         end: Alignment.centerRight,
         transform: GradientRotation(angle),
       ).createShader(Rect.fromPoints(start, end));
 
       final key = '${transition.from}->${transition.to}';
-      final keyReversed = '${transition.to}->${transition.from}';
-      final index = (pairCount.update(key, (v) => v + 1, ifAbsent: () => 1) + pairCount.update(keyReversed, (v) => v + 1, ifAbsent: () => 1)) / 2;
+      final index = pairCount.update(key, (v) => v + 1, ifAbsent: () => 1);
 
-      if (index == 1) {
-        // Single transition – draw a straight line
-        final path = Path()
-          ..moveTo(start.dx, start.dy)
-          ..lineTo(end.dx, end.dy);
-        final center = Offset((start.dx + end.dx) / 2, (start.dy + end.dy) / 2);
-        canvas.drawPath(path, paint);
-        final pointPaint = Paint()..color = Colors.black..style = PaintingStyle.fill;
-        canvas.drawCircle(center, 3, pointPaint);
-      } else {
-        // Multiple transitions – add increasing curvature
-        final mid = Offset(
-          (start.dx + end.dx) / 2,
-          (start.dy + end.dy) / 2,
-        );
-        // Calculate a control point that alternates sides of the straight line
-        // and increases the deviation every two transitions.
-        final sign = (index % 2 == 0) ? 1 : -1;
-        final Offset d = end - start;
-        final Offset perp = Offset(-d.dy, d.dx);
-        final double perpLength = perp.distance;
-        final double magnitude = 50.0 * (((index - 2) ~/ 2) + 1);
-        final Offset unitPerp = perpLength == 0 ? Offset.zero : Offset(perp.dx / perpLength, perp.dy / perpLength);
-        final Offset control = mid + unitPerp * (sign.toDouble() * magnitude);
+      // Multiple transitions – add increasing curvature
+      final mid = Offset(
+        (start.dx + end.dx) / 2,
+        (start.dy + end.dy) / 2,
+      );
+      final Offset d = end - start;
+      final Offset perp = Offset(-d.dy, d.dx);
+      final double perpLength = perp.distance;
+      final double magnitude = 50.0 * index;
+      final Offset unitPerp = perpLength == 0 ? Offset.zero : Offset(perp.dx / perpLength, perp.dy / perpLength);
+      final Offset control = mid + unitPerp * magnitude;
 
-        final path = Path()
-          ..moveTo(start.dx, start.dy)
-          ..quadraticBezierTo(control.dx, control.dy, end.dx, end.dy);
-        final center = Offset(
-          0.25 * start.dx + 0.5 * control.dx + 0.25 * end.dx,
-          0.25 * start.dy + 0.5 * control.dy + 0.25 * end.dy,
-        );
-        canvas.drawPath(path, paint);
-        final pointPaint = Paint()..color = Colors.black..style = PaintingStyle.fill;
-        canvas.drawCircle(center, 3, pointPaint);
+      final path = Path()
+        ..moveTo(start.dx, start.dy)
+        ..quadraticBezierTo(control.dx, control.dy, end.dx, end.dy);
+      final center = Offset(
+        0.25 * start.dx + 0.5 * control.dx + 0.25 * end.dx,
+        0.25 * start.dy + 0.5 * control.dy + 0.25 * end.dy,
+      );
+      canvas.drawPath(path, paint);
+      final pointPaint = Paint()..color = Colors.black..style = PaintingStyle.fill;
+      canvas.drawCircle(center, 3, pointPaint);
+      if (transition.id == selectedTransition?.id) {
+        final pointPaint = Paint()..color = Colors.black..style = PaintingStyle.stroke;
+        canvas.drawCircle(center, 5, pointPaint);
       }
     }
   }
 
   @override
   bool shouldRepaint(covariant TransitionPainter oldDelegate) =>
-      oldDelegate.offset != offset || oldDelegate.transitionCount != transitionCount;
+      oldDelegate.offset != offset || oldDelegate.transitionCount != transitionCount || oldDelegate.selectedTransition != selectedTransition;
 }

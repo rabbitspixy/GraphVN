@@ -9,7 +9,8 @@ class EditorState {
   static final Map<String, EditorNode> nodes = <String, EditorNode>{};
   static final List<EditorTransition> transitions = List.empty(growable: true);
   static final ValueNotifier<List<EditorTransition>> transitionsNotifier = ValueNotifier<List<EditorTransition>>([]);
-  // <‑‑ NEW: store the last canvas offset
+  static EditorNode? selectedNode;
+  static EditorTransition? selectedTransition;
   static Offset? _storedOffset;
   static Offset? get storedOffset => _storedOffset;
   static set storedOffset(Offset? value) => _storedOffset = value;
@@ -50,6 +51,9 @@ class EditorState {
   }
 
   static void deleteTransition(String id) {
+    if (EditorState.selectedTransition?.id == id) {
+      EditorState.selectedTransition = null;
+    }
     final idx = EditorState.transitions.indexWhere((t) => t.id == id);
     if (idx != -1) {
       EditorState.transitions.removeAt(idx);
@@ -58,11 +62,30 @@ class EditorState {
   }
 
   static void deleteNode(String id) {
+    if (EditorState.selectedNode?.id == id) {
+      EditorState.selectedNode = null;
+    }
     final node = EditorState.nodes[id];
     if (node != null) {
       EditorState.nodes.remove(node.id);
       EditorState.transitions.removeWhere((t) => t.from == node.id || t.to == node.id);
       EditorState.transitionsNotifier.value = List.from(EditorState.transitions);
+    }
+  }
+
+  static bool hasNodeInPosition(int x, int y) {
+    return nodes.values.where((n) => n.x == x && n.y == y).firstOrNull != null;
+  }
+
+  static void trySetNodePosition(String nodeId, int x, int y) {
+    final node = EditorState.nodes[nodeId];
+    if (node != null) {
+      final newX = (x.toDouble() / 25).round() * 25;
+      final newY = (y.toDouble() / 25).round() * 25;
+      if (!hasNodeInPosition(newX, newY)) {
+        node.x = newX;
+        node.y = newY;
+      }
     }
   }
 }
