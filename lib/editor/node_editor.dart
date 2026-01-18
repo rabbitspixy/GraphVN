@@ -16,17 +16,26 @@ class NodeEditor extends StatefulWidget {
 }
 
 class _NodeEditorState extends State<NodeEditor> {
-  late TextEditingController _controller;
+  late TextEditingController _nodeTextController;
+  late TextEditingController _labelTextController;
   bool _isStart = false;
 
   @override
   void initState() {
     super.initState();
-    _controller = TextEditingController(text: widget.node.text);
+    _nodeTextController = TextEditingController(text: widget.node.text);
+    _labelTextController = TextEditingController(text: widget.node.label);
     _isStart = widget.node.isStart;
-    _controller.addListener(() {
-      if (_controller.text != widget.node.text) {
-        widget.node.text = _controller.text;
+    _nodeTextController.addListener(() {
+      if (_nodeTextController.text != widget.node.text) {
+        widget.node.text = _nodeTextController.text;
+        widget.onChange();
+        setState(() {});
+      }
+    });
+    _labelTextController.addListener(() {
+      if (_labelTextController.text != widget.node.label) {
+        widget.node.label = _labelTextController.text;
         widget.onChange();
         setState(() {});
       }
@@ -35,7 +44,7 @@ class _NodeEditorState extends State<NodeEditor> {
 
   @override
   void dispose() {
-    _controller.dispose();
+    _nodeTextController.dispose();
     super.dispose();
   }
 
@@ -44,9 +53,15 @@ class _NodeEditorState extends State<NodeEditor> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Node Text:', style: TextStyle(fontWeight: FontWeight.bold)),
+        const Text('Label:', style: TextStyle(fontWeight: FontWeight.bold)),
         TextField(
-          controller: _controller,
+          controller: _labelTextController,
+          maxLines: null,
+          decoration: const InputDecoration(border: OutlineInputBorder()),
+        ),
+        const Text('Text:', style: TextStyle(fontWeight: FontWeight.bold)),
+        TextField(
+          controller: _nodeTextController,
           maxLines: null,
           decoration: const InputDecoration(border: OutlineInputBorder()),
         ),

@@ -18,12 +18,37 @@ class NodePainter extends CustomPainter {
       pointPaint.color = node.isStart ? const Color.fromARGB(255, 37, 224, 43) : Colors.blue;
       pointPaint.style = PaintingStyle.fill;
       canvas.drawCircle(center, 5, pointPaint);
+      if (node.label.isNotEmpty) {
+        _paintText(canvas, center, node.label);
+      }
 
       if (node.id == selectedNode?.id) {
         final pointPaint = Paint()..color = Colors.black..style = PaintingStyle.stroke;
         canvas.drawCircle(center, 7, pointPaint);
       }
     }
+  }
+
+  void _paintText(Canvas canvas, Offset nodePosition, String text) {
+    const textStyle = TextStyle(
+      color: Colors.black,
+      fontSize: 14,
+      fontWeight: FontWeight.w600,
+    );
+    final textSpan = TextSpan(
+      text: text,
+      style: textStyle,
+    );
+    final textPainter = TextPainter(
+      text: textSpan,
+      textAlign: TextAlign.center,
+      textDirection: TextDirection.ltr,
+    );
+    textPainter.layout(
+      minWidth: 200.0,
+      maxWidth: 200.0,
+    );
+    textPainter.paint(canvas, nodePosition + Offset(-100.0, -26.0));
   }
 
   @override

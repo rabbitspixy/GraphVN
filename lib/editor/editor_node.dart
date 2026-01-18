@@ -4,6 +4,7 @@ import 'package:xml/xml.dart';
 class EditorNode {
   String id = Uuid().v4();
   String text = '';
+  String label = '';
 
   int x = 0;
   int y = 0;
@@ -11,10 +12,11 @@ class EditorNode {
 
   void loadFromXml(XmlElement element) {
     id = element.getAttribute('id')!;
-    text = element.getElement('text')!.innerText;
+    text = element.getElement('text')?.innerText ?? '';
     x = int.parse(element.getAttribute('x')!);
     y = int.parse(element.getAttribute('y')!);
     isStart = bool.parse(element.getAttribute('isStart')!);
+    label = element.getElement('label')?.innerText ?? '';
   }
 
   void writeToXml(XmlBuilder builder) {
@@ -24,6 +26,7 @@ class EditorNode {
       builder.attribute('y', y);
       builder.attribute('isStart', isStart);
       builder.element('text', nest: text);
+      builder.element('label', nest: label);
     });
   }
 }
