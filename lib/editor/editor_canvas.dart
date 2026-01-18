@@ -174,7 +174,7 @@ class _EditorCanvasState extends State<EditorCanvas> {
   }
 
   void _onHover(PointerHoverEvent event) {
-    _updateHover(event.position);
+    _updateHover(event.localPosition);
   }
 
   EditorNode? _getNodeAtPosition(Offset pos) {
