@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_window_close/flutter_window_close.dart';
 import 'package:graph_vn/editor/editor_state.dart';
+import 'package:graph_vn/llm/text_generator.dart';
 import 'engine.dart';
 import 'package:flutter/services.dart';
 import 'editor/editor.dart';
