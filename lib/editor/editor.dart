@@ -3,8 +3,8 @@ import 'package:graph_vn/editor/editor_canvas.dart';
 import 'package:graph_vn/editor/editor_node.dart';
 import 'package:graph_vn/editor/editor_state.dart';
 import 'package:graph_vn/editor/editor_transition.dart';
-import 'package:graph_vn/editor/editor_node_editor.dart';
-import 'package:graph_vn/editor/editor_transition_editor.dart';
+import 'package:graph_vn/editor/node_editor.dart';
+import 'package:graph_vn/editor/transition_editor.dart';
 
 class Editor extends StatefulWidget {
   const Editor({super.key});
@@ -56,9 +56,9 @@ class _EditorState extends State<Editor> {
             color: Colors.black.withAlpha(20),
             padding: const EdgeInsets.all(8.0),
             child: EditorState.selectedNode != null
-                ? EditorNodeEditor(node: EditorState.selectedNode!, onChange: _onNodeEdited,)
+                ? NodeEditor(node: EditorState.selectedNode!, onChange: _onNodeEdited,)
                 : EditorState.selectedTransition != null
-                    ? EditorTransitionEditor(transition: EditorState.selectedTransition!, onChange: _onTransitionEdited,)
+                    ? TransitionEditor(transition: EditorState.selectedTransition!, onChange: _onTransitionEdited,)
                     : const SizedBox.shrink(),
           ),
         ),

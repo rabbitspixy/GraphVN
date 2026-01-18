@@ -2,20 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:graph_vn/editor/editor_state.dart';
 import 'package:graph_vn/editor/editor_transition.dart';
 
-class EditorTransitionEditor extends StatefulWidget {
+class TransitionEditor extends StatefulWidget {
   final EditorTransition transition;
   final VoidCallback onChange;
 
-  EditorTransitionEditor({
+  TransitionEditor({
     required this.transition,
     required this.onChange,
   }) : super(key: ValueKey(transition));
 
   @override
-  State<EditorTransitionEditor> createState() => _EditorTransitionEditorState();
+  State<TransitionEditor> createState() => _TransitionEditorState();
 }
 
-class _EditorTransitionEditorState extends State<EditorTransitionEditor> {
+class _TransitionEditorState extends State<TransitionEditor> {
   late TextEditingController _controller;
 
   @override

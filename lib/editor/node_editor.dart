@@ -2,20 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:graph_vn/editor/editor_node.dart';
 import 'package:graph_vn/editor/editor_state.dart';
 
-class EditorNodeEditor extends StatefulWidget {
+class NodeEditor extends StatefulWidget {
   final EditorNode node;
   final VoidCallback onChange;
 
-  EditorNodeEditor({
+  NodeEditor({
     required this.node,
     required this.onChange,
   }) : super(key: ValueKey(node));
 
   @override
-  State<EditorNodeEditor> createState() => _EditorNodeEditorState();
+  State<NodeEditor> createState() => _NodeEditorState();
 }
 
-class _EditorNodeEditorState extends State<EditorNodeEditor> {
+class _NodeEditorState extends State<NodeEditor> {
   late TextEditingController _controller;
   bool _isStart = false;
 
