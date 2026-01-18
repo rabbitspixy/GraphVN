@@ -53,6 +53,16 @@ class _RootWidgetState extends State<RootWidget> {
       EditorState.save();
       return true;
     }
+    if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.delete) {
+      final node = EditorState.selectedNode;
+      if (node != null) {
+        EditorState.deleteNode(node.id);
+      }
+      final transition = EditorState.selectedTransition;
+      if (transition != null) {
+        EditorState.deleteTransition(transition.id);
+      }
+    }
     return false;
   }
   
