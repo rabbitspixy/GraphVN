@@ -93,15 +93,23 @@ class EditorState {
     return nodes.values.where((n) => n.x == x && n.y == y).firstOrNull != null;
   }
 
-  static void trySetNodePosition(String nodeId, int x, int y) {
+  static bool trySetNodePositionById(String nodeId, int x, int y) {
     final node = EditorState.nodes[nodeId];
     if (node != null) {
-      final newX = (x.toDouble() / 25).round() * 25;
-      final newY = (y.toDouble() / 25).round() * 25;
-      if (!hasNodeInPosition(newX, newY)) {
-        node.x = newX;
-        node.y = newY;
-      }
+      return trySetNodePosition(node, x, y);
     }
+    return false;
   }
+  
+  static bool trySetNodePosition(EditorNode node, int x, int y) {
+    final newX = (x.toDouble() / 25).round() * 25;
+    final newY = (y.toDouble() / 25).round() * 25;
+    if (!hasNodeInPosition(newX, newY)) {
+      node.x = newX;
+      node.y = newY;
+      return true;
+    }
+    return false;
+  }
+  
 }

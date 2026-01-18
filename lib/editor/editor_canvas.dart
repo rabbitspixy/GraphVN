@@ -56,7 +56,7 @@ class _EditorCanvasState extends State<EditorCanvas> {
         widget.startTransitionEdit(_hoveredTransition!);
       }
       if (event.timeStamp - _lastClickTime < const Duration(milliseconds: 300)) {
-        _createNewNodeAt(event.position - _offset);
+        _createNewNodeAt(event.localPosition - _offset);
         _lastClickTime = Duration(milliseconds: 0);
         return;
       }
@@ -71,7 +71,7 @@ class _EditorCanvasState extends State<EditorCanvas> {
           final left = node.x.toDouble() - 5 + _offset.dx;
           final top = node.y.toDouble() - 5 + _offset.dy;
           final rect = Rect.fromLTWH(left, top, 10, 10);
-          if (rect.contains(event.position)) {
+          if (rect.contains(event.localPosition)) {
             _linkingNodeId = node.id;
             return;
           }
@@ -81,9 +81,9 @@ class _EditorCanvasState extends State<EditorCanvas> {
           final left = node.x.toDouble() - 5 + _offset.dx;
           final top = node.y.toDouble() - 5 + _offset.dy;
           final rect = Rect.fromLTWH(left, top, 10, 10);
-          if (rect.contains(event.position)) {
+          if (rect.contains(event.localPosition)) {
             _draggingNodeId = node.id;
-            _nodeDragStart = event.position;
+            _nodeDragStart = event.localPosition;
             _nodeOffsetStart = Offset(node.x.toDouble(), node.y.toDouble());
             _nodeDragging = true;
             return;
@@ -93,30 +93,28 @@ class _EditorCanvasState extends State<EditorCanvas> {
     }
     // Handle canvas panning with middle mouse button
     if (_linkingNodeId == null && event.buttons & kMiddleMouseButton != 0) {
-      _dragStart = event.position;
+      _dragStart = event.localPosition;
       _offsetStart = _offset;
       _dragging = true;
     }
   }
 
   void _createNewNodeAt(Offset localPos) {
-    final gridX = ((localPos.dx / 25).round() * 25);
-    final gridY = ((localPos.dy / 25).round() * 25);
-    final newNode = EditorNode()
-      ..x = gridX
-      ..y = gridY;
-    EditorState.nodes[newNode.id] = newNode;
+    final newNode = EditorNode();
+    if (EditorState.trySetNodePosition(newNode, localPos.dx.round(), localPos.dy.round())) {
+      EditorState.nodes[newNode.id] = newNode;
+    }
   }
 
   void _onPointerMove(PointerMoveEvent event) {
     if (_linkingNodeId == null && _nodeDragging && _draggingNodeId != null && _nodeDragStart != null && _nodeOffsetStart != null) {
-      final delta = event.position - _nodeDragStart!;
+      final delta = event.localPosition - _nodeDragStart!;
       setState(() {
-        EditorState.trySetNodePosition(_draggingNodeId!, (_nodeOffsetStart!.dx + delta.dx).round(), (_nodeOffsetStart!.dy + delta.dy).round());
+        EditorState.trySetNodePositionById(_draggingNodeId!, (_nodeOffsetStart!.dx + delta.dx).round(), (_nodeOffsetStart!.dy + delta.dy).round());
         _forcedRepaint++;
       });
     } else if (_dragging && _dragStart != null && _offsetStart != null) {
-      final delta = event.position - _dragStart!;
+      final delta = event.localPosition - _dragStart!;
       setState(() {
         _offset = _offsetStart! + delta;
       });
@@ -130,7 +128,7 @@ class _EditorCanvasState extends State<EditorCanvas> {
         final left = node.x.toDouble() - 5 + _offset.dx;
         final top = node.y.toDouble() - 5 + _offset.dy;
         final rect = Rect.fromLTWH(left, top, 10, 10);
-        if (rect.contains(event.position) && node.id != _linkingNodeId) {
+        if (rect.contains(event.localPosition) && node.id != _linkingNodeId) {
           // Create transition
           EditorState.transitions.add(EditorTransition()
             ..from = _linkingNodeId!
