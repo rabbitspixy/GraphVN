@@ -15,22 +15,73 @@ class _EditorState extends State<Editor> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    return Row(
       children: [
-        Visibility(
-          visible: _page == EditorPage.graph,
-          maintainState: true,
-          child: const EditorGraph(),
+        Expanded(
+          child: Stack(
+            children: [
+              Visibility(
+                visible: _page == EditorPage.graph,
+                maintainState: true,
+                child: const EditorGraph(),
+              ),
+              Visibility(
+                visible: _page == EditorPage.variables,
+                maintainState: true,
+                child: const EditorVariables(),
+              ),
+              Visibility(
+                visible: _page == EditorPage.settings,
+                maintainState: true,
+                child: const EditorSettings(),
+              ),
+            ],
+          ),
         ),
-        Visibility(
-          visible: _page == EditorPage.variables,
-          maintainState: true,
-          child: const EditorVariables(),
-        ),
-        Visibility(
-          visible: _page == EditorPage.settings,
-          maintainState: true,
-          child: const EditorSettings(),
+        Container(
+          width: 50,
+          color: Colors.grey[200],
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: 50,
+                height: 50,
+                child: TextButton(
+                  onPressed: () {
+                    setState(() {
+                      _page = EditorPage.graph;
+                    });
+                  },
+                  child: const Text('📊', style: TextStyle(fontSize: 24)),
+                ),
+              ),
+              SizedBox(
+                width: 50,
+                height: 50,
+                child: TextButton(
+                  onPressed: () {
+                    setState(() {
+                      _page = EditorPage.variables;
+                    });
+                  },
+                  child: const Text('🧪', style: TextStyle(fontSize: 24)),
+                ),
+              ),
+              SizedBox(
+                width: 50,
+                height: 50,
+                child: TextButton(
+                  onPressed: () {
+                    setState(() {
+                      _page = EditorPage.settings;
+                    });
+                  },
+                  child: const Text('⚙️', style: TextStyle(fontSize: 24)),
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     );
