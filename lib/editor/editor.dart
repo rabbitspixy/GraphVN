@@ -17,27 +17,6 @@ class _EditorState extends State<Editor> {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Expanded(
-          child: Stack(
-            children: [
-              Visibility(
-                visible: _page == EditorPage.graph,
-                maintainState: true,
-                child: const EditorGraph(),
-              ),
-              Visibility(
-                visible: _page == EditorPage.variables,
-                maintainState: true,
-                child: const EditorVariables(),
-              ),
-              Visibility(
-                visible: _page == EditorPage.settings,
-                maintainState: true,
-                child: const EditorSettings(),
-              ),
-            ],
-          ),
-        ),
         Container(
           width: 50,
           color: Colors.grey[200],
@@ -79,6 +58,27 @@ class _EditorState extends State<Editor> {
                   },
                   child: const Text('⚙️', style: TextStyle(fontSize: 24)),
                 ),
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          child: Stack(
+            children: [
+              Visibility(
+                visible: _page == EditorPage.graph,
+                maintainState: true,
+                child: const EditorGraph(),
+              ),
+              Visibility(
+                visible: _page == EditorPage.variables,
+                maintainState: true,
+                child: const EditorVariables(),
+              ),
+              Visibility(
+                visible: _page == EditorPage.settings,
+                maintainState: true,
+                child: const EditorSettings(),
               ),
             ],
           ),
