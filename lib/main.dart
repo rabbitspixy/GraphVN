@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_window_close/flutter_window_close.dart';
 import 'package:graph_vn/editor/editor_state.dart';
-import 'package:graph_vn/image_generation/image_generator.dart';
 import 'engine.dart';
 import 'package:flutter/services.dart';
 import 'editor/editor.dart';
@@ -10,7 +9,6 @@ import 'game_player.dart';
 void main() {
   EditorState.load();
   updateNode();
-  ImageGenerator.start();
   initWindowCloseHandler();
   runApp(const RootWidget());
 }
