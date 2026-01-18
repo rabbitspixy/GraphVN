@@ -65,8 +65,8 @@ class _TransitionButtonsState extends State<TransitionButtons> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    return Column(
+      mainAxisSize: MainAxisSize.min,
       children: List.generate(_transitions.length, (index) {
         final transition = _transitions[index];
         return AnimatedOpacity(

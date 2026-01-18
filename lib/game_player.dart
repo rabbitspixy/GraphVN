@@ -13,9 +13,9 @@ class GamePlayer extends StatelessWidget {
       children: [
         const BackgroundImageWidget(),
         Align(
-          alignment: Alignment.bottomCenter,
+          alignment: Alignment.bottomLeft,
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.only(left: 16.0, bottom: 16.0),
             child: ValueListenableBuilder<List<Transition>>(
               valueListenable: transitions,
               builder: (context, transitionList, child) {
