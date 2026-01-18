@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:graph_vn/editor/editor_canvas.dart';
-import 'package:graph_vn/editor/editor_node.dart';
-import 'package:graph_vn/editor/editor_state.dart';
-import 'package:graph_vn/editor/editor_transition.dart';
-import 'package:graph_vn/editor/node_editor.dart';
-import 'package:graph_vn/editor/transition_editor.dart';
+import 'package:graph_vn/editor/editor_graph.dart';
+import 'package:graph_vn/editor/editor_settings.dart';
+import 'package:graph_vn/editor/editor_variables.dart';
 
 class Editor extends StatefulWidget {
   const Editor({super.key});
@@ -14,55 +11,35 @@ class Editor extends StatefulWidget {
 }
 
 class _EditorState extends State<Editor> {
-  void _onStartNodeEdit(EditorNode node) {
-    setState(() {
-      EditorState.selectedNode = node;
-      EditorState.selectedTransition = null;
-    });
-  }
-
-  void _onStartTransitionEdit(EditorTransition transition) {
-    setState(() {
-      EditorState.selectedNode = null;
-      EditorState.selectedTransition = transition;
-    });
-  }
-
-  void _onNodeEdited() {
-    setState(() {});
-  }
-
-  void _onTransitionEdited() {
-    setState(() {});
-  }
+  EditorPage _page = EditorPage.graph;
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     return Stack(
       children: [
-        EditorCanvas(
-          selectedNode: EditorState.selectedNode,
-          selectedTransition: EditorState.selectedTransition,
-          startNodeEdit: _onStartNodeEdit,
-          startTransitionEdit: _onStartTransitionEdit,
+        Visibility(
+          visible: _page == EditorPage.graph,
+          maintainState: true,
+          child: const EditorGraph(),
         ),
-        Positioned(
-          left: size.width * 0.7,
-          top: 0,
-          bottom: 0,
-          child: Container(
-            width: size.width * 0.3,
-            color: Colors.black.withAlpha(20),
-            padding: const EdgeInsets.all(8.0),
-            child: EditorState.selectedNode != null
-                ? NodeEditor(node: EditorState.selectedNode!, onChange: _onNodeEdited,)
-                : EditorState.selectedTransition != null
-                    ? TransitionEditor(transition: EditorState.selectedTransition!, onChange: _onTransitionEdited,)
-                    : const SizedBox.shrink(),
-          ),
+        Visibility(
+          visible: _page == EditorPage.variables,
+          maintainState: true,
+          child: const EditorVariables(),
+        ),
+        Visibility(
+          visible: _page == EditorPage.settings,
+          maintainState: true,
+          child: const EditorSettings(),
         ),
       ],
     );
   }
+}
+
+
+enum EditorPage {
+  graph,
+  variables,
+  settings,
 }
