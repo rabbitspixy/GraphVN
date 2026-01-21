@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:graph_vn/editor/editor_graph.dart';
 import 'package:graph_vn/editor/editor_settings.dart';
-import 'package:graph_vn/editor/editor_variables.dart';
+import 'package:graph_vn/editor/editor_variables_page.dart';
 
 class Editor extends StatefulWidget {
   const Editor({super.key});
@@ -73,7 +73,7 @@ class _EditorState extends State<Editor> {
               Visibility(
                 visible: _page == EditorPage.variables,
                 maintainState: true,
-                child: const EditorVariables(),
+                child: const EditorVariablesPage(),
               ),
               Visibility(
                 visible: _page == EditorPage.settings,

@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:graph_vn/editor/editor_constants.dart';
 import 'package:graph_vn/editor/editor_node.dart';
 import 'package:graph_vn/editor/editor_transition.dart';
+import 'package:graph_vn/editor/struct.dart';
 import 'dart:ui';
 
 import 'package:xml/xml.dart';
@@ -16,6 +17,7 @@ class EditorState {
   static final ValueNotifier<List<EditorTransition>> transitionsNotifier = ValueNotifier<List<EditorTransition>>([]);
   static EditorNode? selectedNode;
   static EditorTransition? selectedTransition;
+  static final List<Struct> structs = List.empty();
   static Offset? storedOffset;
 
   static String projectDirName = "test";
