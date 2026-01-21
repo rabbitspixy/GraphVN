@@ -26,7 +26,7 @@ class _EditorVariablesPageState extends State<EditorVariablesPage> {
                   itemBuilder: (context, index) {
                     final struct = EditorState.structs[index];
                     return ListTile(
-                      title: Text(struct.name.isEmpty ? 'Unnamed' : struct.name),
+                      title: Text(struct.name),
                       selected: _selectedStructIndex == index,
                       onTap: () {
                         setState(() {
@@ -74,7 +74,10 @@ class _EditorVariablesPageState extends State<EditorVariablesPage> {
                   label: Text('Add Struct'),
                   onPressed: () {
                     setState(() {
-                      EditorState.structs.add(Struct());
+                      EditorState.structs.add(
+                        Struct()
+                          ..name="Структура ${EditorState.structs.length + 1}"
+                      );
                     });
                   },
                 ),
