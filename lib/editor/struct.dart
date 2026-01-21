@@ -10,6 +10,6 @@ class Struct {
 class Variable {
   String id = Uuid().v4();
   String name = "";
-  Rational startValue = Rational.zero;
+  String startValue = '0';
   Rational value = Rational.zero;
 }

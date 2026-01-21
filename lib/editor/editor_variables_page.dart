@@ -95,7 +95,7 @@ class _EditorVariablesPageState extends State<EditorVariablesPage> {
                         itemBuilder: (context, varIndex) {
                           final variable = EditorState.structs[_selectedStructIndex!].variables[varIndex];
                           final nameController = TextEditingController(text: variable.name);
-                          final valueController = TextEditingController(text: variable.startValue.toString());
+                          final valueController = TextEditingController(text: variable.startValue);
                           return Row(
                             children: [
                               Expanded(
@@ -114,9 +114,7 @@ class _EditorVariablesPageState extends State<EditorVariablesPage> {
                                   controller: valueController,
                                   decoration: InputDecoration(labelText: 'Start Value'),
                                   onChanged: (val) {
-                                    try {
-                                      variable.startValue = Rational.parse(val);
-                                    } catch (_) {}
+                                    variable.startValue = val;
                                   },
                                 ),
                               ),
