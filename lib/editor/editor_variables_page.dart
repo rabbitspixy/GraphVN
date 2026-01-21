@@ -24,12 +24,13 @@ class _EditorVariablesPageState extends State<EditorVariablesPage> {
                 trailing: IconButton(
                   icon: Icon(Icons.edit),
                   onPressed: () async {
+                    final controller = TextEditingController(text: struct.name);
                     final newName = await showDialog<String>(
                       context: context,
                       builder: (context) => AlertDialog(
                         title: Text('Edit Struct Name'),
                         content: TextField(
-                          controller: TextEditingController(text: struct.name),
+                          controller: controller,
                           decoration: InputDecoration(labelText: 'Name'),
                         ),
                         actions: [
@@ -38,7 +39,7 @@ class _EditorVariablesPageState extends State<EditorVariablesPage> {
                               child: Text('Cancel')),
                           TextButton(
                               onPressed: () =>
-                                  Navigator.pop(context, struct.name),
+                                  Navigator.pop(context, controller.text),
                               child: Text('Save')),
                         ],
                       ),
