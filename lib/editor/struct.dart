@@ -7,9 +7,12 @@ class Struct {
   List<Variable> variables = List.empty(growable: true);
 }
 
-class Variable {
+abstract class Variable {
   String id = Uuid().v4();
   String name = "";
+}
+
+class NumberVariable extends Variable {
   String startValue = '0';
   Rational value = Rational.zero;
 }

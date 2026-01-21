@@ -97,7 +97,12 @@ class _EditorVariablesPageState extends State<EditorVariablesPage> {
                         itemBuilder: (context, varIndex) {
                           final variable = EditorState.structs[_selectedStructIndex!].variables[varIndex];
                           final nameController = TextEditingController(text: variable.name);
-                          final valueController = TextEditingController(text: variable.startValue);
+                          TextEditingController valueController;
+                          if (variable is NumberVariable) {
+                            valueController = TextEditingController(text: variable.startValue);
+                          } else {
+                            valueController = TextEditingController(text: '');
+                          }
                           return Row(
                             children: [
                               Expanded(
@@ -116,7 +121,9 @@ class _EditorVariablesPageState extends State<EditorVariablesPage> {
                                   controller: valueController,
                                   decoration: InputDecoration(labelText: 'Start Value'),
                                   onChanged: (val) {
-                                    variable.startValue = val;
+                                    if (variable is NumberVariable) {
+                                      variable.startValue = val;
+                                    }
                                   },
                                 ),
                               ),
@@ -140,7 +147,7 @@ class _EditorVariablesPageState extends State<EditorVariablesPage> {
                         label: Text('Add Variable'),
                         onPressed: () {
                           setState(() {
-                            EditorState.structs[_selectedStructIndex!].variables.add(Variable());
+                            EditorState.structs[_selectedStructIndex!].variables.add(NumberVariable());
                           });
                         },
                       ),
