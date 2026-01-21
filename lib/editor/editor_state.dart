@@ -17,7 +17,7 @@ class EditorState {
   static final ValueNotifier<List<EditorTransition>> transitionsNotifier = ValueNotifier<List<EditorTransition>>([]);
   static EditorNode? selectedNode;
   static EditorTransition? selectedTransition;
-  static final List<Struct> structs = List.empty();
+  static final List<Struct> structs = List.empty(growable: true);
   static Offset? storedOffset;
 
   static String projectDirName = "test";

@@ -4,7 +4,7 @@ import 'package:uuid/uuid.dart';
 class Struct {
   String id = Uuid().v4();
   String name = "";
-  List<Variable> variables = List.empty();
+  List<Variable> variables = List.empty(growable: true);
 }
 
 class Variable {

@@ -45,6 +45,7 @@ class _EditorVariablesPageState extends State<EditorVariablesPage> {
                     );
                     if (newName != null) {
                       setState(() {
+                        print("newName = ${newName}");
                         struct.name = newName;
                       });
                     }
