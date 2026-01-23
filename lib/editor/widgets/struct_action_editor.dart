@@ -18,8 +18,6 @@ import 'package:graph_vn/editor/struct_actions.dart';
 /// }
 /// ```
 Future<StructAction?> editStructAction(BuildContext context, StructAction action) async {
-  // Keep a copy of the original action to allow cancellation.
-  StructAction original = action;
   // Current action being edited; may change type.
   StructAction current = action;
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:graph_vn/editor/struct.dart';
 import 'package:graph_vn/editor/struct_actions.dart';
+import 'package:graph_vn/editor/widgets/struct_action_editor.dart';
 
 class StructEditor extends StatefulWidget {
   final Struct struct;
@@ -136,7 +137,13 @@ class _StructEditorState extends State<StructEditor> {
                           return Padding(
                             padding: EdgeInsets.symmetric(vertical: 2),
                             child: ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () async {
+                                final editResult = await editStructAction(context, action);
+                                if (editResult != null) {
+                                  procedure.actions[procedure.actions.indexOf(action)] = editResult;
+                                  setState(() {});
+                                }
+                              },
                               child: Text(action.actionText()),
                             ),
                           );
