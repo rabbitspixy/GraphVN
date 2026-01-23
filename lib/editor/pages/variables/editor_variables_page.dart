@@ -234,6 +234,18 @@ class _EditorVariablesPageState extends State<EditorVariablesPage> {
                         },
                       ),
                     ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ElevatedButton.icon(
+                        icon: Icon(Icons.add),
+                        label: Text('Add Procedure'),
+                        onPressed: () {
+                          setState(() {
+                            EditorState.structs[_selectedStructIndex!].procedures.add(StructProcedure());
+                          });
+                        },
+                      ),
+                    ),
                   ],
                 ),
         ),
