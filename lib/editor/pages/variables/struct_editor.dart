@@ -149,7 +149,7 @@ class _StructEditorState extends State<StructEditor> {
                           label: Text('Add Action'),
                           onPressed: () {
                             setState(() {
-                              procedure.actions.add(VariableSetNumberValue());
+                              procedure.actions.add(DoNothing());
                             });
                           },
                         ),
