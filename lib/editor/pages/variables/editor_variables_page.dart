@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'editor_state.dart';
-import 'struct.dart';
-import 'struct_actions.dart';
+import '../../editor_state.dart';
+import '../../struct.dart';
+import '../../struct_actions.dart';
 
 class EditorVariablesPage extends StatefulWidget {
   const EditorVariablesPage({super.key});

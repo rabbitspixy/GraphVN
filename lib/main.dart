@@ -3,7 +3,7 @@ import 'package:flutter_window_close/flutter_window_close.dart';
 import 'package:graph_vn/editor/editor_state.dart';
 import 'engine.dart';
 import 'package:flutter/services.dart';
-import 'editor/editor.dart';
+import 'editor/widgets/editor.dart';
 import 'game_player.dart';
 
 void main() {

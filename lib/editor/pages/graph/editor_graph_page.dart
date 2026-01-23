@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:graph_vn/editor/editor_canvas.dart';
+import 'package:graph_vn/editor/pages/graph/editor_canvas.dart';
 import 'package:graph_vn/editor/editor_node.dart';
 import 'package:graph_vn/editor/editor_state.dart';
 import 'package:graph_vn/editor/editor_transition.dart';
-import 'package:graph_vn/editor/node_editor.dart';
-import 'package:graph_vn/editor/transition_editor.dart';
+import 'package:graph_vn/editor/pages/graph/node_editor.dart';
+import 'package:graph_vn/editor/pages/graph/transition_editor.dart';
 
-class EditorGraph extends StatefulWidget {
-  const EditorGraph({super.key});
+class EditorGraphPage extends StatefulWidget {
+  const EditorGraphPage({super.key});
 
   @override
-  State<EditorGraph> createState() => _EditorGraphState();
+  State<EditorGraphPage> createState() => _EditorGraphPageState();
 }
 
-class _EditorGraphState extends State<EditorGraph> {
+class _EditorGraphPageState extends State<EditorGraphPage> {
   void _onStartNodeEdit(EditorNode node) {
     setState(() {
       EditorState.selectedNode = node;

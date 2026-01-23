@@ -5,10 +5,10 @@ import 'package:graph_vn/editor/editor_constants.dart';
 import 'package:graph_vn/editor/editor_node.dart';
 import 'package:graph_vn/editor/editor_state.dart';
 import 'package:graph_vn/editor/editor_transition.dart';
-import 'package:graph_vn/editor/node_painter.dart';
-import 'package:graph_vn/editor/node_tooltip.dart';
-import 'package:graph_vn/editor/transition_painter.dart';
-import 'package:graph_vn/editor/transition_tooltip.dart';
+import 'package:graph_vn/editor/pages/graph/node_painter.dart';
+import 'package:graph_vn/editor/pages/graph/node_tooltip.dart';
+import 'package:graph_vn/editor/pages/graph/transition_painter.dart';
+import 'package:graph_vn/editor/pages/graph/transition_tooltip.dart';
 
 class EditorCanvas extends StatefulWidget {
   final EditorNode? selectedNode;
