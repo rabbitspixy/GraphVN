@@ -16,7 +16,10 @@ Future<String?> showRenameDialog(BuildContext context, String title, String curr
           child: Text('Cancel'),
         ),
         TextButton(
-          onPressed: () => Navigator.pop(context, controller.text),
+          onPressed: () {
+            if (controller.text.isEmpty) return;
+            Navigator.pop(context, controller.text);
+          },
           child: Text('Save'),
         ),
       ],
