@@ -21,22 +21,8 @@ Future<StructAction?> editStructAction(BuildContext context, StructAction action
   // Current action being edited; may change type.
   StructAction current = action;
 
-  // Helper to create a new instance based on type.
-  StructAction _createInstance(String type) {
-    switch (type) {
-      case 'DoNothing':
-        return DoNothing();
-      case 'VariableSetNumberValue':
-        return VariableSetNumberValue();
-      case 'IncreaseNumberValue':
-        return IncreaseNumberValue();
-      default:
-        return DoNothing();
-    }
-  }
-
   // Determine initial type string.
-  String currentType = current.runtimeType.toString();
+  StructActionType currentType = StructActionType.values.singleWhere((item) => item.type == action.runtimeType);
 
   final result = await showDialog<StructAction>(
     context: context,
@@ -44,18 +30,16 @@ Future<StructAction?> editStructAction(BuildContext context, StructAction action
       return StatefulBuilder(
         builder: (context, setState) {
           return AlertDialog(
-            title: DropdownButton<String>(
+            title: DropdownButton<StructActionType>(
               value: currentType,
-              items: const [
-                DropdownMenuItem(value: 'DoNothing', child: Text('Do Nothing')),
-                DropdownMenuItem(value: 'VariableSetNumberValue', child: Text('Set Number Value')),
-                DropdownMenuItem(value: 'IncreaseNumberValue', child: Text('Increase Number Value')),
-              ],
-              onChanged: (String? newType) {
+              items: StructActionType.values.map((item) {
+                return DropdownMenuItem(value: item, child: Text(item.title));
+              }).toList(),
+              onChanged: (StructActionType? newType) {
                 if (newType == null || newType == currentType) return;
                 setState(() {
                   currentType = newType;
-                  current = _createInstance(newType);
+                  current = newType.create();
                 });
               },
             ),
