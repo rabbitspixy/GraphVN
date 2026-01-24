@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:graph_vn/editor/modals/rename_dialog.dart';
 import 'package:graph_vn/editor/pages/variables/struct_editor.dart';
 import '../../editor_state.dart';
 import '../../variables.dart';
@@ -37,26 +38,7 @@ class _EditorVariablesPageState extends State<EditorVariablesPage> {
                       trailing: IconButton(
                         icon: Icon(Icons.edit),
                         onPressed: () async {
-                          final controller = TextEditingController(text: struct.name);
-                          final newName = await showDialog<String>(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: Text('Edit Struct Name'),
-                              content: TextField(
-                                controller: controller,
-                                decoration: InputDecoration(labelText: 'Name'),
-                              ),
-                              actions: [
-                                TextButton(
-                                    onPressed: () => Navigator.pop(context),
-                                    child: Text('Cancel')),
-                                TextButton(
-                                    onPressed: () =>
-                                        Navigator.pop(context, controller.text),
-                                    child: Text('Save')),
-                              ],
-                            ),
-                          );
+                          final newName = await showRenameDialog(context, 'Edit Struct Name', struct.name);
                           if (newName != null) {
                             setState(() {
                               struct.name = newName;

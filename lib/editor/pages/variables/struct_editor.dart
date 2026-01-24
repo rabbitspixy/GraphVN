@@ -118,26 +118,7 @@ class _StructEditorState extends State<StructEditor> {
                           IconButton(
                             icon: Icon(Icons.edit),
                             onPressed: () async {
-                              final controller = TextEditingController(text: procedure.name);
-                              final newName = await showDialog<String>(
-                                context: context,
-                                builder: (context) => AlertDialog(
-                                  title: Text('Edit Procedure Name'),
-                                  content: TextField(
-                                    controller: controller,
-                                    decoration: InputDecoration(labelText: 'Name'),
-                                  ),
-                                  actions: [
-                                    TextButton(
-                                        onPressed: () => Navigator.pop(context),
-                                        child: Text('Cancel')),
-                                    TextButton(
-                                        onPressed: () =>
-                                            Navigator.pop(context, controller.text),
-                                        child: Text('Save')),
-                                  ],
-                                ),
-                              );
+                              final newName = await showRenameDialog(context, 'Edit Procedure Name', procedure.name);
                               if (newName != null) {
                                 setState(() {
                                   procedure.name = newName;
