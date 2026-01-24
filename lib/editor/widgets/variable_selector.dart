@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:graph_vn/editor/struct.dart';
+import 'package:graph_vn/editor/editor_state.dart';
 
 /// Shows a modal dialog that lists all [Variable]s in [struct] and
 /// returns the selected one. If the user cancels, returns null.
@@ -15,22 +16,23 @@ Future<Variable?> showVariableSelector(BuildContext? context) async {
   if (context == null) {
     return null;
   }
-  return showDialog<Variable>(
+  // First, let user pick a struct
+  final struct = await showDialog<Struct>(
     context: context,
     builder: (BuildContext ctx) {
       return AlertDialog(
-        title: const Text('Select Variable'),
+        title: const Text('Select Struct'),
         content: SizedBox(
           width: double.maxFinite,
           child: ListView.builder(
             shrinkWrap: true,
-            itemCount: struct.variables.length,
+            itemCount: EditorState.structs.length,
             itemBuilder: (BuildContext ctx, int index) {
-              final variable = struct.variables[index];
+              final s = EditorState.structs[index];
               return ListTile(
-                title: Text(variable.name),
-                subtitle: Text(variable.runtimeType.toString()),
-                onTap: () => Navigator.of(ctx).pop(variable),
+                title: Text(s.name),
+                subtitle: Text(s.runtimeType.toString()),
+                onTap: () => Navigator.of(ctx).pop(s),
               );
             },
           ),
@@ -44,4 +46,38 @@ Future<Variable?> showVariableSelector(BuildContext? context) async {
       );
     },
   );
+  if (struct == null) {
+    return null;
+  }
+  // Then pick variable
+  final variable = await showDialog<Variable>(
+    context: context,
+    builder: (BuildContext ctx) {
+      return AlertDialog(
+        title: const Text('Select Variable'),
+        content: SizedBox(
+          width: double.maxFinite,
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: struct.variables.length,
+            itemBuilder: (BuildContext ctx, int index) {
+              final v = struct.variables[index];
+              return ListTile(
+                title: Text(v.name),
+                subtitle: Text(v.runtimeType.toString()),
+                onTap: () => Navigator.of(ctx).pop(v),
+              );
+            },
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(null),
+            child: const Text('Cancel'),
+          ),
+        ],
+      );
+    },
+  );
+  return variable;
 }
