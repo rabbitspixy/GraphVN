@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:graph_vn/editor/pages/variables/add_variable_dialog.dart';
 import 'package:graph_vn/editor/variables.dart';
 import 'package:graph_vn/editor/actions/do_nothing.dart';
 import 'package:graph_vn/editor/actions/struct_action_editor.dart';
@@ -44,18 +45,20 @@ class _StructEditorState extends State<StructEditor> {
                       },
                     ),
                   ),
-                  Expanded(
-                    flex: 3,
-                    child: TextField(
-                      controller: valueController,
-                      decoration: InputDecoration(labelText: 'Start Value'),
-                      onChanged: (val) {
-                        if (variable is NumberVariable) {
-                          variable.startValue = val;
-                        }
-                      },
+                  switch (variable) {
+                    NumberVariable _ => Expanded(
+                      flex: 3,
+                      child: TextField(
+                        controller: valueController,
+                        decoration: InputDecoration(labelText: 'Start Value'),
+                        onChanged: (newStartValue) {
+                          variable.startValue = newStartValue;
+                        },
+                      ),
                     ),
-                  ),
+                    NamedNumberVariable _ => Text(variable.startValue),
+                    _ => Text('Not implemented')
+                  },
                   IconButton(
                     icon: Icon(Icons.delete, color: Colors.red),
                     onPressed: () {
@@ -74,10 +77,13 @@ class _StructEditorState extends State<StructEditor> {
           child: ElevatedButton.icon(
             icon: Icon(Icons.add),
             label: Text('Add Variable'),
-            onPressed: () {
-              setState(() {
-                widget.struct.variables.add(NumberVariable());
-              });
+            onPressed: () async {
+              final newVariable = await showAddVariableDialog(context);
+              if (newVariable != null) {
+                setState(() {
+                  widget.struct.variables.add(newVariable);
+                });
+              }
             },
           ),
         ),
