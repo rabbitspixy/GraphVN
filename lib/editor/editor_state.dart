@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:graph_vn/editor/editor_constants.dart';
 import 'package:graph_vn/editor/editor_node.dart';
 import 'package:graph_vn/editor/editor_transition.dart';
-import 'package:graph_vn/editor/struct.dart';
+import 'package:graph_vn/editor/variables.dart';
 import 'dart:ui';
 
 import 'package:xml/xml.dart';

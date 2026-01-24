@@ -5,7 +5,7 @@ import 'package:graph_vn/editor/number_expression/constant_number_expression.dar
 import 'package:graph_vn/editor/number_expression/number_expression.dart';
 import 'package:graph_vn/editor/number_expression/number_expression_editor.dart';
 import 'package:graph_vn/editor/actions/base.dart';
-import 'package:graph_vn/editor/widgets/variable_selector.dart';
+import 'package:graph_vn/editor/modals/variable_selector.dart';
 
 class IncreaseNumberValue extends BaseAction {
   String variableId = "";
