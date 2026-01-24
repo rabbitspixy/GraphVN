@@ -16,11 +16,13 @@ class Struct {
 final namedNumbersTypes = [
   NamedNumbersType()
     ..id = 'a16100bc-5afb-4e8c-b2c1-eb14e523e0d0'
+    ..name = 'Boolean'
     ..list = Map.fromEntries([MapEntry('False', Rational.zero), MapEntry('True', Rational.one)])
 ];
 
 class NamedNumbersType {
   String id = Uuid().v4();
+  String name = '';
   Map<String, Rational> list = Map.identity();
 }
 
