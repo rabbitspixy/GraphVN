@@ -11,13 +11,9 @@ class SetNumberValue extends BaseAction {
   String variableId = "";
   NumberExpression numberExpression = ConstantNumberExpression();
 
-  String variableName() {
-    return EditorState.variableById(variableId)?.name ?? 'variable';
-  }
-
   @override
   String actionText() {
-    return "Set ${variableName()} to ${numberExpression.asString()}";
+    return "Set ${EditorState.variableAsString(variableId)} to ${numberExpression.asString()}";
   }
 }
 
@@ -35,7 +31,7 @@ class _SetNumberValueEditorState extends State<SetNumberValueEditor> {
     return EditorRichText([
       ETextSpan(text: 'Set'),
       ETextSpan(
-        text: widget.action.variableName(), 
+        text: EditorState.variableAsString(widget.action.variableId), 
         tap: () async { 
           widget.action.variableId = (await showVariableSelector(context))?.id ?? "";
           setState(() {});

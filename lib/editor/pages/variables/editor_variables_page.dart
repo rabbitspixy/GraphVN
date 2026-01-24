@@ -24,8 +24,25 @@ class _EditorVariablesPageState extends State<EditorVariablesPage> {
             children: [
               Expanded(
                 child: ListView.builder(
-                  itemCount: EditorState.structs.length,
+                  itemCount: EditorState.structs.length + 1,
                   itemBuilder: (context, index) {
+                    if (index == EditorState.structs.length) {
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: OutlinedButton.icon(
+                          icon: Icon(Icons.add),
+                          label: Text('Struct'),
+                          onPressed: () {
+                            setState(() {
+                              EditorState.structs.add(
+                                Struct()
+                                  ..name="Структура ${EditorState.structs.length + 1}"
+                              );
+                            });
+                          },
+                        ),
+                      );
+                    }
                     final struct = EditorState.structs[index];
                     return ListTile(
                       title: Text(struct.name),
@@ -47,21 +64,6 @@ class _EditorVariablesPageState extends State<EditorVariablesPage> {
                         },
                       ),
                     );
-                  },
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ElevatedButton.icon(
-                  icon: Icon(Icons.add),
-                  label: Text('Add Struct'),
-                  onPressed: () {
-                    setState(() {
-                      EditorState.structs.add(
-                        Struct()
-                          ..name="Структура ${EditorState.structs.length + 1}"
-                      );
-                    });
                   },
                 ),
               ),

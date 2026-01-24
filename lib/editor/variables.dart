@@ -29,11 +29,24 @@ class NamedNumbersType {
 abstract class Variable {
   String id = Uuid().v4();
   String name = "";
+
+  String initialValueAsString();
+  String currentValueAsString();
 }
 
 class NumberVariable extends Variable {
-  String startValue = '0';
+  Rational startValue = Rational.zero;
   Rational value = Rational.zero;
+
+  @override
+  String initialValueAsString() {
+    return startValue.toString();
+  }
+
+  @override
+  String currentValueAsString() {
+    return value.toString();
+  }
 }
 
 class NamedNumberVariable extends Variable {
@@ -42,10 +55,20 @@ class NamedNumberVariable extends Variable {
   String value = '';
 
   NamedNumberVariable({required this.typeId});
+
+  @override
+  String initialValueAsString() {
+    return startValue;
+  }
+
+  @override
+  String currentValueAsString() {
+    return value;
+  }
 }
 
 class StructProcedure {
   String id = Uuid().v4();
-  String name = "";
+  String name = "Unnamed procedure";
   List<BaseAction> actions = List.empty(growable: true);
 }

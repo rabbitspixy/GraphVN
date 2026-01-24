@@ -11,13 +11,9 @@ class IncreaseNumberValue extends BaseAction {
   String variableId = "";
   NumberExpression numberExpression = ConstantNumberExpression();
 
-  String variableName() {
-    return EditorState.variableById(variableId)?.name ?? 'variable';
-  }
-
   @override
   String actionText() {
-    return "Increase ${variableName()} by ${numberExpression.asString()}";
+    return "Increase ${EditorState.variableAsString(variableId)} by ${numberExpression.asString()}";
   }
 }
 
@@ -35,7 +31,7 @@ class _IncreaseNumberValueEditorState extends State<IncreaseNumberValueEditor> {
     return EditorRichText([
       ETextSpan(text: 'Increase'),
       ETextSpan(
-        text: widget.action.variableName(), 
+        text: EditorState.variableAsString(widget.action.variableId), 
         tap: () async { 
           final selectedVariable = await showVariableSelector(context);
           if (selectedVariable != null) {

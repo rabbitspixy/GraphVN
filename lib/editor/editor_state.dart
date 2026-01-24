@@ -125,5 +125,17 @@ class EditorState {
   static Variable? variableById(String variableId) {
     return EditorState.structByVariableId(variableId)?.variableById(variableId);
   }
+
+  static String variableAsString(String variableId) {
+    final struct = EditorState.structByVariableId(variableId);
+    if (struct == null) {
+      return "variable";
+    }
+    final variable = struct.variableById(variableId);
+    if (variable == null) {
+      return "variable";
+    }
+    return "${struct.name}->${variable.name}";
+  }
   
 }
