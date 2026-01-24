@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:uuid/uuid.dart';
-import '../../struct.dart';
+import 'package:graph_vn/editor/struct.dart';
 
 /// Shows a modal dialog that lists all [Variable]s in [struct] and
 /// returns the selected one. If the user cancels, returns null.
@@ -12,7 +11,13 @@ import '../../struct.dart';
 ///   // do something with chosen
 /// }
 /// ```
-Future<Variable?> showVariableSelector(BuildContext context, Struct struct) async {
+Future<Variable?> showVariableSelector(BuildContext? context, Struct? struct) async {
+  if (context == null) {
+    return null;
+  }
+  if (struct == null) {
+    return null;
+  }
   return showDialog<Variable>(
     context: context,
     builder: (BuildContext ctx) {

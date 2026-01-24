@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:graph_vn/editor/struct_actions.dart';
+import 'package:graph_vn/editor/struct_actions/base.dart';
+import 'package:graph_vn/editor/struct_actions/do_nothing.dart';
+import 'package:graph_vn/editor/struct_actions/increase_number_value.dart';
+import 'package:graph_vn/editor/struct_actions/set_number_value.dart';
 
 /// Opens a modal dialog to edit a [StructAction].
 /// The dialog contains:
@@ -39,14 +42,19 @@ Future<StructAction?> editStructAction(BuildContext context, StructAction action
                 if (newType == null || newType == currentType) return;
                 setState(() {
                   currentType = newType;
-                  current = newType.create();
+                  current = newType.create(current.struct);
                 });
               },
             ),
             content: SizedBox(
               width: 400,
               height: 300,
-              child: current.edit(),
+              child: switch (current) {
+                DoNothing action => DoNothingEditor(action: action),
+                IncreaseNumberValue action => IncreaseNumberValueEditor(action: action),
+                SetNumberValue action => SetNumberValueEditor(action: action),
+                _ => Placeholder()
+              },
             ),
             actions: [
               TextButton(

@@ -113,5 +113,9 @@ class EditorState {
     }
     return false;
   }
+
+  static Struct? structById(String id) {
+    return structs.where((s) => s.id == id).firstOrNull;
+  }
   
 }

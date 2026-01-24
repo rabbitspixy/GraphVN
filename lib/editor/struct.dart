@@ -1,4 +1,4 @@
-import 'package:graph_vn/editor/struct_actions.dart';
+import 'package:graph_vn/editor/struct_actions/base.dart';
 import 'package:rational/rational.dart';
 import 'package:uuid/uuid.dart';
 
@@ -7,6 +7,10 @@ class Struct {
   String name = "";
   List<Variable> variables = List.empty(growable: true);
   List<StructProcedure> procedures = List.empty(growable: true);
+
+  Variable? variableById(String id) {
+    return variables.where((v) => v.id == id).firstOrNull;
+  }
 }
 
 abstract class Variable {
