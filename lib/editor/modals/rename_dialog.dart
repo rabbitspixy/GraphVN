@@ -4,25 +4,25 @@ Future<String?> showRenameDialog(BuildContext context, String title, String curr
   final controller = TextEditingController(text: currentName);
   return await showDialog<String>(
     context: context,
-    builder: (context) => AlertDialog(
-      title: Text(title),
-      content: TextField(
-        controller: controller,
-        decoration: InputDecoration(labelText: 'Name'),
+    builder: (context) => StatefulBuilder(
+      builder: (context, setState) => AlertDialog(
+        title: Text(title),
+        content: TextField(
+          controller: controller,
+          decoration: InputDecoration(labelText: 'Name'),
+          onChanged: (_) => setState(() {}),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: controller.text.isEmpty ? null : () => Navigator.pop(context, controller.text),
+            child: Text('Save'),
+          ),
+        ],
       ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: Text('Cancel'),
-        ),
-        TextButton(
-          onPressed: () {
-            if (controller.text.isEmpty) return;
-            Navigator.pop(context, controller.text);
-          },
-          child: Text('Save'),
-        ),
-      ],
     ),
   );
 }
