@@ -1,5 +1,4 @@
-import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
+import 'package:graph_vn/editor/editor_rich_text.dart';
 import 'package:rational/rational.dart';
 import 'package:uuid/uuid.dart';
 
@@ -7,7 +6,7 @@ abstract class StructAction {
   String id = Uuid().v4();
   String structId = "";
 
-  Widget edit();
+  EditorRichText edit();
 
   String actionText();
 }
@@ -15,38 +14,35 @@ abstract class StructAction {
 class DoNothing extends StructAction {
 
   @override
-  Widget edit() {
-    return Text("Not implemented");
+  edit() {
+    return EditorRichText([
+      ETextSpan(text: 'Do nothing')
+    ]);
   }
 
   @override
   String actionText() {
-    return "Ничего не делать";
+    return edit().toSimpleText();
   }
 }
 
-class VariableSetNumberValue extends StructAction {
+class SetNumberValue extends StructAction {
   String variableId = "";
   Rational newValue = Rational.zero;
 
   @override
-  Widget edit() {
-    return RichText(
-      text: TextSpan(
-        style: TextStyle(color: Colors.black),
-        children: [
-          TextSpan(text: 'Set '),
-          TextSpan(text: 'variable', style: TextStyle(decoration: TextDecoration.underline), recognizer: TapGestureRecognizer()..onTap = () { print('clicked'); }),
-          TextSpan(text: ' to '),
-          TextSpan(text: '0', style: TextStyle(decoration: TextDecoration.underline), recognizer: TapGestureRecognizer()..onTap = () { print('clicked'); })
-        ]
-      ),
-    );
+  edit() {
+    return EditorRichText([
+      ETextSpan(text: 'Set'),
+      ETextSpan(text: 'variable', tap: () {}),
+      ETextSpan(text: 'to'),
+      ETextSpan(text: '0', tap: () {})
+    ]);
   }
 
   @override
   String actionText() {
-    return "Установить значение";
+    return edit().toSimpleText();
   }
 }
 
@@ -55,20 +51,25 @@ class IncreaseNumberValue extends StructAction {
   Rational increaseValue = Rational.zero;
 
   @override
-  Widget edit() {
-    return Text("Not implemented");
+  edit() {
+    return EditorRichText([
+      ETextSpan(text: 'Increase'),
+      ETextSpan(text: 'variable', tap: () {}),
+      ETextSpan(text: 'by'),
+      ETextSpan(text: '0', tap: () {})
+    ]);
   }
 
   @override
   String actionText() {
-    return "Увеличить значение";
+    return edit().toSimpleText();
   }
 }
 
 enum StructActionType {
-  doNothing(type: DoNothing, create: DoNothing.new, title: 'DoNothing'),
-  setNumberValue(type: VariableSetNumberValue, create: VariableSetNumberValue.new, title: 'VariableSetNumberValue'),
-  increaseNumberValue(type: IncreaseNumberValue, create: IncreaseNumberValue.new, title: 'IncreaseNumberValue'),
+  doNothing(type: DoNothing, create: DoNothing.new, title: 'Do nothing'),
+  setNumberValue(type: SetNumberValue, create: SetNumberValue.new, title: 'Set number value'),
+  increaseNumberValue(type: IncreaseNumberValue, create: IncreaseNumberValue.new, title: 'Increase number value'),
   ;
 
   final Type type;
