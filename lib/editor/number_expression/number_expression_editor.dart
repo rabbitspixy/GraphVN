@@ -25,7 +25,6 @@ Future<NumberExpression?> editNumberExpression(BuildContext context, NumberExpre
                 });
               },
             ),
-            bool isValid = true;
             content: SizedBox(
               width: 400,
               height: 300,
