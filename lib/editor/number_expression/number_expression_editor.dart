@@ -11,6 +11,7 @@ Future<NumberExpression?> editNumberExpression(BuildContext context, NumberExpre
     builder: (context) {
       return StatefulBuilder(
         builder: (context, setState) {
+          bool isValid = true;
           return AlertDialog(
             title: DropdownButton<NumberExpressionType>(
               value: currentType,
