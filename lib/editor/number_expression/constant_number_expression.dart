@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:graph_vn/editor/number_expression/number_expression.dart';
+import 'package:graph_vn/editor/rational_util.dart';
 import 'package:rational/rational.dart';
 
 class ConstantNumberExpression extends NumberExpression {
 
   Rational value = Rational.zero;
+  bool _isValid = true;
 
   @override
   Rational evaluate() {
@@ -15,15 +17,18 @@ class ConstantNumberExpression extends NumberExpression {
   String asString() {
     return value.toString();
   }
+
+  @override
+  bool isValid() {
+    return _isValid;
+  }
 }
 
 class ConstantNumberExpressionEditor extends StatefulWidget {
   final ConstantNumberExpression expression;
-  final ValueChanged<bool> onValidityChanged;
   const ConstantNumberExpressionEditor({
     super.key,
     required this.expression,
-    required this.onValidityChanged,
   });
 
   @override
@@ -32,12 +37,15 @@ class ConstantNumberExpressionEditor extends StatefulWidget {
 
 class _ConstantNumberExpressionEditorState extends State<ConstantNumberExpressionEditor> {
   final TextEditingController _controller = TextEditingController();
-  bool _isValid = true;
 
   @override
   void initState() {
     super.initState();
     _controller.text = widget.expression.value.toString();
+  }
+
+  bool isValid() {
+    return isValidNumber(_controller.text);
   }
 
   @override
@@ -46,23 +54,16 @@ class _ConstantNumberExpressionEditorState extends State<ConstantNumberExpressio
       controller: _controller,
       decoration: InputDecoration(
         labelText: 'Number',
-        errorText: _isValid ? null : 'Invalid number',
+        errorText: isValidNumber(_controller.text) ? null : 'Invalid number',
       ),
       keyboardType: TextInputType.numberWithOptions(decimal: true, signed: true),
       onChanged: (value) {
-        try {
-          final parsed = Rational.parse(value);
+        final parsed = Rational.tryParse(value);
+        widget.expression._isValid = isValid();
+        if (parsed != null) {
           widget.expression.value = parsed;
-          if (!_isValid) {
-            setState(() => _isValid = true);
-            widget.onValidityChanged(true);
-          }
-        } catch (_) {
-          if (_isValid) {
-            setState(() => _isValid = false);
-            widget.onValidityChanged(false);
-          }
         }
+        setState(() {});
       },
     );
   }

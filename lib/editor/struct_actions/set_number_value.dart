@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:graph_vn/editor/editor_rich_text.dart';
 import 'package:graph_vn/editor/number_expression/constant_number_expression.dart';
 import 'package:graph_vn/editor/number_expression/number_expression.dart';
+import 'package:graph_vn/editor/number_expression/number_expression_editor.dart';
 import 'package:graph_vn/editor/struct.dart';
 import 'package:graph_vn/editor/struct_actions/base.dart';
 import 'package:graph_vn/editor/widgets/variable_selector.dart';
@@ -43,7 +44,16 @@ class _SetNumberValueEditorState extends State<SetNumberValueEditor> {
         }
       ),
       ETextSpan(text: 'to'),
-      ETextSpan(text: widget.action.numberExpression.asString(), tap: () {})
+      ETextSpan(
+        text: widget.action.numberExpression.asString(),
+        tap: () async {
+          final newNumberExpression = await editNumberExpression(context, widget.action.numberExpression);
+          if (newNumberExpression != null) {
+            widget.action.numberExpression = newNumberExpression;
+            setState(() {});
+          }
+        }
+      )
     ]);
   }
 }

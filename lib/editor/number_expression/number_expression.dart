@@ -4,6 +4,7 @@ import 'package:rational/rational.dart';
 abstract class NumberExpression {
   Rational evaluate();
   String asString();
+  bool isValid();
 }
 
 enum NumberExpressionType {

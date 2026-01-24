@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:graph_vn/editor/editor_rich_text.dart';
 import 'package:graph_vn/editor/number_expression/constant_number_expression.dart';
 import 'package:graph_vn/editor/number_expression/number_expression.dart';
+import 'package:graph_vn/editor/number_expression/number_expression_editor.dart';
 import 'package:graph_vn/editor/struct.dart';
 import 'package:graph_vn/editor/struct_actions/base.dart';
 import 'package:graph_vn/editor/widgets/variable_selector.dart';
@@ -38,12 +39,24 @@ class _IncreaseNumberValueEditorState extends State<IncreaseNumberValueEditor> {
       ETextSpan(
         text: widget.action.variableName(), 
         tap: () async { 
-          widget.action.variableId = (await showVariableSelector(context, widget.action.struct))?.id ?? "";
-          setState(() {});
+          final selectedVariable = await showVariableSelector(context, widget.action.struct);
+          if (selectedVariable != null) {
+            widget.action.variableId = selectedVariable.id;
+            setState(() {});
+          }
         }
       ),
       ETextSpan(text: 'by'),
-      ETextSpan(text: widget.action.numberExpression.asString(), tap: () {})
+      ETextSpan(
+        text: widget.action.numberExpression.asString(),
+        tap: () async {
+          final newNumberExpression = await editNumberExpression(context, widget.action.numberExpression);
+          if (newNumberExpression != null) {
+            widget.action.numberExpression = newNumberExpression;
+            setState(() {});
+          }
+        }
+      )
     ]);
   }
 }

@@ -11,7 +11,6 @@ Future<NumberExpression?> editNumberExpression(BuildContext context, NumberExpre
     builder: (context) {
       return StatefulBuilder(
         builder: (context, setState) {
-          bool isValid = true;
           return AlertDialog(
             title: DropdownButton<NumberExpressionType>(
               value: currentType,
@@ -30,14 +29,7 @@ Future<NumberExpression?> editNumberExpression(BuildContext context, NumberExpre
               width: 400,
               height: 300,
               child: switch (current) {
-                ConstantNumberExpression _ => ConstantNumberExpressionEditor(
-                  expression: current as ConstantNumberExpression,
-                  onValidityChanged: (valid) {
-                    setState(() {
-                      isValid = valid;
-                    });
-                  },
-                ),
+                ConstantNumberExpression _ => ConstantNumberExpressionEditor(expression: current as ConstantNumberExpression),
                 _ => const Placeholder(),
               },
             ),
@@ -47,7 +39,11 @@ Future<NumberExpression?> editNumberExpression(BuildContext context, NumberExpre
                 child: const Text('Cancel'),
               ),
               ElevatedButton(
-                onPressed: isValid ? () => Navigator.of(context).pop(current) : null,
+                onPressed: () {
+                  if (current.isValid()) {
+                    Navigator.of(context).pop(current);
+                  }
+                },
                 child: const Text('Save'),
               ),
             ],
