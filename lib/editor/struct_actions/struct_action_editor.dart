@@ -21,11 +21,8 @@ import 'package:graph_vn/editor/struct_actions/set_number_value.dart';
 /// }
 /// ```
 Future<StructAction?> editStructAction(BuildContext context, StructAction action) async {
-  // Current action being edited; may change type.
   StructAction current = action;
-
-  // Determine initial type string.
-  StructActionType currentType = StructActionType.values.singleWhere((item) => item.type == action.runtimeType);
+  StructActionType currentType = StructActionType.values.singleWhere((item) => item.type == current.runtimeType);
 
   final result = await showDialog<StructAction>(
     context: context,

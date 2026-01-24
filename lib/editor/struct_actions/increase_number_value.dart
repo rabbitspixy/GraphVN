@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:graph_vn/editor/editor_rich_text.dart';
+import 'package:graph_vn/editor/number_expression/constant_number_expression.dart';
+import 'package:graph_vn/editor/number_expression/number_expression.dart';
 import 'package:graph_vn/editor/struct.dart';
 import 'package:graph_vn/editor/struct_actions/base.dart';
 import 'package:graph_vn/editor/widgets/variable_selector.dart';
-import 'package:rational/rational.dart';
 
 class IncreaseNumberValue extends StructAction {
   String variableId = "";
-  Rational increaseValue = Rational.zero;
+  NumberExpression numberExpression = ConstantNumberExpression();
 
   IncreaseNumberValue(Struct struct) : super(struct: struct);
 
@@ -15,13 +16,9 @@ class IncreaseNumberValue extends StructAction {
     return struct.variableById(variableId)?.name ?? 'variable';
   }
 
-  String numberValueAsString() {
-    return increaseValue.toString();
-  }
-
   @override
   String actionText() {
-    return "Increase ${variableName()} by ${numberValueAsString()}";
+    return "Increase ${variableName()} by ${numberExpression.asString()}";
   }
 }
 
@@ -46,7 +43,7 @@ class _IncreaseNumberValueEditorState extends State<IncreaseNumberValueEditor> {
         }
       ),
       ETextSpan(text: 'by'),
-      ETextSpan(text: widget.action.numberValueAsString(), tap: () {})
+      ETextSpan(text: widget.action.numberExpression.asString(), tap: () {})
     ]);
   }
 }
