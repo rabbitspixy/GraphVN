@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-Future<String?> showEditStructNameDialog(BuildContext context, String currentName) async {
+Future<String?> showRenameDialog(BuildContext context, String title, String currentName) async {
   final controller = TextEditingController(text: currentName);
   return await showDialog<String>(
     context: context,
     builder: (context) => AlertDialog(
-      title: Text('Edit Variable Name'),
+      title: Text(title),
       content: TextField(
         controller: controller,
         decoration: InputDecoration(labelText: 'Name'),

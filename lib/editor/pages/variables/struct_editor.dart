@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:graph_vn/editor/pages/variables/add_variable_dialog.dart';
-import 'package:graph_vn/editor/pages/variables/edit_struct_name_dialog.dart';
+import 'package:graph_vn/editor/modals/rename_dialog.dart';
 import 'package:graph_vn/editor/variables.dart';
 import 'package:graph_vn/editor/actions/do_nothing.dart';
 import 'package:graph_vn/editor/actions/struct_action_editor.dart';
@@ -27,7 +27,6 @@ class _StructEditorState extends State<StructEditor> {
             itemCount: widget.struct.variables.length,
             itemBuilder: (context, varIndex) {
               final variable = widget.struct.variables[varIndex];
-              final nameController = TextEditingController(text: variable.name);
               TextEditingController valueController;
               if (variable is NumberVariable) {
                 valueController = TextEditingController(text: variable.startValue);
@@ -40,16 +39,19 @@ class _StructEditorState extends State<StructEditor> {
                     flex: 3,
                     child: GestureDetector(
                       onTap: () async {
-                        final newName = await showEditStructNameDialog(context, variable.name);
+                        final newName = await showRenameDialog(context, 'Edit Variable Name', variable.name);
                         if (newName != null) {
                           setState(() {
                             variable.name = newName;
                           });
                         }
                       },
-                      child: Text(
-                        variable.name.isEmpty ? 'Unnamed' : variable.name,
-                        style: TextStyle(fontSize: 16),
+                      child: MouseRegion(
+                        cursor: SystemMouseCursors.click,
+                        child: Text(
+                          variable.name,
+                          style: TextStyle(fontSize: 16),
+                        ),
                       ),
                     ),
                   ),
