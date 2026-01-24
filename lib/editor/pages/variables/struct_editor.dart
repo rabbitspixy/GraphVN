@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:graph_vn/editor/pages/variables/add_variable_dialog.dart';
+import 'package:graph_vn/editor/pages/variables/edit_struct_name_dialog.dart';
 import 'package:graph_vn/editor/variables.dart';
 import 'package:graph_vn/editor/actions/do_nothing.dart';
 import 'package:graph_vn/editor/actions/struct_action_editor.dart';
@@ -37,12 +38,19 @@ class _StructEditorState extends State<StructEditor> {
                 children: [
                   Expanded(
                     flex: 3,
-                    child: TextField(
-                      controller: nameController,
-                      decoration: InputDecoration(labelText: 'Name'),
-                      onChanged: (val) {
-                        variable.name = val;
+                    child: GestureDetector(
+                      onTap: () async {
+                        final newName = await showEditStructNameDialog(context, variable.name);
+                        if (newName != null) {
+                          setState(() {
+                            variable.name = newName;
+                          });
+                        }
                       },
+                      child: Text(
+                        variable.name.isEmpty ? 'Unnamed' : variable.name,
+                        style: TextStyle(fontSize: 16),
+                      ),
                     ),
                   ),
                   switch (variable) {
