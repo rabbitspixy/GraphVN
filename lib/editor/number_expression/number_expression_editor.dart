@@ -25,12 +25,20 @@ Future<NumberExpression?> editNumberExpression(BuildContext context, NumberExpre
                 });
               },
             ),
+            bool isValid = true;
             content: SizedBox(
               width: 400,
               height: 300,
               child: switch (current) {
-                ConstantNumberExpression _ => ConstantNumberExpressionEditor(),
-                _ => Placeholder()
+                ConstantNumberExpression _ => ConstantNumberExpressionEditor(
+                  expression: current as ConstantNumberExpression,
+                  onValidityChanged: (valid) {
+                    setState(() {
+                      isValid = valid;
+                    });
+                  },
+                ),
+                _ => const Placeholder(),
               },
             ),
             actions: [
@@ -39,7 +47,7 @@ Future<NumberExpression?> editNumberExpression(BuildContext context, NumberExpre
                 child: const Text('Cancel'),
               ),
               ElevatedButton(
-                onPressed: () => Navigator.of(context).pop(current),
+                onPressed: isValid ? () => Navigator.of(context).pop(current) : null,
                 child: const Text('Save'),
               ),
             ],
