@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:graph_vn/editor/struct.dart';
-import 'package:graph_vn/editor/struct_actions/do_nothing.dart';
-import 'package:graph_vn/editor/struct_actions/struct_action_editor.dart';
+import 'package:graph_vn/editor/actions/do_nothing.dart';
+import 'package:graph_vn/editor/actions/struct_action_editor.dart';
 
 class StructEditor extends StatefulWidget {
   final Struct struct;
@@ -156,7 +156,7 @@ class _StructEditorState extends State<StructEditor> {
                           label: Text('Add Action'),
                           onPressed: () {
                             setState(() {
-                              procedure.actions.add(DoNothing(widget.struct));
+                              procedure.actions.add(DoNothing());
                             });
                           },
                         ),

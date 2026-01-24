@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:graph_vn/editor/editor_rich_text.dart';
-import 'package:graph_vn/editor/struct.dart';
-import 'package:graph_vn/editor/struct_actions/base.dart';
+import 'package:graph_vn/editor/actions/base.dart';
 
-class DoNothing extends StructAction {
-
-  DoNothing(Struct struct) : super(struct: struct);
+class DoNothing extends BaseAction {
 
   @override
   String actionText() {

@@ -117,5 +117,13 @@ class EditorState {
   static Struct? structById(String id) {
     return structs.where((s) => s.id == id).firstOrNull;
   }
+
+  static Struct? structByVariableId(String variableId) {
+    return EditorState.structs.where((s) => s.variables.any((v) => v.id == variableId)).firstOrNull;
+  }
+  
+  static Variable? variableById(String variableId) {
+    return EditorState.structByVariableId(variableId)?.variableById(variableId);
+  }
   
 }

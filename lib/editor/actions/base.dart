@@ -1,14 +1,10 @@
-import 'package:graph_vn/editor/struct.dart';
-import 'package:graph_vn/editor/struct_actions/do_nothing.dart';
-import 'package:graph_vn/editor/struct_actions/increase_number_value.dart';
-import 'package:graph_vn/editor/struct_actions/set_number_value.dart';
+import 'package:graph_vn/editor/actions/do_nothing.dart';
+import 'package:graph_vn/editor/actions/increase_number_value.dart';
+import 'package:graph_vn/editor/actions/set_number_value.dart';
 import 'package:uuid/uuid.dart';
 
-abstract class StructAction {
+abstract class BaseAction {
   String id = Uuid().v4();
-  Struct struct;
-
-  StructAction({required this.struct});
 
   String actionText();
 }
@@ -20,7 +16,7 @@ enum StructActionType {
   ;
 
   final Type type;
-  final StructAction Function(Struct struct) create;
+  final BaseAction Function() create;
   final String title;
 
   const StructActionType({

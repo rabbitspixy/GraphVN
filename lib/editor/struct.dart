@@ -1,4 +1,4 @@
-import 'package:graph_vn/editor/struct_actions/base.dart';
+import 'package:graph_vn/editor/actions/base.dart';
 import 'package:rational/rational.dart';
 import 'package:uuid/uuid.dart';
 
@@ -26,5 +26,5 @@ class NumberVariable extends Variable {
 class StructProcedure {
   String id = Uuid().v4();
   String name = "";
-  List<StructAction> actions = List.empty(growable: true);
+  List<BaseAction> actions = List.empty(growable: true);
 }

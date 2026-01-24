@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:graph_vn/editor/struct_actions/base.dart';
-import 'package:graph_vn/editor/struct_actions/do_nothing.dart';
-import 'package:graph_vn/editor/struct_actions/increase_number_value.dart';
-import 'package:graph_vn/editor/struct_actions/set_number_value.dart';
+import 'package:graph_vn/editor/actions/base.dart';
+import 'package:graph_vn/editor/actions/do_nothing.dart';
+import 'package:graph_vn/editor/actions/increase_number_value.dart';
+import 'package:graph_vn/editor/actions/set_number_value.dart';
 
-/// Opens a modal dialog to edit a [StructAction].
+/// Opens a modal dialog to edit a [BaseAction].
 /// The dialog contains:
 /// * A dropdown at the top to select the concrete type of the action.
 ///   Changing the selection creates a new instance of the chosen type.
@@ -20,11 +20,11 @@ import 'package:graph_vn/editor/struct_actions/set_number_value.dart';
 ///   // use newAction
 /// }
 /// ```
-Future<StructAction?> editStructAction(BuildContext context, StructAction action) async {
-  StructAction current = action;
+Future<BaseAction?> editStructAction(BuildContext context, BaseAction action) async {
+  BaseAction current = action;
   StructActionType currentType = StructActionType.values.singleWhere((item) => item.type == current.runtimeType);
 
-  final result = await showDialog<StructAction>(
+  final result = await showDialog<BaseAction>(
     context: context,
     builder: (context) {
       return StatefulBuilder(
@@ -39,7 +39,7 @@ Future<StructAction?> editStructAction(BuildContext context, StructAction action
                 if (newType == null || newType == currentType) return;
                 setState(() {
                   currentType = newType;
-                  current = newType.create(current.struct);
+                  current = newType.create();
                 });
               },
             ),

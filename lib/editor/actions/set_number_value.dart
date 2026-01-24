@@ -1,52 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:graph_vn/editor/editor_rich_text.dart';
+import 'package:graph_vn/editor/editor_state.dart';
 import 'package:graph_vn/editor/number_expression/constant_number_expression.dart';
 import 'package:graph_vn/editor/number_expression/number_expression.dart';
 import 'package:graph_vn/editor/number_expression/number_expression_editor.dart';
-import 'package:graph_vn/editor/struct.dart';
-import 'package:graph_vn/editor/struct_actions/base.dart';
+import 'package:graph_vn/editor/actions/base.dart';
 import 'package:graph_vn/editor/widgets/variable_selector.dart';
 
-class IncreaseNumberValue extends StructAction {
+class SetNumberValue extends BaseAction {
   String variableId = "";
   NumberExpression numberExpression = ConstantNumberExpression();
 
-  IncreaseNumberValue(Struct struct) : super(struct: struct);
-
   String variableName() {
-    return struct.variableById(variableId)?.name ?? 'variable';
+    return EditorState.variableById(variableId)?.name ?? 'variable';
   }
 
   @override
   String actionText() {
-    return "Increase ${variableName()} by ${numberExpression.asString()}";
+    return "Set ${variableName()} to ${numberExpression.asString()}";
   }
 }
 
-class IncreaseNumberValueEditor extends StatefulWidget {
-  final IncreaseNumberValue action;
-  const IncreaseNumberValueEditor({super.key, required this.action});
+class SetNumberValueEditor extends StatefulWidget {
+  final SetNumberValue action;
+  const SetNumberValueEditor({super.key, required this.action});
 
   @override
-  State<IncreaseNumberValueEditor> createState() => _IncreaseNumberValueEditorState();
+  State<SetNumberValueEditor> createState() => _SetNumberValueEditorState();
 }
 
-class _IncreaseNumberValueEditorState extends State<IncreaseNumberValueEditor> {
+class _SetNumberValueEditorState extends State<SetNumberValueEditor> {
   @override
   Widget build(BuildContext context) {
     return EditorRichText([
-      ETextSpan(text: 'Increase'),
+      ETextSpan(text: 'Set'),
       ETextSpan(
         text: widget.action.variableName(), 
         tap: () async { 
-          final selectedVariable = await showVariableSelector(context, widget.action.struct);
-          if (selectedVariable != null) {
-            widget.action.variableId = selectedVariable.id;
-            setState(() {});
-          }
+          widget.action.variableId = (await showVariableSelector(context))?.id ?? "";
+          setState(() {});
         }
       ),
-      ETextSpan(text: 'by'),
+      ETextSpan(text: 'to'),
       ETextSpan(
         text: widget.action.numberExpression.asString(),
         tap: () async {

@@ -11,11 +11,8 @@ import 'package:graph_vn/editor/struct.dart';
 ///   // do something with chosen
 /// }
 /// ```
-Future<Variable?> showVariableSelector(BuildContext? context, Struct? struct) async {
+Future<Variable?> showVariableSelector(BuildContext? context) async {
   if (context == null) {
-    return null;
-  }
-  if (struct == null) {
     return null;
   }
   return showDialog<Variable>(
