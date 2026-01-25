@@ -6,6 +6,7 @@ import 'package:graph_vn/editor/number_expression/number_expression.dart';
 import 'package:graph_vn/editor/number_expression/number_expression_editor.dart';
 import 'package:graph_vn/editor/actions/base.dart';
 import 'package:graph_vn/editor/modals/variable_selector.dart';
+import 'package:graph_vn/editor/variables.dart';
 
 class SetNumberValue extends BaseAction {
   String variableId = "";
@@ -14,6 +15,14 @@ class SetNumberValue extends BaseAction {
   @override
   String actionText() {
     return "Set ${EditorState.variableAsString(variableId)} to ${numberExpression.asString()}";
+  }
+
+  @override
+  void exec() {
+    final variable = EditorState.variableById(variableId);
+    if (variable != null && variable is NumberVariable) {
+      variable.value = numberExpression.evaluate();
+    }
   }
 }
 

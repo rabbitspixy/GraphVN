@@ -71,4 +71,10 @@ class StructProcedure {
   String id = Uuid().v4();
   String name = "Unnamed procedure";
   List<BaseAction> actions = List.empty(growable: true);
+
+  void exec() {
+    for (final action in actions) {
+      action.exec();
+    }
+  }
 }

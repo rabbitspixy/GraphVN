@@ -8,6 +8,11 @@ class DoNothing extends BaseAction {
   String actionText() {
     return "Do nothing";
   }
+
+  @override
+  void exec() {
+    // do nothing
+  }
 }
 
 class DoNothingEditor extends StatefulWidget {

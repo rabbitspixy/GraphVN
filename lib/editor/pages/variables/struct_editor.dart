@@ -44,6 +44,13 @@ class _StructEditorState extends State<StructEditor> {
                   }
                 },
               ),
+              IconButton(
+                icon: Icon(Icons.send),
+                onPressed: () {
+                  procedure.exec();
+                  setState(() {});
+                },
+              )
             ],
           ),
           Column(

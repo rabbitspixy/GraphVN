@@ -7,6 +7,8 @@ abstract class BaseAction {
   String id = Uuid().v4();
 
   String actionText();
+
+  void exec();
 }
 
 enum StructActionType {
