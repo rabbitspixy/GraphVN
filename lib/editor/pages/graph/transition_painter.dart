@@ -17,8 +17,13 @@ class TransitionPainter extends CustomPainter {
       ..color = Colors.black
       ..strokeWidth = 2
       ..style = PaintingStyle.stroke;
+    
+    final Map<String, int> precalculatedPairCount = {};
+    for (final transition in EditorState.transitions) {
+      final key = '${transition.from}->${transition.to}';
+      precalculatedPairCount.update(key, (v) => v + 1, ifAbsent: () => 1);
+    }
 
-    // Map to keep track of how many transitions have been drawn between each pair
     final Map<String, int> pairCount = {};
 
     for (final transition in EditorState.transitions) {
@@ -46,6 +51,17 @@ class TransitionPainter extends CustomPainter {
 
       final key = '${transition.from}->${transition.to}';
       final index = pairCount.update(key, (v) => v + 1, ifAbsent: () => 1);
+      final totalTransitionsCount = precalculatedPairCount[key] ?? 0;
+
+      final oppositeKey = '${transition.to}->${transition.from}';
+      final hasOppositeDirectionTransitions = precalculatedPairCount.containsKey(oppositeKey);
+
+      double t;
+      if (hasOppositeDirectionTransitions) {
+        t = index.toDouble();
+      } else {
+        t = index.toDouble() - (totalTransitionsCount + 1).toDouble() / 2.0;
+      }
 
       // Multiple transitions – add increasing curvature
       final mid = Offset(
@@ -55,7 +71,7 @@ class TransitionPainter extends CustomPainter {
       final Offset d = end - start;
       final Offset perp = Offset(-d.dy, d.dx);
       final double perpLength = perp.distance;
-      final double magnitude = EditorConstants.transitionDeviationMagnitude * index;
+      final double magnitude = EditorConstants.transitionDeviationMagnitude * t;
       final Offset unitPerp = perpLength == 0 ? Offset.zero : Offset(perp.dx / perpLength, perp.dy / perpLength);
       final Offset control = mid + unitPerp * magnitude;
 

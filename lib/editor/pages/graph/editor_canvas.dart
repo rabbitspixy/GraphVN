@@ -189,7 +189,15 @@ class _EditorCanvasState extends State<EditorCanvas> {
     const double threshold = 5.0;
     EditorTransition? nearest;
     double nearestDist = double.infinity;
+
+    final Map<String, int> precalculatedPairCount = {};
+    for (final transition in EditorState.transitions) {
+      final key = '${transition.from}->${transition.to}';
+      precalculatedPairCount.update(key, (v) => v + 1, ifAbsent: () => 1);
+    }
+
     final Map<String, int> pairCount = {};
+
     for (final transition in EditorState.transitions) {
       final fromNode = EditorState.nodes[transition.from];
       final toNode = EditorState.nodes[transition.to];
@@ -204,6 +212,17 @@ class _EditorCanvasState extends State<EditorCanvas> {
       ) + _offset;
       final key = '${transition.from}->${transition.to}';
       final index = pairCount.update(key, (v) => v + 1, ifAbsent: () => 1);
+      final totalTransitionsCount = precalculatedPairCount[key] ?? 0;
+
+      final oppositeKey = '${transition.to}->${transition.from}';
+      final hasOppositeDirectionTransitions = precalculatedPairCount.containsKey(oppositeKey);
+
+      double t;
+      if (hasOppositeDirectionTransitions) {
+        t = index.toDouble();
+      } else {
+        t = index.toDouble() - (totalTransitionsCount + 1).toDouble() / 2.0;
+      }
 
       Offset center;
       final mid = Offset(
@@ -213,7 +232,7 @@ class _EditorCanvasState extends State<EditorCanvas> {
       final d = end - start;
       final perp = Offset(-d.dy, d.dx);
       final perpLength = perp.distance;
-      final magnitude = EditorConstants.transitionDeviationMagnitude * index;
+      final magnitude = EditorConstants.transitionDeviationMagnitude * t;
       final unitPerp = perpLength == 0 ? Offset.zero : Offset(perp.dx / perpLength, perp.dy / perpLength);
       final control = mid + unitPerp * magnitude;
       center = Offset(
