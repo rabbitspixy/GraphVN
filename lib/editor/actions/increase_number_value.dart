@@ -42,7 +42,7 @@ class _IncreaseNumberValueEditorState extends State<IncreaseNumberValueEditor> {
       ETextSpan(
         text: EditorState.variableAsString(widget.action.variableId), 
         tap: () async { 
-          final selectedVariable = await showVariableSelector(context);
+          final selectedVariable = await showVariableSelector(context, VariableType.number);
           if (selectedVariable != null) {
             widget.action.variableId = selectedVariable.id;
             setState(() {});

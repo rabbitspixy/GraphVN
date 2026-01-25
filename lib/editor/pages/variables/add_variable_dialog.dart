@@ -68,14 +68,14 @@ Future<Variable?> showAddVariableDialog(BuildContext context) async {
               TextButton(
                 onPressed: () {
                   if (name.isEmpty) return;
-                  Variable varr;
+                  Variable newVariable;
                   if (selectedType == 'Number') {
-                    varr = NumberVariable()..name = name;
+                    newVariable = NumberVariable()..name = name;
                   } else {
-                    varr = NamedNumberVariable(typeId: selectedNamedTypeId!)
+                    newVariable = NamedNumberVariable(typeId: selectedNamedTypeId!)
                       ..name = name;
                   }
-                  Navigator.pop(context, varr);
+                  Navigator.pop(context, newVariable);
                 },
                 child: Text('Add'),
               ),

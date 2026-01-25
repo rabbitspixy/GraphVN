@@ -17,13 +17,13 @@ final namedNumbersTypes = [
   NamedNumbersType()
     ..id = 'a16100bc-5afb-4e8c-b2c1-eb14e523e0d0'
     ..name = 'Boolean'
-    ..list = Map.fromEntries([MapEntry('False', Rational.zero), MapEntry('True', Rational.one)])
+    ..list = [MapEntry('False', Rational.zero), MapEntry('True', Rational.one)]
 ];
 
 class NamedNumbersType {
   String id = Uuid().v4();
   String name = '';
-  Map<String, Rational> list = Map.identity();
+  List<MapEntry<String, Rational>> list = List.empty();
 }
 
 abstract class Variable {
@@ -54,7 +54,13 @@ class NamedNumberVariable extends Variable {
   String startValue = '';
   String value = '';
 
-  NamedNumberVariable({required this.typeId});
+  NamedNumberVariable({required this.typeId}) {
+    final type = namedNumbersTypes.where((v) => v.id == typeId).firstOrNull;
+    if (type != null) {
+      startValue = type.list.first.key;
+      value = startValue;
+    }
+  }
 
   @override
   String initialValueAsString() {
@@ -65,6 +71,16 @@ class NamedNumberVariable extends Variable {
   String currentValueAsString() {
     return value;
   }
+}
+
+enum VariableType {
+  number(type: NumberVariable),
+  namedNumber(type: NamedNumberVariable)
+  ;
+
+  const VariableType({required this.type});
+
+  final Type type;
 }
 
 class StructProcedure {

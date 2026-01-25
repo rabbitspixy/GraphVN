@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:graph_vn/editor/named_number_expression/constant_named_number_expression.dart';
+import 'package:graph_vn/editor/named_number_expression/named_number_expression_editor.dart';
 import 'package:graph_vn/editor/number_expression/constant_number_expression.dart';
 import 'package:graph_vn/editor/number_expression/number_expression_editor.dart';
 import 'package:graph_vn/editor/pages/variables/add_variable_dialog.dart';
@@ -108,6 +110,13 @@ class _StructEditorState extends State<StructEditor> {
                   Expanded(
                     child: Text(procedure.name, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                   ),
+                  IconButton(
+                    icon: Icon(Icons.send),
+                    onPressed: () {
+                      procedure.exec();
+                      setState(() {});
+                    },
+                  )
                 ],
               ),
             ],
@@ -186,13 +195,20 @@ class _StructEditorState extends State<StructEditor> {
                         onTap: () async {
                           switch (variable) {
                             case NumberVariable _: {
-                              final number = (await editNumberExpression(context, ConstantNumberExpression(), allowChangeType: false))?.evaluate();
+                              final fakeExpression = ConstantNumberExpression()
+                                ..value = variable.startValue;
+                              final number = (await editNumberExpression(context, fakeExpression, allowChangeType: false))?.evaluate();
                               if (number != null) {
                                 variable.startValue = number;
                               }
                             }
                             case NamedNumberVariable _ : {
-
+                              final fakeExpression = ConstantNamedNumberExpression(namedNumbersTypeId: variable.typeId)
+                                ..value = variable.startValue;
+                              final newStartValue = (await editNamedNumberExpression(context, fakeExpression, allowChangeType: false))?.evaluate();
+                              if (newStartValue != null) {
+                                variable.startValue = newStartValue;
+                              }
                             }
                           }
                           setState(() {});

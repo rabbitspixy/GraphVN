@@ -12,7 +12,7 @@ import 'package:graph_vn/editor/editor_state.dart';
 ///   // do something with chosen
 /// }
 /// ```
-Future<Variable?> showVariableSelector(BuildContext? context) async {
+Future<Variable?> showVariableSelector(BuildContext? context, VariableType variableType) async {
   if (context == null) {
     return null;
   }
@@ -23,7 +23,8 @@ Future<Variable?> showVariableSelector(BuildContext? context) async {
       return AlertDialog(
         title: const Text('Select Struct'),
         content: SizedBox(
-          width: double.maxFinite,
+          width: 400,
+          height: 500,
           child: ListView.builder(
             shrinkWrap: true,
             itemCount: EditorState.structs.length,
@@ -49,19 +50,20 @@ Future<Variable?> showVariableSelector(BuildContext? context) async {
   if (struct == null) {
     return null;
   }
-  // Then pick variable
+  final filteredVariables = struct.variables.where((v) => v.runtimeType == variableType.type).toList();
   final variable = await showDialog<Variable>(
     context: context,
     builder: (BuildContext ctx) {
       return AlertDialog(
         title: const Text('Select Variable'),
         content: SizedBox(
-          width: double.maxFinite,
+          width: 400,
+          height: 500,
           child: ListView.builder(
             shrinkWrap: true,
-            itemCount: struct.variables.length,
+            itemCount: filteredVariables.length,
             itemBuilder: (BuildContext ctx, int index) {
-              final v = struct.variables[index];
+              final v = filteredVariables[index];
               return ListTile(
                 title: Text(v.name),
                 subtitle: Text(v.runtimeType.toString()),

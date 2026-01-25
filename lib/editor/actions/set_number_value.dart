@@ -42,7 +42,7 @@ class _SetNumberValueEditorState extends State<SetNumberValueEditor> {
       ETextSpan(
         text: EditorState.variableAsString(widget.action.variableId), 
         tap: () async { 
-          widget.action.variableId = (await showVariableSelector(context))?.id ?? "";
+          widget.action.variableId = (await showVariableSelector(context, VariableType.number))?.id ?? "";
           setState(() {});
         }
       ),
