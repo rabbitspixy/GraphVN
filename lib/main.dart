@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_window_close/flutter_window_close.dart';
 import 'package:graph_vn/custom_mapper/rational_mapper.dart';
 import 'package:graph_vn/editor/editor_state.dart';
+import 'package:logger/logger.dart';
 import 'engine.dart';
 import 'package:flutter/services.dart';
 import 'editor/widgets/editor.dart';
 import 'game_player.dart';
+
+final logger = Logger();
 
 void main() {
   MapperContainer.globals.use(RationalMapper());
@@ -20,9 +23,8 @@ void initWindowCloseHandler() {
   FlutterWindowClose.setWindowShouldCloseHandler(() async {
     try {
       await EditorState.save();
-    } catch(e, stackTrace) {
-      print(e);
-      print(stackTrace);
+    } catch (e, s) {
+      logger.e('project saving error', error: e, stackTrace: s);
       return false;
     }
     return true;

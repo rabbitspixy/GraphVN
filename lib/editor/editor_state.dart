@@ -9,6 +9,8 @@ import 'package:graph_vn/editor/project_data.dart';
 import 'package:graph_vn/editor/variables.dart';
 import 'dart:ui';
 
+import 'package:graph_vn/main.dart';
+
 class EditorState {
   static String projectDirName = "";
 
@@ -46,7 +48,7 @@ class EditorState {
   }
 
   static Future<void> save() async {
-    print("saving project...");
+    logger.i('start saving project');
 
     final projectData = ProjectData(
       nodes: EditorState.nodes,
@@ -61,6 +63,7 @@ class EditorState {
     final json = const JsonEncoder.withIndent('  ').convert(projectData.toMap());
     ProjectDataMapper.fromJson(json); //deserialize check
     await file.writeAsString(json);
+    logger.i('saving project done');
   }
 
   static void deleteTransition(String id) {

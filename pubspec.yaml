@@ -39,6 +39,7 @@ dependencies:
   llm_dart: ^0.10.5
   rational: ^2.2.3
   dart_mappable: ^4.6.1
+  logger: ^2.6.2
 
 dev_dependencies:
   flutter_test:
