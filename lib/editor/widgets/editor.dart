@@ -21,7 +21,7 @@ class _EditorState extends State<Editor> {
           width: 50,
           color: Colors.grey[200],
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               SizedBox(
                 width: 50,
@@ -32,7 +32,13 @@ class _EditorState extends State<Editor> {
                       _page = EditorPage.graph;
                     });
                   },
-                  child: const Text('📊', style: TextStyle(fontSize: 24)),
+                  style: TextButton.styleFrom(
+                    backgroundColor: _page == EditorPage.graph ? Colors.black12 : Colors.transparent,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.zero
+                    ),
+                  ),
+                  child: const Icon(Icons.hub),
                 ),
               ),
               SizedBox(
@@ -44,7 +50,13 @@ class _EditorState extends State<Editor> {
                       _page = EditorPage.variables;
                     });
                   },
-                  child: const Text('🧪', style: TextStyle(fontSize: 24)),
+                  style: TextButton.styleFrom(
+                    backgroundColor: _page == EditorPage.variables ? Colors.black12 : Colors.transparent,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.zero
+                    ),
+                  ),
+                  child: const Icon(Icons.data_object),
                 ),
               ),
               SizedBox(
@@ -56,7 +68,13 @@ class _EditorState extends State<Editor> {
                       _page = EditorPage.settings;
                     });
                   },
-                  child: const Text('⚙️', style: TextStyle(fontSize: 24)),
+                  style: TextButton.styleFrom(
+                    backgroundColor: _page == EditorPage.settings ? Colors.black12 : Colors.transparent,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.zero
+                    ),
+                  ),
+                  child: const Icon(Icons.settings),
                 ),
               ),
             ],

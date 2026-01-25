@@ -71,7 +71,7 @@ class _EditorVariablesPageState extends State<EditorVariablesPage> {
           ),
         ),
         Expanded(
-          flex: 2,
+          flex: 4,
           child: _selectedStructIndex == null
               ? Center(child: Text('Select a struct to edit'))
               : StructEditor(struct: EditorState.structs[_selectedStructIndex!])
