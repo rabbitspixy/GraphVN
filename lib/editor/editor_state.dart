@@ -22,6 +22,8 @@ class EditorState {
 
   static String projectDirName = "test";
 
+  static String currentNode = "";
+
   static void load() {
     nodes.clear();
     transitions.clear();

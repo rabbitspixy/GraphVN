@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:graph_vn/components.dart';
 import 'package:graph_vn/editor/editor_state.dart';
-import 'package:graph_vn/game_logic/game_state.dart';
 
 final ValueNotifier<NodeImageInfo> imageInfoNotifier = ValueNotifier<NodeImageInfo>(NodeImageInfo(path: ''));
 final ValueNotifier<String> narrativeText = ValueNotifier<String>('');
@@ -13,7 +12,7 @@ void goToNode(String nodeId) {
     return;
   }
   // GameState.currentNode.onLeave?.call();
-  GameState.currentNode = nodeId;
+  EditorState.currentNode = nodeId;
   // GameState.currentNode.onEnter?.call();
   // imageInfoNotifier.value = no.imageInfo();
   
@@ -22,17 +21,17 @@ void goToNode(String nodeId) {
 
 void updateNode() {
   transitions.value.clear();
-  if (GameState.currentNode == "") {
+  if (EditorState.currentNode == "") {
     initStartGame();
     return;
   }
-  final node = EditorState.nodes[GameState.currentNode];
+  final node = EditorState.nodes[EditorState.currentNode];
   if (node == null) {
     return;
   }
   narrativeText.value = node.text;
   transitions.value = EditorState.transitions
-    .where((t) => t.from == GameState.currentNode)
+    .where((t) => t.from == EditorState.currentNode)
     .map((t) => Transition(text: t.text, nextNode: t.to))
     .toList();
 }
