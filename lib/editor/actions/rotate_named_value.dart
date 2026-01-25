@@ -1,3 +1,4 @@
+import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/material.dart';
 import 'package:graph_vn/editor/actions/base.dart';
 import 'package:graph_vn/editor/editor_rich_text.dart';
@@ -5,8 +6,19 @@ import 'package:graph_vn/editor/editor_state.dart';
 import 'package:graph_vn/editor/modals/variable_selector.dart';
 import 'package:graph_vn/editor/variables.dart';
 
-class RotateNamedValue extends BaseAction {
+part 'rotate_named_value.mapper.dart';
+
+@MappableClass(discriminatorValue: 'RotateNamedValue')
+class RotateNamedValue extends BaseAction with RotateNamedValueMappable {
   String variableId = "";
+
+  RotateNamedValue();
+
+  @MappableConstructor()
+  RotateNamedValue.mappableConstructor({
+    required super.id,
+    required this.variableId,
+  }) : super.mappableConstructor();
 
   @override
   String actionText() {

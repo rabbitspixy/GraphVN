@@ -1,5 +1,7 @@
+import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_window_close/flutter_window_close.dart';
+import 'package:graph_vn/custom_mapper/rational_mapper.dart';
 import 'package:graph_vn/editor/editor_state.dart';
 import 'engine.dart';
 import 'package:flutter/services.dart';
@@ -7,7 +9,8 @@ import 'editor/widgets/editor.dart';
 import 'game_player.dart';
 
 void main() {
-  EditorState.load();
+  MapperContainer.globals.use(RationalMapper());
+  EditorState.load('test');
   updateNode();
   initWindowCloseHandler();
   runApp(const RootWidget());
@@ -15,7 +18,13 @@ void main() {
 
 void initWindowCloseHandler() {
   FlutterWindowClose.setWindowShouldCloseHandler(() async {
-    await EditorState.save();
+    try {
+      await EditorState.save();
+    } catch(e, stackTrace) {
+      print(e);
+      print(stackTrace);
+      return false;
+    }
     return true;
   });
 }

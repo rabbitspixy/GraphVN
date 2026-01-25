@@ -1,12 +1,23 @@
+import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/material.dart';
 import 'package:graph_vn/editor/number_expression/number_expression.dart';
 import 'package:graph_vn/editor/rational_util.dart';
 import 'package:rational/rational.dart';
 
-class ConstantNumberExpression extends NumberExpression {
+part 'constant_number_expression.mapper.dart';
+
+@MappableClass(discriminatorValue: 'ConstantNumberExpression')
+class ConstantNumberExpression extends NumberExpression with ConstantNumberExpressionMappable {
 
   Rational value = Rational.zero;
   bool _isValid = true;
+
+  ConstantNumberExpression();
+
+  @MappableConstructor()
+  ConstantNumberExpression.mappableConstructor({
+    required this.value,
+  }) : super.mappableConstructor();
 
   @override
   Rational evaluate() {

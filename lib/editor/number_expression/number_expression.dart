@@ -1,7 +1,22 @@
+import 'package:dart_mappable/dart_mappable.dart';
 import 'package:graph_vn/editor/number_expression/constant_number_expression.dart';
 import 'package:rational/rational.dart';
 
-abstract class NumberExpression {
+part 'number_expression.mapper.dart';
+
+@MappableClass(
+  discriminatorKey: 'subclass',
+  includeSubClasses: [
+    ConstantNumberExpression,
+  ]
+)
+abstract class NumberExpression with NumberExpressionMappable {
+
+  NumberExpression();
+
+  @MappableConstructor()
+  NumberExpression.mappableConstructor();
+  
   Rational evaluate();
   String asString();
   bool isValid();

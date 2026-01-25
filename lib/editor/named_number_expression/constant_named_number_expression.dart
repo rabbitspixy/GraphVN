@@ -1,14 +1,23 @@
+import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/material.dart';
 import 'package:graph_vn/editor/named_number_expression/named_number_expression.dart';
 import 'package:graph_vn/editor/variables.dart';
 
-class ConstantNamedNumberExpression extends NamedNumberExpression {
+part 'constant_named_number_expression.mapper.dart';
+
+@MappableClass(discriminatorValue: 'ConstantNamedNumberExpression')
+class ConstantNamedNumberExpression extends NamedNumberExpression with ConstantNamedNumberExpressionMappable {
   String value = "";
   bool _isValid = true;
 
   ConstantNamedNumberExpression({required super.namedNumbersTypeId}) {
     value = namedNumbersTypes.where((t) => t.id == namedNumbersTypeId).first.list.first.key;
   }
+
+  ConstantNamedNumberExpression.mappableConstructor({
+    required super.namedNumbersTypeId,
+    required this.value,
+  }) : super.mappableConstructor();
 
   @override
   String evaluate() {

@@ -1,3 +1,4 @@
+import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/material.dart';
 import 'package:graph_vn/editor/editor_rich_text.dart';
 import 'package:graph_vn/editor/editor_state.dart';
@@ -8,9 +9,21 @@ import 'package:graph_vn/editor/actions/base.dart';
 import 'package:graph_vn/editor/modals/variable_selector.dart';
 import 'package:graph_vn/editor/variables.dart';
 
-class SetNumberValue extends BaseAction {
+part 'set_number_value.mapper.dart';
+
+@MappableClass(discriminatorValue: 'SetNumberValue')
+class SetNumberValue extends BaseAction with SetNumberValueMappable {
   String variableId = "";
   NumberExpression numberExpression = ConstantNumberExpression();
+
+  SetNumberValue();
+
+  @MappableConstructor()
+  SetNumberValue.mappableConstructor({
+    required super.id,
+    required this.variableId,
+    required this.numberExpression,
+  }) : super.mappableConstructor();
 
   @override
   String actionText() {

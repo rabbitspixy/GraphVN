@@ -1,3 +1,4 @@
+import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/material.dart';
 import 'package:graph_vn/editor/actions/base.dart';
 import 'package:graph_vn/editor/editor_rich_text.dart';
@@ -8,9 +9,21 @@ import 'package:graph_vn/editor/named_number_expression/named_number_expression.
 import 'package:graph_vn/editor/named_number_expression/named_number_expression_editor.dart';
 import 'package:graph_vn/editor/variables.dart';
 
-class SetNamedValue extends BaseAction {
+part 'set_named_value.mapper.dart';
+
+@MappableClass(discriminatorValue: 'SetNamedValue')
+class SetNamedValue extends BaseAction with SetNamedValueMappable {
   String variableId = "";
   NamedNumberExpression expression = ConstantNamedNumberExpression(namedNumbersTypeId: namedNumbersTypes.first.id);
+
+  SetNamedValue();
+
+  @MappableConstructor()
+  SetNamedValue.mappableConstructor({
+    required super.id,
+    required this.variableId,
+    required this.expression,
+  }) : super.mappableConstructor();
 
   void recreateExpressionIfNotValid() {
     final variable = EditorState.variableById(variableId);

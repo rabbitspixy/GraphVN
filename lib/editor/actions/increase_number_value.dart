@@ -1,3 +1,4 @@
+import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/material.dart';
 import 'package:graph_vn/editor/editor_rich_text.dart';
 import 'package:graph_vn/editor/editor_state.dart';
@@ -8,9 +9,21 @@ import 'package:graph_vn/editor/actions/base.dart';
 import 'package:graph_vn/editor/modals/variable_selector.dart';
 import 'package:graph_vn/editor/variables.dart';
 
-class IncreaseNumberValue extends BaseAction {
+part 'increase_number_value.mapper.dart';
+
+@MappableClass(discriminatorValue: 'IncreaseNumberValue')
+class IncreaseNumberValue extends BaseAction with IncreaseNumberValueMappable {
   String variableId = "";
   NumberExpression numberExpression = ConstantNumberExpression();
+
+  IncreaseNumberValue();
+
+  @MappableConstructor()
+  IncreaseNumberValue.mappableConstructor({
+    required super.id,
+    required this.variableId,
+    required this.numberExpression,
+  }) : super.mappableConstructor();
 
   @override
   String actionText() {

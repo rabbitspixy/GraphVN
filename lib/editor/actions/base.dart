@@ -1,3 +1,4 @@
+import 'package:dart_mappable/dart_mappable.dart';
 import 'package:graph_vn/editor/actions/do_nothing.dart';
 import 'package:graph_vn/editor/actions/increase_number_value.dart';
 import 'package:graph_vn/editor/actions/rotate_named_value.dart';
@@ -5,8 +6,27 @@ import 'package:graph_vn/editor/actions/set_named_value.dart';
 import 'package:graph_vn/editor/actions/set_number_value.dart';
 import 'package:uuid/uuid.dart';
 
-abstract class BaseAction {
+part 'base.mapper.dart';
+
+@MappableClass(
+  discriminatorKey: 'subclass',
+  includeSubClasses: [
+    DoNothing,
+    IncreaseNumberValue,
+    RotateNamedValue,
+    SetNamedValue,
+    SetNumberValue,
+  ]
+)
+abstract class BaseAction with BaseActionMappable {
   String id = Uuid().v4();
+
+  BaseAction();
+
+  @MappableConstructor()
+  BaseAction.mappableConstructor({
+    required this.id,
+  });
 
   String actionText();
 

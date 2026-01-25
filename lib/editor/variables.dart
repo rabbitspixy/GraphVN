@@ -1,12 +1,26 @@
+import 'package:dart_mappable/dart_mappable.dart';
 import 'package:graph_vn/editor/actions/base.dart';
 import 'package:rational/rational.dart';
 import 'package:uuid/uuid.dart';
 
-class Struct {
+part 'variables.mapper.dart';
+
+@MappableClass()
+class Struct with StructMappable {
   String id = Uuid().v4();
   String name = "";
   List<Variable> variables = List.empty(growable: true);
   List<StructProcedure> procedures = List.empty(growable: true);
+
+  Struct();
+
+  @MappableConstructor()
+  Struct.mappableConstructor({
+    required this.id,
+    required this.name,
+    required this.variables,
+    required this.procedures,
+  });
 
   Variable? variableById(String id) {
     return variables.where((v) => v.id == id).firstOrNull;
@@ -26,17 +40,37 @@ class NamedNumbersType {
   List<MapEntry<String, Rational>> list = List.empty();
 }
 
-abstract class Variable {
+@MappableClass(discriminatorKey: 'subclass')
+abstract class Variable with VariableMappable {
   String id = Uuid().v4();
   String name = "";
+
+  Variable();
+
+  @MappableConstructor()
+  Variable.mappableConstructor({
+    required this.id,
+    required this.name,
+  });
 
   String initialValueAsString();
   String currentValueAsString();
 }
 
-class NumberVariable extends Variable {
+@MappableClass(discriminatorValue: 'NumberVariable')
+class NumberVariable extends Variable with NumberVariableMappable {
   Rational startValue = Rational.zero;
   Rational value = Rational.zero;
+
+  NumberVariable();
+
+  @MappableConstructor()
+  NumberVariable.mappableConstructor({
+    required super.id,
+    required super.name,
+    required this.startValue,
+    required this.value,
+  }) : super.mappableConstructor();
 
   @override
   String initialValueAsString() {
@@ -49,7 +83,8 @@ class NumberVariable extends Variable {
   }
 }
 
-class NamedNumberVariable extends Variable {
+@MappableClass(discriminatorValue: 'NamedNumberVariable')
+class NamedNumberVariable extends Variable with NamedNumberVariableMappable {
   String typeId;
   String startValue = '';
   String value = '';
@@ -61,6 +96,15 @@ class NamedNumberVariable extends Variable {
       value = startValue;
     }
   }
+
+  @MappableConstructor()
+  NamedNumberVariable.mappableConstructor({
+    required super.id,
+    required super.name,
+    required this.typeId,
+    required this.startValue,
+    required this.value,
+  }) : super.mappableConstructor();
 
   @override
   String initialValueAsString() {
@@ -83,10 +127,20 @@ enum VariableType {
   final Type type;
 }
 
-class StructProcedure {
+@MappableClass()
+class StructProcedure with StructProcedureMappable {
   String id = Uuid().v4();
   String name = "Unnamed procedure";
   List<BaseAction> actions = List.empty(growable: true);
+
+  StructProcedure();
+
+  @MappableConstructor()
+  StructProcedure.mappableConstructor({
+    required this.id,
+    required this.name,
+    required this.actions,
+  });
 
   void exec() {
     for (final action in actions) {

@@ -1,9 +1,23 @@
+import 'package:dart_mappable/dart_mappable.dart';
 import 'package:graph_vn/editor/named_number_expression/constant_named_number_expression.dart';
 
-abstract class NamedNumberExpression {
+part 'named_number_expression.mapper.dart';
+
+@MappableClass(
+  discriminatorKey: 'subclass',
+  includeSubClasses: [
+    ConstantNamedNumberExpression,
+  ]
+)
+abstract class NamedNumberExpression with NamedNumberExpressionMappable {
   String namedNumbersTypeId;
 
   NamedNumberExpression({required this.namedNumbersTypeId});
+
+  @MappableConstructor()
+  NamedNumberExpression.mappableConstructor({
+    required this.namedNumbersTypeId,
+  });
 
   String evaluate();
   String asString();

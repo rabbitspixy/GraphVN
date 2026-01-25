@@ -1,17 +1,17 @@
-
-
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:graph_vn/editor/editor_constants.dart';
 import 'package:graph_vn/editor/editor_node.dart';
 import 'package:graph_vn/editor/editor_transition.dart';
+import 'package:graph_vn/editor/project_data.dart';
 import 'package:graph_vn/editor/variables.dart';
 import 'dart:ui';
 
-import 'package:xml/xml.dart';
-
 class EditorState {
+  static String projectDirName = "";
+
   static final Map<String, EditorNode> nodes = <String, EditorNode>{};
   static final List<EditorTransition> transitions = List.empty(growable: true);
   static final ValueNotifier<List<EditorTransition>> transitionsNotifier = ValueNotifier<List<EditorTransition>>([]);
@@ -19,55 +19,48 @@ class EditorState {
   static EditorTransition? selectedTransition;
   static final List<Struct> structs = List.empty(growable: true);
   static Offset? storedOffset;
-
-  static String projectDirName = "test";
-
   static String currentNode = "";
 
-  static void load() {
+  static void load(String projectDir) {
+    projectDirName = "";
     nodes.clear();
     transitions.clear();
     transitionsNotifier.value = [];
     selectedNode = null;
     selectedTransition = null;
+    structs.clear();
     storedOffset = null;
+    currentNode = "";
 
-    final file = File("./${EditorConstants.projectsDir}/$projectDirName/main.xml");
+    final file = File("./${EditorConstants.projectsDir}/$projectDir/main.json");
     if (!file.existsSync()) {
+      projectDirName = projectDir;
       return;
     }
-    final document = XmlDocument.parse(file.readAsStringSync());
-    final root = document.getElement('project');
-    if (root == null) throw Exception("No project node");
-    nodes.addEntries(
-      root.findAllElements('node')
-        .map((n) => EditorNode()..loadFromXml(n))
-        .map((n) => MapEntry(n.id, n))
-    );
-    transitions.addAll(
-      root.findAllElements('transition')
-        .map((t) => EditorTransition()..loadFromXml(t))
-    );
+    final projectData = ProjectDataMapper.fromJson(file.readAsStringSync());
+    nodes.addAll(projectData.nodes);
+    transitions.addAll(projectData.transitions);
+    structs.addAll(projectData.structs);
+
+    projectDirName = projectDir;
   }
 
   static Future<void> save() async {
     print("saving project...");
-    final builder = XmlBuilder();
-    builder.element('project', nest: () {
-      for (final node in nodes.values) {
-        node.writeToXml(builder);
-      }
-      for (final transition in transitions) {
-        transition.writeToXml(builder);
-      }
-    });
-    final document = builder.buildDocument();
-    final file = File("./${EditorConstants.projectsDir}/$projectDirName/main.xml");
+
+    final projectData = ProjectData(
+      nodes: EditorState.nodes,
+      transitions:  EditorState.transitions,
+      structs: EditorState.structs,
+    );
+    final file = File("./${EditorConstants.projectsDir}/$projectDirName/main.json");
     final dir = file.parent;
     if (!dir.existsSync()) {
       await dir.create(recursive: true);
     }
-    await file.writeAsString(document.toXmlString(pretty: true));
+    final json = const JsonEncoder.withIndent('  ').convert(projectData.toMap());
+    ProjectDataMapper.fromJson(json); //deserialize check
+    await file.writeAsString(json);
   }
 
   static void deleteTransition(String id) {

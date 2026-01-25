@@ -1,25 +1,22 @@
+import 'package:dart_mappable/dart_mappable.dart';
 import 'package:uuid/uuid.dart';
-import 'package:xml/xml.dart';
 
-class EditorTransition {
+part 'editor_transition.mapper.dart';
+
+@MappableClass()
+class EditorTransition with EditorTransitionMappable {
   String id = Uuid().v4();
   String text = "";
   String from = "";
   String to = "";
 
-  void loadFromXml(XmlElement element) {
-    id = element.getAttribute('id')!;
-    text = element.getElement('text')!.innerText;
-    from = element.getAttribute('from')!;
-    to = element.getAttribute('to')!;
-  }
+  EditorTransition();
 
-  void writeToXml(XmlBuilder builder) {
-    builder.element('transition', nest: () {
-      builder.attribute('id', id);
-      builder.attribute('from', from);
-      builder.attribute('to', to);
-      builder.element('text', nest: text);
-    });
-  }
+  @MappableConstructor()
+  EditorTransition.mappableConstructor({
+    required this.id,
+    required this.text,
+    required this.from,
+    required this.to,
+  });
 }

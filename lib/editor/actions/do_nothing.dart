@@ -1,8 +1,19 @@
+import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/material.dart';
 import 'package:graph_vn/editor/editor_rich_text.dart';
 import 'package:graph_vn/editor/actions/base.dart';
 
-class DoNothing extends BaseAction {
+part 'do_nothing.mapper.dart';
+
+@MappableClass(discriminatorValue: 'DoNothing')
+class DoNothing extends BaseAction with DoNothingMappable {
+
+  DoNothing();
+
+  @MappableConstructor()
+  DoNothing.mappableConstructor({
+    required super.id,
+  }) : super.mappableConstructor();
 
   @override
   String actionText() {
