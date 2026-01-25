@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:graph_vn/editor/actions/base.dart';
 import 'package:graph_vn/editor/actions/do_nothing.dart';
 import 'package:graph_vn/editor/actions/increase_number_value.dart';
+import 'package:graph_vn/editor/actions/rotate_named_value.dart';
 import 'package:graph_vn/editor/actions/set_named_value.dart';
 import 'package:graph_vn/editor/actions/set_number_value.dart';
 
@@ -52,6 +53,7 @@ Future<BaseAction?> editStructAction(BuildContext context, BaseAction action) as
                 IncreaseNumberValue action => IncreaseNumberValueEditor(action: action),
                 SetNumberValue action => SetNumberValueEditor(action: action),
                 SetNamedValue action => SetNamedValueEditor(action: action),
+                RotateNamedValue action => RotateNamedValueEditor(action: action),
                 _ => Placeholder()
               },
             ),

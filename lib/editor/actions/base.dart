@@ -1,5 +1,6 @@
 import 'package:graph_vn/editor/actions/do_nothing.dart';
 import 'package:graph_vn/editor/actions/increase_number_value.dart';
+import 'package:graph_vn/editor/actions/rotate_named_value.dart';
 import 'package:graph_vn/editor/actions/set_named_value.dart';
 import 'package:graph_vn/editor/actions/set_number_value.dart';
 import 'package:uuid/uuid.dart';
@@ -17,6 +18,7 @@ enum StructActionType {
   setNumberValue(type: SetNumberValue, create: SetNumberValue.new, title: 'Set number value'),
   setNamedValue(type: SetNamedValue, create: SetNamedValue.new, title: 'Set named value'),
   increaseNumberValue(type: IncreaseNumberValue, create: IncreaseNumberValue.new, title: 'Increase number value'),
+  rotateNamedValue(type: RotateNamedValue, create: RotateNamedValue.new, title: 'Rotate named value'),
   ;
 
   final Type type;
