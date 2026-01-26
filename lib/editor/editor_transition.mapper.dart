@@ -29,6 +29,12 @@ class EditorTransitionMapper extends ClassMapperBase<EditorTransition> {
   static const Field<EditorTransition, String> _f$from = Field('from', _$from);
   static String _$to(EditorTransition v) => v.to;
   static const Field<EditorTransition, String> _f$to = Field('to', _$to);
+  static TransitionPosition _$pos(EditorTransition v) => v.pos;
+  static const Field<EditorTransition, TransitionPosition> _f$pos = Field(
+    'pos',
+    _$pos,
+    mode: FieldMode.member,
+  );
 
   @override
   final MappableFields<EditorTransition> fields = const {
@@ -36,6 +42,7 @@ class EditorTransitionMapper extends ClassMapperBase<EditorTransition> {
     #text: _f$text,
     #from: _f$from,
     #to: _f$to,
+    #pos: _f$pos,
   };
 
   static EditorTransition _instantiate(DecodingData data) {
