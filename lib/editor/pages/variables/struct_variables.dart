@@ -116,14 +116,14 @@ class _StructVariablesState extends State<StructVariables> {
                       ),
                     ),
                   ),
-                  IconButton(
-                    icon: Icon(Icons.delete, color: Colors.red),
-                    onPressed: () {
-                      setState(() {
-                        widget.struct.variables.removeAt(varIndex);
-                      });
-                    },
-                  ),
+                  // IconButton(
+                  //   icon: Icon(Icons.delete, color: Colors.red),
+                  //   onPressed: () {
+                  //     setState(() {
+                  //       widget.struct.variables.removeAt(varIndex);
+                  //     });
+                  //   },
+                  // ),
                 ],
               );
             },

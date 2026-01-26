@@ -1,7 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:graph_vn/editor/editor_constants.dart';
 import 'package:graph_vn/editor/editor_node.dart';
 import 'package:graph_vn/editor/editor_state.dart';
 import 'package:graph_vn/editor/editor_transition.dart';
@@ -13,15 +14,13 @@ import 'package:graph_vn/editor/pages/graph/transition_tooltip.dart';
 class EditorCanvas extends StatefulWidget {
   final EditorNode? selectedNode;
   final EditorTransition? selectedTransition;
-  final Function(EditorNode) startNodeEdit;
-  final Function(EditorTransition) startTransitionEdit;
+  final Function(dynamic) onSelect;
 
   const EditorCanvas({
     super.key,
     required this.selectedNode,
     required this.selectedTransition,
-    required this.startNodeEdit,
-    required this.startTransitionEdit,
+    required this.onSelect,
   });
 
   @override
@@ -47,13 +46,17 @@ class _EditorCanvasState extends State<EditorCanvas> {
   Offset? _hoverNodePosition;
   int _forcedRepaint = 0;
 
+  StreamSubscription<String>? _stateUpdatedEventsSubscription = null;
+
+
   void _onPointerDown(PointerDownEvent event) {
     if (event.buttons & kPrimaryMouseButton != 0) {
       if (_hoveredNode != null) {
-        widget.startNodeEdit(_hoveredNode!);
-      }
-      if (_hoveredTransition != null) {
-        widget.startTransitionEdit(_hoveredTransition!);
+        widget.onSelect(_hoveredNode!);
+      } else if (_hoveredTransition != null) {
+        widget.onSelect(_hoveredTransition!);
+      } else {
+        widget.onSelect(null);
       }
       if (event.timeStamp - _lastClickTime < const Duration(milliseconds: 300)) {
         _createNewNodeAt(event.localPosition - _offset);
@@ -102,7 +105,7 @@ class _EditorCanvasState extends State<EditorCanvas> {
   void _createNewNodeAt(Offset localPos) {
     final newNode = EditorNode();
     if (EditorState.trySetNodePosition(newNode, localPos.dx.round(), localPos.dy.round())) {
-      EditorState.nodes[newNode.id] = newNode;
+      EditorState.addNode(newNode);
     }
   }
 
@@ -130,10 +133,9 @@ class _EditorCanvasState extends State<EditorCanvas> {
         final rect = Rect.fromLTWH(left, top, 10, 10);
         if (rect.contains(event.localPosition) && node.id != _linkingNodeId) {
           // Create transition
-          EditorState.transitions.add(EditorTransition()
+          EditorState.addTransition(EditorTransition()
             ..from = _linkingNodeId!
             ..to = node.id);
-          EditorState.transitionsNotifier.value = List.from(EditorState.transitions);
           break;
         }
       }
@@ -190,56 +192,8 @@ class _EditorCanvasState extends State<EditorCanvas> {
     EditorTransition? nearest;
     double nearestDist = double.infinity;
 
-    final Map<String, int> precalculatedPairCount = {};
     for (final transition in EditorState.transitions) {
-      final key = '${transition.from}->${transition.to}';
-      precalculatedPairCount.update(key, (v) => v + 1, ifAbsent: () => 1);
-    }
-
-    final Map<String, int> pairCount = {};
-
-    for (final transition in EditorState.transitions) {
-      final fromNode = EditorState.nodes[transition.from];
-      final toNode = EditorState.nodes[transition.to];
-      if (fromNode == null || toNode == null) continue;
-      final start = Offset(
-        fromNode.x.toDouble(),
-        fromNode.y.toDouble(),
-      ) + _offset;
-      final end = Offset(
-        toNode.x.toDouble(),
-        toNode.y.toDouble(),
-      ) + _offset;
-      final key = '${transition.from}->${transition.to}';
-      final index = pairCount.update(key, (v) => v + 1, ifAbsent: () => 1);
-      final totalTransitionsCount = precalculatedPairCount[key] ?? 0;
-
-      final oppositeKey = '${transition.to}->${transition.from}';
-      final hasOppositeDirectionTransitions = precalculatedPairCount.containsKey(oppositeKey);
-
-      double t;
-      if (hasOppositeDirectionTransitions) {
-        t = index.toDouble();
-      } else {
-        t = index.toDouble() - (totalTransitionsCount + 1).toDouble() / 2.0;
-      }
-
-      Offset center;
-      final mid = Offset(
-        (start.dx + end.dx) / 2,
-        (start.dy + end.dy) / 2,
-      );
-      final d = end - start;
-      final perp = Offset(-d.dy, d.dx);
-      final perpLength = perp.distance;
-      final magnitude = EditorConstants.transitionDeviationMagnitude * t;
-      final unitPerp = perpLength == 0 ? Offset.zero : Offset(perp.dx / perpLength, perp.dy / perpLength);
-      final control = mid + unitPerp * magnitude;
-      center = Offset(
-        0.25 * start.dx + 0.5 * control.dx + 0.25 * end.dx,
-        0.25 * start.dy + 0.5 * control.dy + 0.25 * end.dy,
-      );
-      final dist = (pos - center).distance;
+      final dist = (pos - (transition.pos.center + _offset)).distance;
       if (dist < nearestDist && dist <= threshold) {
         nearestDist = dist;
         nearest = transition;
@@ -249,8 +203,17 @@ class _EditorCanvasState extends State<EditorCanvas> {
   }
 
   @override
+  void initState() {
+    _stateUpdatedEventsSubscription = EditorState.stateUpdatedEvents.listen((e) { 
+      setState(() {});
+    });
+    super.initState();
+  }
+
+  @override
   void dispose() {
     EditorState.storedOffset = _offset;
+    _stateUpdatedEventsSubscription?.cancel();
     super.dispose();
   }
 

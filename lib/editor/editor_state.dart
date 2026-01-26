@@ -1,11 +1,12 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:graph_vn/editor/editor_constants.dart';
 import 'package:graph_vn/editor/editor_node.dart';
 import 'package:graph_vn/editor/editor_transition.dart';
 import 'package:graph_vn/editor/project_data.dart';
+import 'package:graph_vn/editor/transition_position.dart';
 import 'package:graph_vn/editor/variables.dart';
 import 'dart:ui';
 
@@ -16,18 +17,19 @@ class EditorState {
 
   static final Map<String, EditorNode> nodes = <String, EditorNode>{};
   static final List<EditorTransition> transitions = List.empty(growable: true);
-  static final ValueNotifier<List<EditorTransition>> transitionsNotifier = ValueNotifier<List<EditorTransition>>([]);
   static EditorNode? selectedNode;
   static EditorTransition? selectedTransition;
   static final List<Struct> structs = List.empty(growable: true);
   static Offset? storedOffset;
   static String currentNode = "";
+  
+  static final _stateUpdatedEventsController = StreamController<String>();
+  static final stateUpdatedEvents = _stateUpdatedEventsController.stream;
 
   static void load(String projectDir) {
     projectDirName = "";
     nodes.clear();
     transitions.clear();
-    transitionsNotifier.value = [];
     selectedNode = null;
     selectedTransition = null;
     structs.clear();
@@ -45,6 +47,8 @@ class EditorState {
     structs.addAll(projectData.structs);
 
     projectDirName = projectDir;
+    updateAllTransitionPositions();
+    _stateUpdatedEventsController.add('');
   }
 
   static Future<void> save() async {
@@ -66,6 +70,12 @@ class EditorState {
     logger.i('saving project done');
   }
 
+  static void addTransition(EditorTransition transition) {
+    transitions.add(transition);
+    updateAllTransitionPositions();
+    _stateUpdatedEventsController.add('');
+  }
+
   static void deleteTransition(String id) {
     if (EditorState.selectedTransition?.id == id) {
       EditorState.selectedTransition = null;
@@ -73,8 +83,13 @@ class EditorState {
     final idx = EditorState.transitions.indexWhere((t) => t.id == id);
     if (idx != -1) {
       EditorState.transitions.removeAt(idx);
-      EditorState.transitionsNotifier.value = List.from(EditorState.transitions);
     }
+    _stateUpdatedEventsController.add('');
+  }
+
+  static void addNode(EditorNode node) {
+    EditorState.nodes[node.id] = node;
+    _stateUpdatedEventsController.add('');
   }
 
   static void deleteNode(String id) {
@@ -85,8 +100,8 @@ class EditorState {
     if (node != null) {
       EditorState.nodes.remove(node.id);
       EditorState.transitions.removeWhere((t) => t.from == node.id || t.to == node.id);
-      EditorState.transitionsNotifier.value = List.from(EditorState.transitions);
     }
+    _stateUpdatedEventsController.add('');
   }
 
   static bool hasNodeInPosition(int x, int y) {
@@ -107,6 +122,8 @@ class EditorState {
     if (!hasNodeInPosition(newX, newY)) {
       node.x = newX;
       node.y = newY;
+      updateAllTransitionPositions();
+      _stateUpdatedEventsController.add('');
       return true;
     }
     return false;
@@ -134,6 +151,70 @@ class EditorState {
       return "variable";
     }
     return "${struct.name}->${variable.name}";
+  }
+
+  static void updateAllTransitionPositions() {
+    final Map<String, int> precalculatedPairCount = {};
+    for (final transition in EditorState.transitions) {
+      final key = '${transition.from}->${transition.to}';
+      precalculatedPairCount.update(key, (v) => v + 1, ifAbsent: () => 1);
+    }
+
+    final Map<String, int> pairCount = {};
+
+    for (final transition in EditorState.transitions) {
+      final fromNode = EditorState.nodes[transition.from];
+      final toNode = EditorState.nodes[transition.to];
+      if (fromNode == null || toNode == null) continue;
+
+      final start = Offset(
+        fromNode.x.toDouble(),
+        fromNode.y.toDouble(),
+      );
+      
+      final end = Offset(
+        toNode.x.toDouble(),
+        toNode.y.toDouble(),
+      );
+
+      final key = '${transition.from}->${transition.to}';
+      final index = pairCount.update(key, (v) => v + 1, ifAbsent: () => 1);
+      final totalTransitionsCount = precalculatedPairCount[key] ?? 0;
+
+      final oppositeKey = '${transition.to}->${transition.from}';
+      final hasOppositeDirectionTransitions = precalculatedPairCount.containsKey(oppositeKey);
+
+      double t;
+      if (hasOppositeDirectionTransitions) {
+        t = index.toDouble();
+      } else {
+        t = index.toDouble() - (totalTransitionsCount + 1).toDouble() / 2.0;
+      }
+
+      final mid = Offset(
+        (start.dx + end.dx) / 2,
+        (start.dy + end.dy) / 2,
+      );
+      final Offset d = end - start;
+      final Offset perp = Offset(-d.dy, d.dx);
+      final double perpLength = perp.distance;
+      final double magnitude = EditorConstants.transitionDeviationMagnitude * t;
+      final Offset unitPerp = perpLength == 0 ? Offset.zero : Offset(perp.dx / perpLength, perp.dy / perpLength);
+      final Offset control = mid + unitPerp * magnitude;
+
+      final center = Offset(
+        0.25 * start.dx + 0.5 * control.dx + 0.25 * end.dx,
+        0.25 * start.dy + 0.5 * control.dy + 0.25 * end.dy,
+      );
+
+      transition.pos = TransitionPosition(
+        start: start,
+        end: end,
+        control: control,
+        center: center,
+        direction: d.direction,
+      );
+    }
   }
   
 }

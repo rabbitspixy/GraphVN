@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:graph_vn/editor/editor_constants.dart';
 import 'package:graph_vn/editor/editor_state.dart';
 import 'dart:math';
 
@@ -17,78 +16,30 @@ class TransitionPainter extends CustomPainter {
       ..color = Colors.black
       ..strokeWidth = 2
       ..style = PaintingStyle.stroke;
-    
-    final Map<String, int> precalculatedPairCount = {};
-    for (final transition in EditorState.transitions) {
-      final key = '${transition.from}->${transition.to}';
-      precalculatedPairCount.update(key, (v) => v + 1, ifAbsent: () => 1);
-    }
-
-    final Map<String, int> pairCount = {};
 
     for (final transition in EditorState.transitions) {
-      final fromNode = EditorState.nodes[transition.from];
-      final toNode = EditorState.nodes[transition.to];
-      if (fromNode == null || toNode == null) continue;
+      final start = transition.pos.start + offset;
+      final end = transition.pos.end + offset;
+      final control = transition.pos.control + offset;
+      final center = transition.pos.center + offset;
 
-      final start = Offset(
-        fromNode.x.toDouble(),
-        fromNode.y.toDouble(),
-      ) + offset;
-      
-      final end = Offset(
-        toNode.x.toDouble(),
-        toNode.y.toDouble(),
-      ) + offset;
-
-      final double angle = atan2(end.dy - start.dy, end.dx - start.dx);
       paint.shader = LinearGradient(
         colors: [Colors.black.withAlpha(26), Colors.black.withAlpha(50), Colors.black],
         begin: Alignment.centerLeft,
         end: Alignment.centerRight,
-        transform: GradientRotation(angle),
+        transform: GradientRotation(transition.pos.direction),
       ).createShader(Rect.fromPoints(start, end));
-
-      final key = '${transition.from}->${transition.to}';
-      final index = pairCount.update(key, (v) => v + 1, ifAbsent: () => 1);
-      final totalTransitionsCount = precalculatedPairCount[key] ?? 0;
-
-      final oppositeKey = '${transition.to}->${transition.from}';
-      final hasOppositeDirectionTransitions = precalculatedPairCount.containsKey(oppositeKey);
-
-      double t;
-      if (hasOppositeDirectionTransitions) {
-        t = index.toDouble();
-      } else {
-        t = index.toDouble() - (totalTransitionsCount + 1).toDouble() / 2.0;
-      }
-
-      // Multiple transitions – add increasing curvature
-      final mid = Offset(
-        (start.dx + end.dx) / 2,
-        (start.dy + end.dy) / 2,
-      );
-      final Offset d = end - start;
-      final Offset perp = Offset(-d.dy, d.dx);
-      final double perpLength = perp.distance;
-      final double magnitude = EditorConstants.transitionDeviationMagnitude * t;
-      final Offset unitPerp = perpLength == 0 ? Offset.zero : Offset(perp.dx / perpLength, perp.dy / perpLength);
-      final Offset control = mid + unitPerp * magnitude;
 
       final path = Path()
         ..moveTo(start.dx, start.dy)
         ..quadraticBezierTo(control.dx, control.dy, end.dx, end.dy);
-      final center = Offset(
-        0.25 * start.dx + 0.5 * control.dx + 0.25 * end.dx,
-        0.25 * start.dy + 0.5 * control.dy + 0.25 * end.dy,
-      );
       canvas.drawPath(path, paint);
       final centerPaint = Paint()
         ..color = Colors.black
         ..strokeWidth = 1.5
         ..strokeCap = StrokeCap.round
         ..style = PaintingStyle.stroke;
-      final arrow = _arrowPath(center, d.direction);
+      final arrow = _arrowPath(center, transition.pos.direction);
       canvas.drawPath(arrow, centerPaint);
       if (transition.id == selectedTransition?.id) {
         final pointPaint = Paint()..color = Colors.black..style = PaintingStyle.stroke;

@@ -5,7 +5,7 @@ import 'package:graph_vn/components.dart';
 import 'package:graph_vn/engine.dart';
 
 class BackgroundImageWidget extends StatefulWidget {
-  const BackgroundImageWidget({Key? key}) : super(key: key);
+  const BackgroundImageWidget({super.key});
 
   @override
   State<BackgroundImageWidget> createState() => _BackgroundImageWidgetState();

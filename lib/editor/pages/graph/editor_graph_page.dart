@@ -14,18 +14,15 @@ class EditorGraphPage extends StatefulWidget {
 }
 
 class _EditorGraphPageState extends State<EditorGraphPage> {
-  void _onStartNodeEdit(EditorNode node) {
-    setState(() {
-      EditorState.selectedNode = node;
-      EditorState.selectedTransition = null;
-    });
-  }
 
-  void _onStartTransitionEdit(EditorTransition transition) {
-    setState(() {
-      EditorState.selectedNode = null;
-      EditorState.selectedTransition = transition;
-    });
+  void _onSelectHandler(dynamic selectedObject) {
+    EditorState.selectedNode = null;
+    EditorState.selectedTransition = null;
+    switch (selectedObject) {
+      case EditorNode _: EditorState.selectedNode = selectedObject;
+      case EditorTransition _: EditorState.selectedTransition = selectedObject;
+    }
+    setState(() {});
   }
 
   void _onNodeEdited() {
@@ -44,8 +41,7 @@ class _EditorGraphPageState extends State<EditorGraphPage> {
         EditorCanvas(
           selectedNode: EditorState.selectedNode,
           selectedTransition: EditorState.selectedTransition,
-          startNodeEdit: _onStartNodeEdit,
-          startTransitionEdit: _onStartTransitionEdit,
+          onSelect: _onSelectHandler,
         ),
         Positioned(
           left: size.width * 0.7,

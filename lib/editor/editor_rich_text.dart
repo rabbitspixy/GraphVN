@@ -5,7 +5,7 @@ class EditorRichText extends StatelessWidget {
 
   final List<ETextSpan> textSpans;
 
-  EditorRichText(this.textSpans);
+  const EditorRichText(this.textSpans, {super.key});
 
 
   @override

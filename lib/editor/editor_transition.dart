@@ -1,4 +1,6 @@
 import 'package:dart_mappable/dart_mappable.dart';
+import 'package:flutter/services.dart';
+import 'package:graph_vn/editor/transition_position.dart';
 import 'package:uuid/uuid.dart';
 
 part 'editor_transition.mapper.dart';
@@ -9,6 +11,14 @@ class EditorTransition with EditorTransitionMappable {
   String text = "";
   String from = "";
   String to = "";
+
+  TransitionPosition pos = TransitionPosition(
+    start: Offset(0, 0),
+    end: Offset(0, 0),
+    control: Offset(0, 0),
+    center: Offset(0, 0),
+    direction: 0,
+  );
 
   EditorTransition();
 
