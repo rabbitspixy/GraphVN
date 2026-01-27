@@ -29,6 +29,13 @@ class EditorTransitionMapper extends ClassMapperBase<EditorTransition> {
   static const Field<EditorTransition, String> _f$from = Field('from', _$from);
   static String _$to(EditorTransition v) => v.to;
   static const Field<EditorTransition, String> _f$to = Field('to', _$to);
+  static int _$weight(EditorTransition v) => v.weight;
+  static const Field<EditorTransition, int> _f$weight = Field(
+    'weight',
+    _$weight,
+    opt: true,
+    def: 1,
+  );
   static TransitionPosition _$pos(EditorTransition v) => v.pos;
   static const Field<EditorTransition, TransitionPosition> _f$pos = Field(
     'pos',
@@ -42,6 +49,7 @@ class EditorTransitionMapper extends ClassMapperBase<EditorTransition> {
     #text: _f$text,
     #from: _f$from,
     #to: _f$to,
+    #weight: _f$weight,
     #pos: _f$pos,
   };
 
@@ -51,6 +59,7 @@ class EditorTransitionMapper extends ClassMapperBase<EditorTransition> {
       text: data.dec(_f$text),
       from: data.dec(_f$from),
       to: data.dec(_f$to),
+      weight: data.dec(_f$weight),
     );
   }
 
@@ -116,7 +125,7 @@ extension EditorTransitionValueCopy<$R, $Out>
 
 abstract class EditorTransitionCopyWith<$R, $In extends EditorTransition, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  $R call({String? id, String? text, String? from, String? to});
+  $R call({String? id, String? text, String? from, String? to, int? weight});
   EditorTransitionCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
     Then<$Out2, $R2> t,
   );
@@ -131,14 +140,16 @@ class _EditorTransitionCopyWithImpl<$R, $Out>
   late final ClassMapperBase<EditorTransition> $mapper =
       EditorTransitionMapper.ensureInitialized();
   @override
-  $R call({String? id, String? text, String? from, String? to}) => $apply(
-    FieldCopyWithData({
-      if (id != null) #id: id,
-      if (text != null) #text: text,
-      if (from != null) #from: from,
-      if (to != null) #to: to,
-    }),
-  );
+  $R call({String? id, String? text, String? from, String? to, int? weight}) =>
+      $apply(
+        FieldCopyWithData({
+          if (id != null) #id: id,
+          if (text != null) #text: text,
+          if (from != null) #from: from,
+          if (to != null) #to: to,
+          if (weight != null) #weight: weight,
+        }),
+      );
   @override
   EditorTransition $make(CopyWithData data) =>
       EditorTransition.mappableConstructor(
@@ -146,6 +157,7 @@ class _EditorTransitionCopyWithImpl<$R, $Out>
         text: data.get(#text, or: $value.text),
         from: data.get(#from, or: $value.from),
         to: data.get(#to, or: $value.to),
+        weight: data.get(#weight, or: $value.weight),
       );
 
   @override
