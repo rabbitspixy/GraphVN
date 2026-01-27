@@ -33,6 +33,12 @@ class EditorNodeMapper extends ClassMapperBase<EditorNode> {
   static const Field<EditorNode, int> _f$y = Field('y', _$y);
   static bool _$isStart(EditorNode v) => v.isStart;
   static const Field<EditorNode, bool> _f$isStart = Field('isStart', _$isStart);
+  static List<String> _$actionIds(EditorNode v) => v.actionIds;
+  static const Field<EditorNode, List<String>> _f$actionIds = Field(
+    'actionIds',
+    _$actionIds,
+    opt: true,
+  );
 
   @override
   final MappableFields<EditorNode> fields = const {
@@ -42,6 +48,7 @@ class EditorNodeMapper extends ClassMapperBase<EditorNode> {
     #x: _f$x,
     #y: _f$y,
     #isStart: _f$isStart,
+    #actionIds: _f$actionIds,
   };
 
   static EditorNode _instantiate(DecodingData data) {
@@ -52,6 +59,7 @@ class EditorNodeMapper extends ClassMapperBase<EditorNode> {
       x: data.dec(_f$x),
       y: data.dec(_f$y),
       isStart: data.dec(_f$isStart),
+      actionIds: data.dec(_f$actionIds),
     );
   }
 
@@ -115,6 +123,7 @@ extension EditorNodeValueCopy<$R, $Out>
 
 abstract class EditorNodeCopyWith<$R, $In extends EditorNode, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>> get actionIds;
   $R call({
     String? id,
     String? text,
@@ -122,6 +131,7 @@ abstract class EditorNodeCopyWith<$R, $In extends EditorNode, $Out>
     int? x,
     int? y,
     bool? isStart,
+    List<String>? actionIds,
   });
   EditorNodeCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
@@ -135,6 +145,13 @@ class _EditorNodeCopyWithImpl<$R, $Out>
   late final ClassMapperBase<EditorNode> $mapper =
       EditorNodeMapper.ensureInitialized();
   @override
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>> get actionIds =>
+      ListCopyWith(
+        $value.actionIds,
+        (v, t) => ObjectCopyWith(v, $identity, t),
+        (v) => call(actionIds: v),
+      );
+  @override
   $R call({
     String? id,
     String? text,
@@ -142,6 +159,7 @@ class _EditorNodeCopyWithImpl<$R, $Out>
     int? x,
     int? y,
     bool? isStart,
+    Object? actionIds = $none,
   }) => $apply(
     FieldCopyWithData({
       if (id != null) #id: id,
@@ -150,6 +168,7 @@ class _EditorNodeCopyWithImpl<$R, $Out>
       if (x != null) #x: x,
       if (y != null) #y: y,
       if (isStart != null) #isStart: isStart,
+      if (actionIds != $none) #actionIds: actionIds,
     }),
   );
   @override
@@ -160,6 +179,7 @@ class _EditorNodeCopyWithImpl<$R, $Out>
     x: data.get(#x, or: $value.x),
     y: data.get(#y, or: $value.y),
     isStart: data.get(#isStart, or: $value.isStart),
+    actionIds: data.get(#actionIds, or: $value.actionIds),
   );
 
   @override

@@ -36,6 +36,12 @@ class EditorTransitionMapper extends ClassMapperBase<EditorTransition> {
     opt: true,
     def: 1,
   );
+  static List<String> _$actionIds(EditorTransition v) => v.actionIds;
+  static const Field<EditorTransition, List<String>> _f$actionIds = Field(
+    'actionIds',
+    _$actionIds,
+    opt: true,
+  );
   static TransitionPosition _$pos(EditorTransition v) => v.pos;
   static const Field<EditorTransition, TransitionPosition> _f$pos = Field(
     'pos',
@@ -50,6 +56,7 @@ class EditorTransitionMapper extends ClassMapperBase<EditorTransition> {
     #from: _f$from,
     #to: _f$to,
     #weight: _f$weight,
+    #actionIds: _f$actionIds,
     #pos: _f$pos,
   };
 
@@ -60,6 +67,7 @@ class EditorTransitionMapper extends ClassMapperBase<EditorTransition> {
       from: data.dec(_f$from),
       to: data.dec(_f$to),
       weight: data.dec(_f$weight),
+      actionIds: data.dec(_f$actionIds),
     );
   }
 
@@ -125,7 +133,15 @@ extension EditorTransitionValueCopy<$R, $Out>
 
 abstract class EditorTransitionCopyWith<$R, $In extends EditorTransition, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  $R call({String? id, String? text, String? from, String? to, int? weight});
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>> get actionIds;
+  $R call({
+    String? id,
+    String? text,
+    String? from,
+    String? to,
+    int? weight,
+    List<String>? actionIds,
+  });
   EditorTransitionCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
     Then<$Out2, $R2> t,
   );
@@ -140,16 +156,30 @@ class _EditorTransitionCopyWithImpl<$R, $Out>
   late final ClassMapperBase<EditorTransition> $mapper =
       EditorTransitionMapper.ensureInitialized();
   @override
-  $R call({String? id, String? text, String? from, String? to, int? weight}) =>
-      $apply(
-        FieldCopyWithData({
-          if (id != null) #id: id,
-          if (text != null) #text: text,
-          if (from != null) #from: from,
-          if (to != null) #to: to,
-          if (weight != null) #weight: weight,
-        }),
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>> get actionIds =>
+      ListCopyWith(
+        $value.actionIds,
+        (v, t) => ObjectCopyWith(v, $identity, t),
+        (v) => call(actionIds: v),
       );
+  @override
+  $R call({
+    String? id,
+    String? text,
+    String? from,
+    String? to,
+    int? weight,
+    Object? actionIds = $none,
+  }) => $apply(
+    FieldCopyWithData({
+      if (id != null) #id: id,
+      if (text != null) #text: text,
+      if (from != null) #from: from,
+      if (to != null) #to: to,
+      if (weight != null) #weight: weight,
+      if (actionIds != $none) #actionIds: actionIds,
+    }),
+  );
   @override
   EditorTransition $make(CopyWithData data) =>
       EditorTransition.mappableConstructor(
@@ -158,6 +188,7 @@ class _EditorTransitionCopyWithImpl<$R, $Out>
         from: data.get(#from, or: $value.from),
         to: data.get(#to, or: $value.to),
         weight: data.get(#weight, or: $value.weight),
+        actionIds: data.get(#actionIds, or: $value.actionIds),
       );
 
   @override

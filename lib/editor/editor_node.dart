@@ -11,6 +11,7 @@ class EditorNode with EditorNodeMappable {
   int x = 0;
   int y = 0;
   bool isStart = false;
+  List<String> actionIds = [];
 
   bool get isEmpty => text.isEmpty;
 
@@ -24,5 +25,8 @@ class EditorNode with EditorNodeMappable {
     required this.x,
     required this.y,
     required this.isStart,
-  });
+    List<String>? actionIds,
+  }) {
+    this.actionIds = actionIds ?? [];
+  }
 }

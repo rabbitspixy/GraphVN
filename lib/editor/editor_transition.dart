@@ -11,9 +11,9 @@ class EditorTransition with EditorTransitionMappable {
   String text = "";
   String from = "";
   String to = "";
-  
   //must be greater than 0
   int weight = 1;
+  List<String> actionIds = [];
 
   bool get isButton => text.isNotEmpty;
 
@@ -34,5 +34,8 @@ class EditorTransition with EditorTransitionMappable {
     required this.from,
     required this.to,
     this.weight = 1,
-  });
+    List<String>? actionIds,
+  }) {
+    this.actionIds = actionIds ?? [];
+  }
 }
