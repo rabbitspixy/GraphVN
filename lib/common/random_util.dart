@@ -18,6 +18,17 @@ EditorTransition? selectRandomTransition(List<EditorTransition> transitions) {
   if (transitions.isEmpty) {
     return null;
   }
-  final index = Random().nextInt(transitions.length);
-  return transitions[index];
+  final totalWeight = transitions.fold(0, (sum, t) => sum + t.weight);
+  if (totalWeight <= 0) {
+    return null;
+  }
+  final rand = Random().nextDouble() * totalWeight;
+  double cumulative = 0;
+  for (final t in transitions) {
+    cumulative += t.weight;
+    if (rand < cumulative) {
+      return t;
+    }
+  }
+  return transitions.last;
 }
