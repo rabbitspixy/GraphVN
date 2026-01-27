@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:graph_vn/common/random_util.dart';
 import 'package:graph_vn/editor/editor_node.dart';
@@ -111,6 +113,15 @@ class Player {
         .where((t) => t.isButton)
         .map((t) => ChoiseButton(text: t.text, transitionId: t.id))
         .toList();
+    
+    if (node.imagePath.isNotEmpty) {
+      final file = File("projects/${EditorState.projectDirName}/images/${node.imagePath}");
+      if (file.existsSync()) {
+        imageInfoNotifier.value = PlayerImageInfo(
+          path: file.path,
+        );
+      }
+    }
   }
 
   static bool initStartGame() {
