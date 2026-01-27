@@ -11,6 +11,8 @@ class EditorTransition with EditorTransitionMappable {
   String text = "";
   String from = "";
   String to = "";
+  
+  //must be greater than 0
   int weight = 1;
 
   bool get isButton => text.isNotEmpty;
