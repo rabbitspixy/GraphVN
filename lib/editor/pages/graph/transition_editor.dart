@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:graph_vn/common/number_util.dart';
 import 'package:graph_vn/editor/editor_state.dart';
 import 'package:graph_vn/editor/editor_transition.dart';
 
@@ -18,7 +19,6 @@ class TransitionEditor extends StatefulWidget {
 class _TransitionEditorState extends State<TransitionEditor> {
   late TextEditingController _controller;
   late TextEditingController _weightController;
-  String? _weightError;
 
   @override
   void initState() {
@@ -34,17 +34,13 @@ class _TransitionEditorState extends State<TransitionEditor> {
     _weightController = TextEditingController(text: widget.transition.weight.toString());
     _weightController.addListener(() {
       final text = _weightController.text;
-      final parsed = int.tryParse(text);
-      if (parsed == null || parsed < 1 || parsed > 1000000) {
-        _weightError = 'Weight must be between 1 and 1000000';
-      } else {
-        _weightError = null;
-        if (widget.transition.weight != parsed) {
-          widget.transition.weight = parsed;
-          widget.onChange();
-          setState(() {});
-        }
+      final parsed = parseWithCoerce(text, 1, 999999);
+      if (parsed.toString() != text) {
+        _weightController.text = parsed.toString();
       }
+      widget.transition.weight = parsed;
+      widget.onChange();
+      setState(() {});
     });
   }
 
@@ -73,7 +69,6 @@ class _TransitionEditorState extends State<TransitionEditor> {
           keyboardType: TextInputType.number,
           decoration: InputDecoration(
             border: const OutlineInputBorder(),
-            errorText: _weightError,
           ),
         ),
         const SizedBox(height: 8),
