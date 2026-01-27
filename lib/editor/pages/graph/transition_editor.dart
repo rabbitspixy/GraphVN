@@ -77,7 +77,6 @@ class _TransitionEditorState extends State<TransitionEditor> {
       final name = _procedureName(actionId) ?? actionId;
       widgets.add(
         ListTile(
-          leading: const Icon(Icons.play_arrow),
           title: Text(name),
           trailing: IconButton(
             icon: const Icon(Icons.delete),
@@ -95,7 +94,7 @@ class _TransitionEditorState extends State<TransitionEditor> {
       ElevatedButton.icon(
         onPressed: _addAction,
         icon: const Icon(Icons.add),
-        label: const Text('Add Action'),
+        label: const Text('Procedure'),
       ),
     );
     return Column(children: widgets);
@@ -122,8 +121,7 @@ class _TransitionEditorState extends State<TransitionEditor> {
           ),
         ),
         const SizedBox(height: 8),
-        // Actions list
-        const Text('Actions:', style: TextStyle(fontWeight: FontWeight.bold)),
+        const Text('Exec procedures:', style: TextStyle(fontWeight: FontWeight.bold)),
         _buildActionList(),
         const SizedBox(height: 8),
         ElevatedButton(

@@ -32,7 +32,6 @@ Future<Variable?> showVariableSelector(BuildContext? context, VariableType varia
               final s = EditorState.structs[index];
               return ListTile(
                 title: Text(s.name),
-                subtitle: Text(s.runtimeType.toString()),
                 onTap: () => Navigator.of(ctx).pop(s),
               );
             },
@@ -66,7 +65,6 @@ Future<Variable?> showVariableSelector(BuildContext? context, VariableType varia
               final v = filteredVariables[index];
               return ListTile(
                 title: Text(v.name),
-                subtitle: Text(v.runtimeType.toString()),
                 onTap: () => Navigator.of(ctx).pop(v),
               );
             },

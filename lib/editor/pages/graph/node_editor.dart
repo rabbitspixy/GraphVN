@@ -74,7 +74,6 @@ class _NodeEditorState extends State<NodeEditor> {
       final name = _procedureName(actionId) ?? actionId;
       widgets.add(
         ListTile(
-          leading: const Icon(Icons.play_arrow),
           title: Text(name),
           trailing: IconButton(
             icon: const Icon(Icons.delete),
@@ -131,8 +130,7 @@ class _NodeEditorState extends State<NodeEditor> {
           ],
         ),
         const SizedBox(height: 8),
-        // Actions list
-        const Text('Actions:', style: TextStyle(fontWeight: FontWeight.bold)),
+        const Text('Exec procedures:', style: TextStyle(fontWeight: FontWeight.bold)),
         _buildActionList(),
         const SizedBox(height: 8),
         ElevatedButton(

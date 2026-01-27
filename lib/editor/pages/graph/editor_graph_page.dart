@@ -48,7 +48,7 @@ class _EditorGraphPageState extends State<EditorGraphPage> {
           top: 0,
           bottom: 0,
           child: Container(
-            width: size.width * 0.3,
+            width: size.width * 0.3 - 50,
             color: Colors.black.withAlpha(20),
             padding: const EdgeInsets.all(8.0),
             child: EditorState.selectedNode != null

@@ -33,7 +33,6 @@ Future<StructProcedure?> showProcedureSelector(BuildContext? context) async {
               final s = EditorState.structs[index];
               return ListTile(
                 title: Text(s.name),
-                subtitle: Text(s.runtimeType.toString()),
                 onTap: () => Navigator.of(ctx).pop(s),
               );
             },
@@ -68,7 +67,6 @@ Future<StructProcedure?> showProcedureSelector(BuildContext? context) async {
               final p = struct.procedures[index];
               return ListTile(
                 title: Text(p.name),
-                subtitle: Text(p.runtimeType.toString()),
                 onTap: () => Navigator.of(ctx).pop(p),
               );
             },
