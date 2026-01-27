@@ -19,6 +19,7 @@ class NodeEditor extends StatefulWidget {
 class _NodeEditorState extends State<NodeEditor> {
   late TextEditingController _nodeTextController;
   late TextEditingController _labelTextController;
+  late TextEditingController _imagePathController;
   bool _isStart = false;
 
   @override
@@ -26,6 +27,7 @@ class _NodeEditorState extends State<NodeEditor> {
     super.initState();
     _nodeTextController = TextEditingController(text: widget.node.text);
     _labelTextController = TextEditingController(text: widget.node.label);
+    _imagePathController = TextEditingController(text: widget.node.imagePath);
     _isStart = widget.node.isStart;
     _nodeTextController.addListener(() {
       if (_nodeTextController.text != widget.node.text) {
@@ -46,6 +48,7 @@ class _NodeEditorState extends State<NodeEditor> {
   @override
   void dispose() {
     _nodeTextController.dispose();
+    _imagePathController.dispose();
     super.dispose();
   }
 
@@ -105,6 +108,12 @@ class _NodeEditorState extends State<NodeEditor> {
         const Text('Label:', style: TextStyle(fontWeight: FontWeight.bold)),
         TextField(
           controller: _labelTextController,
+          maxLines: null,
+          decoration: const InputDecoration(border: OutlineInputBorder()),
+        ),
+        const Text('Image Path:', style: TextStyle(fontWeight: FontWeight.bold)),
+        TextField(
+          controller: _imagePathController,
           maxLines: null,
           decoration: const InputDecoration(border: OutlineInputBorder()),
         ),
