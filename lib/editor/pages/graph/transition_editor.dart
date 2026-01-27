@@ -17,6 +17,8 @@ class TransitionEditor extends StatefulWidget {
 
 class _TransitionEditorState extends State<TransitionEditor> {
   late TextEditingController _controller;
+  late TextEditingController _weightController;
+  String? _weightError;
 
   @override
   void initState() {
@@ -29,11 +31,27 @@ class _TransitionEditorState extends State<TransitionEditor> {
         setState(() {});
       }
     });
+    _weightController = TextEditingController(text: widget.transition.weight.toString());
+    _weightController.addListener(() {
+      final text = _weightController.text;
+      final parsed = int.tryParse(text);
+      if (parsed == null || parsed < 1 || parsed > 1000000) {
+        _weightError = 'Weight must be between 1 and 1000000';
+      } else {
+        _weightError = null;
+        if (widget.transition.weight != parsed) {
+          widget.transition.weight = parsed;
+          widget.onChange();
+          setState(() {});
+        }
+      }
+    });
   }
 
   @override
   void dispose() {
     _controller.dispose();
+    _weightController.dispose();
     super.dispose();
   }
 
@@ -47,6 +65,16 @@ class _TransitionEditorState extends State<TransitionEditor> {
           controller: _controller,
           maxLines: null,
           decoration: const InputDecoration(border: OutlineInputBorder()),
+        ),
+        const SizedBox(height: 8),
+        const Text('Weight:', style: TextStyle(fontWeight: FontWeight.bold)),
+        TextField(
+          controller: _weightController,
+          keyboardType: TextInputType.number,
+          decoration: InputDecoration(
+            border: const OutlineInputBorder(),
+            errorText: _weightError,
+          ),
         ),
         const SizedBox(height: 8),
         ElevatedButton(
