@@ -43,6 +43,13 @@ class _NodeEditorState extends State<NodeEditor> {
         setState(() {});
       }
     });
+    _imagePathController.addListener(() {
+      if (_imagePathController.text != widget.node.imagePath) {
+        widget.node.imagePath = _imagePathController.text;
+        widget.onChange();
+        setState(() {});
+      }
+    });
   }
 
   @override

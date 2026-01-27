@@ -39,6 +39,13 @@ class EditorNodeMapper extends ClassMapperBase<EditorNode> {
     _$actionIds,
     opt: true,
   );
+  static String _$imagePath(EditorNode v) => v.imagePath;
+  static const Field<EditorNode, String> _f$imagePath = Field(
+    'imagePath',
+    _$imagePath,
+    opt: true,
+    def: "",
+  );
 
   @override
   final MappableFields<EditorNode> fields = const {
@@ -49,6 +56,7 @@ class EditorNodeMapper extends ClassMapperBase<EditorNode> {
     #y: _f$y,
     #isStart: _f$isStart,
     #actionIds: _f$actionIds,
+    #imagePath: _f$imagePath,
   };
 
   static EditorNode _instantiate(DecodingData data) {
@@ -60,6 +68,7 @@ class EditorNodeMapper extends ClassMapperBase<EditorNode> {
       y: data.dec(_f$y),
       isStart: data.dec(_f$isStart),
       actionIds: data.dec(_f$actionIds),
+      imagePath: data.dec(_f$imagePath),
     );
   }
 
@@ -132,6 +141,7 @@ abstract class EditorNodeCopyWith<$R, $In extends EditorNode, $Out>
     int? y,
     bool? isStart,
     List<String>? actionIds,
+    String? imagePath,
   });
   EditorNodeCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
@@ -160,6 +170,7 @@ class _EditorNodeCopyWithImpl<$R, $Out>
     int? y,
     bool? isStart,
     Object? actionIds = $none,
+    String? imagePath,
   }) => $apply(
     FieldCopyWithData({
       if (id != null) #id: id,
@@ -169,6 +180,7 @@ class _EditorNodeCopyWithImpl<$R, $Out>
       if (y != null) #y: y,
       if (isStart != null) #isStart: isStart,
       if (actionIds != $none) #actionIds: actionIds,
+      if (imagePath != null) #imagePath: imagePath,
     }),
   );
   @override
@@ -180,6 +192,7 @@ class _EditorNodeCopyWithImpl<$R, $Out>
     y: data.get(#y, or: $value.y),
     isStart: data.get(#isStart, or: $value.isStart),
     actionIds: data.get(#actionIds, or: $value.actionIds),
+    imagePath: data.get(#imagePath, or: $value.imagePath),
   );
 
   @override
