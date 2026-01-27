@@ -146,9 +146,17 @@ class EditorState {
   static Struct? structByVariableId(String variableId) {
     return EditorState.structs.where((s) => s.variables.any((v) => v.id == variableId)).firstOrNull;
   }
+
+  static Struct? structByProcedureId(String procedureId) {
+    return EditorState.structs.where((s) => s.procedures.any((x) => x.id == procedureId)).firstOrNull;
+  }
   
   static Variable? variableById(String variableId) {
     return EditorState.structByVariableId(variableId)?.variableById(variableId);
+  }
+
+  static StructProcedure? procedureById(String procedureId) {
+    return EditorState.structByProcedureId(procedureId)?.procedureById(procedureId);
   }
 
   static String variableAsString(String variableId) {

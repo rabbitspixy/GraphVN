@@ -33,21 +33,26 @@ class Player {
   ///
   /// The method updates the global [EditorState.currentNode] and
   /// triggers a UI update via [_updateStill].
-  static void updateState({String? useTransition}) {
+  static void updateState({String? useTransition, String? goToNode}) {
     EditorTransition? transition;
     if (useTransition != null) {
       transition = EditorState.transitions.where((x) => x.id == useTransition).firstOrNull;
     }
 
     EditorNode? node;
+    if (goToNode != null) {
+      node = EditorState.nodes[goToNode];
+    }
     int iterations = 0;
     int maxIterations = 10000;
     while (true) {
       if (transition != null) {
+        _runProcedures(transition.actionIds);
         node = EditorState.nodes[transition.to];
         transition = null;
       }
       if (node != null) {
+        _runProcedures(node.actionIds);
         EditorState.currentNode = node.id;
         if (node.isEmpty) {
           final allowedTransitions = Player.allowedTransitionsForCurrentState();
@@ -71,6 +76,12 @@ class Player {
     _updateStill();
   }
 
+  static void _runProcedures(List<String> ids) {
+    for (final actionId in ids) {
+      EditorState.procedureById(actionId)?.exec();
+    }
+  }
+
   static List<EditorTransition> allowedTransitionsForCurrentState() {
     return EditorState.transitions
       .where((t) => t.from == EditorState.currentNode)
@@ -89,7 +100,13 @@ class Player {
     if (node == null) {
       return;
     }
-    narrativeText.value = node.text;
+    String nt = node.text;
+    for (final struct in EditorState.structs) {
+      for (final variable in struct.variables) {
+        nt = nt.replaceAll("[${struct.name}->${variable.name}]", variable.currentValueAsString());
+      }
+    }
+    narrativeText.value = nt;
     buttons.value = allowedTransitionsForCurrentState()
         .where((t) => t.isButton)
         .map((t) => ChoiseButton(text: t.text, transitionId: t.id))
@@ -97,9 +114,10 @@ class Player {
   }
 
   static bool initStartGame() {
+    EditorState.restart();
     final startNode = EditorState.nodes.values.where((node) => node.isStart).firstOrNull;
     if (startNode != null) {
-      EditorState.currentNode = startNode.id;
+      updateState(goToNode: startNode.id);
       return true;
     } else {
       return false;

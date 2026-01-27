@@ -25,6 +25,10 @@ class Struct with StructMappable {
   Variable? variableById(String id) {
     return variables.where((v) => v.id == id).firstOrNull;
   }
+
+  StructProcedure? procedureById(String id) {
+    return procedures.where((x) => x.id == id).firstOrNull;
+  }
 }
 
 final namedNumbersTypes = [
