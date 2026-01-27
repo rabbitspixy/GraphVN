@@ -1,20 +1,20 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_window_close/flutter_window_close.dart';
-import 'package:graph_vn/custom_mapper/rational_mapper.dart';
+import 'package:graph_vn/common/rational_mapper.dart';
 import 'package:graph_vn/editor/editor_state.dart';
 import 'package:logger/logger.dart';
-import 'engine.dart';
+import 'player/player.dart';
 import 'package:flutter/services.dart';
 import 'editor/widgets/editor.dart';
-import 'game_player.dart';
+import 'player/widgets/game_player.dart';
 
 final logger = Logger();
 
 void main() {
   MapperContainer.globals.use(RationalMapper());
   EditorState.load('test');
-  updateNode();
+  Player.updateState();
   initWindowCloseHandler();
   runApp(const RootWidget());
 }
@@ -44,7 +44,7 @@ class _RootWidgetState extends State<RootWidget> {
 
   void toggleEditor() {
     if (_showEditor) {
-      updateNode();
+      Player.updateState();
       setState(() {
         _showEditor = false;
       });
@@ -58,6 +58,11 @@ class _RootWidgetState extends State<RootWidget> {
   bool _handleKey(KeyEvent event) {
     if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.f1) {
       toggleEditor();
+      return true;
+    }
+    if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.f5) {
+      EditorState.restart();
+      Player.updateState();
       return true;
     }
     if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.keyS && HardwareKeyboard.instance.isControlPressed) {

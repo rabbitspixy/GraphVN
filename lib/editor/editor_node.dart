@@ -12,6 +12,8 @@ class EditorNode with EditorNodeMappable {
   int y = 0;
   bool isStart = false;
 
+  bool get isEmpty => text.isEmpty;
+
   EditorNode();
 
   @MappableConstructor()

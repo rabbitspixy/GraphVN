@@ -12,6 +12,8 @@ class EditorTransition with EditorTransitionMappable {
   String from = "";
   String to = "";
 
+  bool get isButton => text.isNotEmpty;
+
   TransitionPosition pos = TransitionPosition(
     start: Offset(0, 0),
     end: Offset(0, 0),

@@ -1,17 +1,18 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:graph_vn/components.dart';
+import 'package:graph_vn/player/components.dart';
+import 'package:graph_vn/player/player.dart';
 
 class TransitionButtons extends StatefulWidget {
-  final List<Transition> transitions;
-  const TransitionButtons({Key? key, required this.transitions}) : super(key: key);
+  final List<ChoiseButton> transitions;
+  const TransitionButtons({super.key, required this.transitions});
 
   @override
   State<TransitionButtons> createState() => _TransitionButtonsState();
 }
 
 class _TransitionButtonsState extends State<TransitionButtons> {
-  late List<Transition> _transitions;
+  late List<ChoiseButton> _transitions;
   late double _opacity;
   Timer? _timer;
 
@@ -79,7 +80,7 @@ class _TransitionButtonsState extends State<TransitionButtons> {
               side: const BorderSide(color: Color.fromARGB(223, 206, 206, 206)),
               elevation: 0,
             ),
-            onPressed: transition.go,
+            onPressed: () => Player.updateState(useTransition: transition.transitionId),
             child: Text(transition.text),
           ),
         );

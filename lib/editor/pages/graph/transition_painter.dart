@@ -24,7 +24,7 @@ class TransitionPainter extends CustomPainter {
       final center = transition.pos.center + offset;
 
       paint.shader = LinearGradient(
-        colors: [Colors.black.withAlpha(26), Colors.black.withAlpha(50), Colors.black],
+        colors: _colorsOf(transition),
         begin: Alignment.centerLeft,
         end: Alignment.centerRight,
         transform: GradientRotation(transition.pos.direction),
@@ -35,7 +35,7 @@ class TransitionPainter extends CustomPainter {
         ..quadraticBezierTo(control.dx, control.dy, end.dx, end.dy);
       canvas.drawPath(path, paint);
       final centerPaint = Paint()
-        ..color = Colors.black
+        ..color = _arrowColorOf(transition)
         ..strokeWidth = 1.5
         ..strokeCap = StrokeCap.round
         ..style = PaintingStyle.stroke;
@@ -50,7 +50,7 @@ class TransitionPainter extends CustomPainter {
 
   Path _arrowPath(Offset center, double direction) {
     final l = 5.0;
-    final angle = pi * 0.75;
+    final angle = pi * 0.8;
     final p2 = center + Offset.fromDirection(direction, l * 0.45);
     final p1 = p2 + Offset.fromDirection(direction - angle, l);
     final p3 = p2 + Offset.fromDirection(direction + angle, l);
@@ -58,6 +58,25 @@ class TransitionPainter extends CustomPainter {
       ..moveTo(p1.dx, p1.dy)
       ..lineTo(p2.dx, p2.dy)
       ..lineTo(p3.dx, p3.dy);
+  }
+
+  static final transitionButtonColors = [Colors.black.withAlpha(25), Colors.black.withAlpha(150), Colors.black.withAlpha(200)];
+  static final emptyTransitionColors = [Colors.black.withAlpha(25), Colors.black.withAlpha(40), Colors.black.withAlpha(75)];
+
+  List<Color> _colorsOf(EditorTransition transition) {
+    if (transition.isButton) {
+      return transitionButtonColors;
+    } else {
+      return emptyTransitionColors;
+    }
+  }
+
+  Color _arrowColorOf(EditorTransition transition) {
+    if (transition.isButton) {
+      return Colors.black.withAlpha(255);
+    } else {
+      return Colors.black.withAlpha(80);
+    }
   }
 
   @override

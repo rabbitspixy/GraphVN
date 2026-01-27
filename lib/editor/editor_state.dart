@@ -70,6 +70,16 @@ class EditorState {
     logger.i('saving project done');
   }
 
+  static void restart() {
+    logger.i('restart game');
+    currentNode = "";
+    for (final struct in structs) {
+      for (final variable in struct.variables) {
+        variable.reset();
+      }
+    }
+  }
+
   static void addTransition(EditorTransition transition) {
     transitions.add(transition);
     updateAllTransitionPositions();

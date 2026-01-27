@@ -15,7 +15,7 @@ class NodePainter extends CustomPainter {
       final center = Offset(node.x.toDouble(), node.y.toDouble()) + offset;
 
       final pointPaint = Paint();
-      pointPaint.color = node.isStart ? const Color.fromARGB(255, 37, 224, 43) : Colors.blue;
+      pointPaint.color = _colorOf(node);
       pointPaint.style = PaintingStyle.fill;
       canvas.drawCircle(center, 5, pointPaint);
       if (node.label.isNotEmpty) {
@@ -27,6 +27,16 @@ class NodePainter extends CustomPainter {
         canvas.drawCircle(center, 7, pointPaint);
       }
     }
+  }
+
+  Color _colorOf(EditorNode node) {
+    if (node.isStart) {
+      return const Color.fromARGB(255, 21, 207, 27);
+    }
+    if (node.isEmpty) {
+      return const Color.fromARGB(255, 201, 201, 201);
+    }
+    return const Color.fromARGB(255, 90, 128, 255);
   }
 
   void _paintText(Canvas canvas, Offset nodePosition, String text) {

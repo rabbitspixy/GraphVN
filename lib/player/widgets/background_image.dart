@@ -1,8 +1,8 @@
 import 'dart:math';
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:graph_vn/components.dart';
-import 'package:graph_vn/engine.dart';
+import 'package:graph_vn/player/components.dart';
+import 'package:graph_vn/player/player.dart';
 
 class BackgroundImageWidget extends StatefulWidget {
   const BackgroundImageWidget({super.key});
@@ -15,7 +15,7 @@ class _BackgroundImageWidgetState extends State<BackgroundImageWidget>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
-  NodeImageInfo? _currentInfo;
+  PlayerImageInfo? _currentInfo;
   final Random _random = Random();
 
   @override
@@ -23,12 +23,12 @@ class _BackgroundImageWidgetState extends State<BackgroundImageWidget>
     super.initState();
     _controller = AnimationController(vsync: this);
     _animation = const AlwaysStoppedAnimation(0.0);
-    imageInfoNotifier.addListener(_onImageInfoChanged);
+    Player.imageInfoNotifier.addListener(_onImageInfoChanged);
     _onImageInfoChanged();
   }
 
   void _onImageInfoChanged() {
-    final newInfo = imageInfoNotifier.value;
+    final newInfo = Player.imageInfoNotifier.value;
     if (_currentInfo?.path != newInfo.path) {
       _currentInfo = newInfo;
       if (newInfo.animationDuration > 0) {
@@ -41,7 +41,7 @@ class _BackgroundImageWidgetState extends State<BackgroundImageWidget>
     }
   }
 
-  void _startAnimations(NodeImageInfo info) {
+  void _startAnimations(PlayerImageInfo info) {
     _controller.stop();
     _controller.reset();
     _controller.duration = Duration(milliseconds: info.animationDuration);
@@ -53,13 +53,13 @@ class _BackgroundImageWidgetState extends State<BackgroundImageWidget>
   @override
   void dispose() {
     _controller.dispose();
-    imageInfoNotifier.removeListener(_onImageInfoChanged);
+    Player.imageInfoNotifier.removeListener(_onImageInfoChanged);
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final info = _currentInfo ?? NodeImageInfo(path: '');
+    final info = _currentInfo ?? PlayerImageInfo(path: '');
     return AnimatedBuilder(
       animation: _controller,
       builder: (context, child) {

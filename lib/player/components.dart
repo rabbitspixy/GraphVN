@@ -1,37 +1,32 @@
 import 'package:flutter/foundation.dart';
-import 'package:graph_vn/engine.dart';
 
-class Node {
-  final NodeImageInfo Function() imageInfo;
+class GameStill {
+  final PlayerImageInfo Function() imageInfo;
   final String Function() text;
   final VoidCallback? onEnter;
   final VoidCallback? onLeave;
-  final List<Transition> transitions;
+  final List<ChoiseButton> buttons;
 
-  Node({
+  GameStill({
     required this.imageInfo,
     required this.text,
     this.onEnter,
     this.onLeave,
-    required this.transitions,
+    required this.buttons,
   });
 }
 
-class Transition {
+class ChoiseButton {
   final String text;
-  final String nextNode;
+  final String transitionId;
 
-  Transition({
+  ChoiseButton({
     required this.text,
-    required this.nextNode,
+    required this.transitionId,
   });
-
-  void go() {
-    goToNode(nextNode);
-  }
 }
 
-class NodeImageInfo {
+class PlayerImageInfo {
   final String? path;
   final int red;
   final int green;
@@ -40,7 +35,7 @@ class NodeImageInfo {
   final double scale;
   final int animationDuration;
 
-  NodeImageInfo({
+  PlayerImageInfo({
     this.path,
     this.red = 0,
     this.green = 0,

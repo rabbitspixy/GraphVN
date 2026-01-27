@@ -53,6 +53,7 @@ abstract class Variable with VariableMappable {
     required this.name,
   });
 
+  void reset();
   String initialValueAsString();
   String currentValueAsString();
 }
@@ -73,6 +74,11 @@ class NumberVariable extends Variable with NumberVariableMappable {
   }) : super.mappableConstructor();
 
   @override
+  void reset() {
+    value = startValue;
+  }
+
+  @override
   String initialValueAsString() {
     return startValue.toString();
   }
@@ -88,6 +94,11 @@ class NamedNumberVariable extends Variable with NamedNumberVariableMappable {
   String typeId;
   String startValue = '';
   String value = '';
+
+  @override
+  void reset() {
+    value = startValue;
+  }
 
   NamedNumberVariable({required this.typeId}) {
     final type = namedNumbersTypes.where((v) => v.id == typeId).firstOrNull;
