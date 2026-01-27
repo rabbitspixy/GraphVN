@@ -22,6 +22,17 @@ class Player {
     }
   }
 
+  /// Updates the player's state by following transitions starting from the current node.
+  ///
+  /// If [useTransition] is provided, the method will start from the transition
+  /// with that ID. It then walks through the graph, following transitions
+  /// until it reaches a node that has no outgoing transitions or until a
+  /// maximum number of iterations is reached. The method also handles
+  /// empty transitions (those without a button) by automatically selecting
+  /// a random one when no button transitions are available.
+  ///
+  /// The method updates the global [EditorState.currentNode] and
+  /// triggers a UI update via [_updateStill].
   static void updateState({String? useTransition}) {
     EditorTransition? transition;
     if (useTransition != null) {
