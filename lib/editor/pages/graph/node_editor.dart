@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:graph_vn/editor/editor_node.dart';
 import 'package:graph_vn/editor/editor_state.dart';
+import 'package:graph_vn/editor/modals/procedure_selector.dart';
 
 class NodeEditor extends StatefulWidget {
   final EditorNode node;
@@ -48,6 +49,55 @@ class _NodeEditorState extends State<NodeEditor> {
     super.dispose();
   }
 
+  Future<void> _addAction() async {
+    final proc = await showProcedureSelector(context);
+    if (proc != null && !widget.node.actionIds.contains(proc.id)) {
+      setState(() {
+        widget.node.actionIds.add(proc.id);
+        widget.onChange();
+      });
+    }
+  }
+
+  String? _procedureName(String id) {
+    for (final struct in EditorState.structs) {
+      for (final proc in struct.procedures) {
+        if (proc.id == id) return proc.name;
+      }
+    }
+    return null;
+  }
+
+  Widget _buildActionList() {
+    final widgets = <Widget>[];
+    for (final actionId in widget.node.actionIds) {
+      final name = _procedureName(actionId) ?? actionId;
+      widgets.add(
+        ListTile(
+          leading: const Icon(Icons.play_arrow),
+          title: Text(name),
+          trailing: IconButton(
+            icon: const Icon(Icons.delete),
+            onPressed: () {
+              setState(() {
+                widget.node.actionIds.remove(actionId);
+                widget.onChange();
+              });
+            },
+          ),
+        ),
+      );
+    }
+    widgets.add(
+      ElevatedButton.icon(
+        onPressed: _addAction,
+        icon: const Icon(Icons.add),
+        label: const Text('Add Action'),
+      ),
+    );
+    return Column(children: widgets);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -80,6 +130,10 @@ class _NodeEditorState extends State<NodeEditor> {
             const Text('Start Node'),
           ],
         ),
+        const SizedBox(height: 8),
+        // Actions list
+        const Text('Actions:', style: TextStyle(fontWeight: FontWeight.bold)),
+        _buildActionList(),
         const SizedBox(height: 8),
         ElevatedButton(
           onPressed: () {
