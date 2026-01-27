@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 import 'dart:ui';
 import 'package:flutter/material.dart';
@@ -81,7 +82,7 @@ class _BackgroundImageWidgetState extends State<BackgroundImageWidget>
                 : Container(
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: AssetImage(info.path!),
+                        image: FileImage(File(info.path!)),
                         fit: BoxFit.cover,
                       ),
                     ),
