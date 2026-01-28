@@ -31,11 +31,15 @@ class Struct with StructMappable {
   }
 }
 
+const booleanNamedNumberTypeId = 'a16100bc-5afb-4e8c-b2c1-eb14e523e0d0';
+const booleanFalse = 'False';
+const booleanTrue = 'True';
+
 final namedNumbersTypes = [
   NamedNumbersType()
-    ..id = 'a16100bc-5afb-4e8c-b2c1-eb14e523e0d0'
+    ..id = booleanNamedNumberTypeId
     ..name = 'Boolean'
-    ..list = [MapEntry('False', Rational.zero), MapEntry('True', Rational.one)]
+    ..list = [MapEntry(booleanFalse, Rational.zero), MapEntry(booleanTrue, Rational.one)]
 ];
 
 class NamedNumbersType {

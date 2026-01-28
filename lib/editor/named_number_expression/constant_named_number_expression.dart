@@ -14,6 +14,7 @@ class ConstantNamedNumberExpression extends NamedNumberExpression with ConstantN
     value = namedNumbersTypes.where((t) => t.id == namedNumbersTypeId).first.list.first.key;
   }
 
+  @MappableConstructor()
   ConstantNamedNumberExpression.mappableConstructor({
     required super.namedNumbersTypeId,
     required this.value,

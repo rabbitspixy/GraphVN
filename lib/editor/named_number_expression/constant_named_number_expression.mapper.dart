@@ -33,7 +33,6 @@ class ConstantNamedNumberExpressionMapper
   static const Field<ConstantNamedNumberExpression, String> _f$value = Field(
     'value',
     _$value,
-    mode: FieldMode.member,
   );
 
   @override
@@ -51,8 +50,9 @@ class ConstantNamedNumberExpressionMapper
       NamedNumberExpressionMapper.ensureInitialized();
 
   static ConstantNamedNumberExpression _instantiate(DecodingData data) {
-    return ConstantNamedNumberExpression(
+    return ConstantNamedNumberExpression.mappableConstructor(
       namedNumbersTypeId: data.dec(_f$namedNumbersTypeId),
+      value: data.dec(_f$value),
     );
   }
 
@@ -131,7 +131,7 @@ abstract class ConstantNamedNumberExpressionCopyWith<
 >
     implements NamedNumberExpressionCopyWith<$R, $In, $Out> {
   @override
-  $R call({String? namedNumbersTypeId});
+  $R call({String? namedNumbersTypeId, String? value});
   ConstantNamedNumberExpressionCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
     Then<$Out2, $R2> t,
   );
@@ -155,18 +155,20 @@ class _ConstantNamedNumberExpressionCopyWithImpl<$R, $Out>
   late final ClassMapperBase<ConstantNamedNumberExpression> $mapper =
       ConstantNamedNumberExpressionMapper.ensureInitialized();
   @override
-  $R call({String? namedNumbersTypeId}) => $apply(
+  $R call({String? namedNumbersTypeId, String? value}) => $apply(
     FieldCopyWithData({
       if (namedNumbersTypeId != null) #namedNumbersTypeId: namedNumbersTypeId,
+      if (value != null) #value: value,
     }),
   );
   @override
   ConstantNamedNumberExpression $make(CopyWithData data) =>
-      ConstantNamedNumberExpression(
+      ConstantNamedNumberExpression.mappableConstructor(
         namedNumbersTypeId: data.get(
           #namedNumbersTypeId,
           or: $value.namedNumbersTypeId,
         ),
+        value: data.get(#value, or: $value.value),
       );
 
   @override

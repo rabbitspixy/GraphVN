@@ -3,7 +3,6 @@ import 'package:graph_vn/editor/modals/rename_dialog.dart';
 import 'package:graph_vn/editor/variables.dart';
 import 'package:graph_vn/editor/actions/do_nothing.dart';
 import 'package:graph_vn/editor/actions/struct_action_editor.dart';
-import 'package:collection/collection.dart';
 
 class StructProcedures extends StatefulWidget {
   final Struct struct;
@@ -79,7 +78,7 @@ class _StructProceduresState extends State<StructProcedures> {
                   },
                 )
               ]
-            ].flattenedToList
+            ].expand((x) => x).toList()
           ),
         ],
       ),

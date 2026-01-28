@@ -15,19 +15,17 @@ class EditorRichText extends StatelessWidget {
         style: TextStyle(color: Colors.black),
         children: textSpans.map((t) {
           if (t.tap != null) {
-            return TextSpan(text: t.text, style: TextStyle(decoration: TextDecoration.underline), recognizer: TapGestureRecognizer()..onTap = t.tap);
+            return [
+              TextSpan(text: t.text, style: TextStyle(decoration: TextDecoration.underline), recognizer: TapGestureRecognizer()..onTap = t.tap),
+              TextSpan(text: ' ')
+            ];
           } else {
-            return TextSpan(text: " ${t.text} ");
+            return [TextSpan(text: "${t.text} ")];
           }
-        }).toList(),
+        }).expand((x) => x).toList(),
       ),
     );
   }
-
-  String toSimpleText() {
-    return textSpans.map((t) => t.text).join(' ');
-  }
-
 }
 
 class ETextSpan {

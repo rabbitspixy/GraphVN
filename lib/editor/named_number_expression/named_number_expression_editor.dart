@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:graph_vn/editor/named_number_expression/boolean_number_expression.dart';
 import 'package:graph_vn/editor/named_number_expression/constant_named_number_expression.dart';
 import 'package:graph_vn/editor/named_number_expression/named_number_expression.dart';
 
@@ -32,7 +33,8 @@ Future<NamedNumberExpression?> editNamedNumberExpression(BuildContext context, N
               width: 400,
               height: 300,
               child: switch (current) {
-                ConstantNamedNumberExpression _ => ConstantNamedNumberExpressionEditor(expression: current as ConstantNamedNumberExpression),
+                ConstantNamedNumberExpression exp => ConstantNamedNumberExpressionEditor(expression: exp),
+                BooleanNumberExpression exp => BooleanNumberExpressionEditor(expression: exp),
                 _ => const Placeholder(),
               },
             ),
