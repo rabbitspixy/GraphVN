@@ -49,12 +49,12 @@ class Player {
     int maxIterations = 10000;
     while (true) {
       if (transition != null) {
-        _runProcedures(transition.actionIds);
+        _runProcedures(transition.procedureIds);
         node = EditorState.nodes[transition.to];
         transition = null;
       }
       if (node != null) {
-        _runProcedures(node.actionIds);
+        _runProcedures(node.procedureIds);
         EditorState.currentNode = node.id;
         if (node.isEmpty) {
           final allowedTransitions = Player.allowedTransitionsForCurrentState();

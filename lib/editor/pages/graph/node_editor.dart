@@ -61,9 +61,9 @@ class _NodeEditorState extends State<NodeEditor> {
 
   Future<void> _addAction() async {
     final proc = await showProcedureSelector(context);
-    if (proc != null && !widget.node.actionIds.contains(proc.id)) {
+    if (proc != null && !widget.node.procedureIds.contains(proc.id)) {
       setState(() {
-        widget.node.actionIds.add(proc.id);
+        widget.node.procedureIds.add(proc.id);
         widget.onChange();
       });
     }
@@ -80,7 +80,7 @@ class _NodeEditorState extends State<NodeEditor> {
 
   Widget _buildActionList() {
     final widgets = <Widget>[];
-    for (final actionId in widget.node.actionIds) {
+    for (final actionId in widget.node.procedureIds) {
       final name = _procedureName(actionId) ?? actionId;
       widgets.add(
         ListTile(
@@ -89,7 +89,7 @@ class _NodeEditorState extends State<NodeEditor> {
             icon: const Icon(Icons.delete),
             onPressed: () {
               setState(() {
-                widget.node.actionIds.remove(actionId);
+                widget.node.procedureIds.remove(actionId);
                 widget.onChange();
               });
             },

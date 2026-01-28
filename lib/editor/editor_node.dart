@@ -11,7 +11,7 @@ class EditorNode with EditorNodeMappable {
   int x = 0;
   int y = 0;
   bool isStart = false;
-  List<String> actionIds = [];
+  List<String> procedureIds = [];
   String imagePath = "";
 
   bool get isEmpty => text.isEmpty;
@@ -26,9 +26,9 @@ class EditorNode with EditorNodeMappable {
     required this.x,
     required this.y,
     required this.isStart,
-    List<String>? actionIds,
+    List<String>? procedureIds,
     this.imagePath = "",
   }) {
-    this.actionIds = actionIds ?? [];
+    this.procedureIds = procedureIds ?? [];
   }
 }

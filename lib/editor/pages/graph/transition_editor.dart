@@ -54,9 +54,9 @@ class _TransitionEditorState extends State<TransitionEditor> {
 
   Future<void> _addAction() async {
     final proc = await showProcedureSelector(context);
-    if (proc != null && !widget.transition.actionIds.contains(proc.id)) {
+    if (proc != null && !widget.transition.procedureIds.contains(proc.id)) {
       setState(() {
-        widget.transition.actionIds.add(proc.id);
+        widget.transition.procedureIds.add(proc.id);
         widget.onChange();
       });
     }
@@ -73,7 +73,7 @@ class _TransitionEditorState extends State<TransitionEditor> {
 
   Widget _buildActionList() {
     final widgets = <Widget>[];
-    for (final actionId in widget.transition.actionIds) {
+    for (final actionId in widget.transition.procedureIds) {
       final name = _procedureName(actionId) ?? actionId;
       widgets.add(
         ListTile(
@@ -82,7 +82,7 @@ class _TransitionEditorState extends State<TransitionEditor> {
             icon: const Icon(Icons.delete),
             onPressed: () {
               setState(() {
-                widget.transition.actionIds.remove(actionId);
+                widget.transition.procedureIds.remove(actionId);
                 widget.onChange();
               });
             },
