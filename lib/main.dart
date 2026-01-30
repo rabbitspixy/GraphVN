@@ -13,7 +13,7 @@ final logger = Logger();
 
 void main() {
   MapperContainer.globals.use(RationalMapper());
-  EditorState.load('test');
+  EditorState.load('test3');
   Player.updateState();
   initWindowCloseHandler();
   runApp(const RootWidget());

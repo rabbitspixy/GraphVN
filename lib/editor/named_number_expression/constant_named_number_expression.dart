@@ -5,7 +5,7 @@ import 'package:graph_vn/editor/variables.dart';
 
 part 'constant_named_number_expression.mapper.dart';
 
-@MappableClass(discriminatorValue: 'ConstantNamedNumberExpression')
+@MappableClass()
 class ConstantNamedNumberExpression extends NamedNumberExpression with ConstantNamedNumberExpressionMappable {
   String value = "";
   bool _isValid = true;

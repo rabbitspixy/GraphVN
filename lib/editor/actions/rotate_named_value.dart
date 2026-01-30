@@ -8,7 +8,7 @@ import 'package:graph_vn/editor/variables.dart';
 
 part 'rotate_named_value.mapper.dart';
 
-@MappableClass(discriminatorValue: 'RotateNamedValue')
+@MappableClass()
 class RotateNamedValue extends BaseAction with RotateNamedValueMappable {
   String variableId = "";
 

@@ -48,7 +48,7 @@ class NamedNumbersType {
   List<MapEntry<String, Rational>> list = List.empty();
 }
 
-@MappableClass(discriminatorKey: 'subclass')
+@MappableClass()
 abstract class Variable with VariableMappable {
   String id = Uuid().v4();
   String name = "";
@@ -66,7 +66,7 @@ abstract class Variable with VariableMappable {
   String currentValueAsString();
 }
 
-@MappableClass(discriminatorValue: 'NumberVariable')
+@MappableClass()
 class NumberVariable extends Variable with NumberVariableMappable {
   Rational startValue = Rational.zero;
   Rational value = Rational.zero;
@@ -97,7 +97,7 @@ class NumberVariable extends Variable with NumberVariableMappable {
   }
 }
 
-@MappableClass(discriminatorValue: 'NamedNumberVariable')
+@MappableClass()
 class NamedNumberVariable extends Variable with NamedNumberVariableMappable {
   String typeId;
   String startValue = '';

@@ -16,7 +16,7 @@ class NamedNumberExpressionMapper
     if (_instance == null) {
       MapperContainer.globals.use(_instance = NamedNumberExpressionMapper._());
       ConstantNamedNumberExpressionMapper.ensureInitialized();
-      BooleanNumberExpressionMapper.ensureInitialized();
+      CompareNumbersExpressionMapper.ensureInitialized();
     }
     return _instance!;
   }

@@ -1,14 +1,13 @@
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:graph_vn/editor/named_number_expression/boolean_number_expression.dart';
+import 'package:graph_vn/editor/named_number_expression/compare_numbers_expression.dart';
 import 'package:graph_vn/editor/named_number_expression/constant_named_number_expression.dart';
 
 part 'named_number_expression.mapper.dart';
 
 @MappableClass(
-  discriminatorKey: 'subclass',
   includeSubClasses: [
     ConstantNamedNumberExpression,
-    BooleanNumberExpression,
+    CompareNumbersExpression,
   ]
 )
 abstract class NamedNumberExpression with NamedNumberExpressionMappable {
@@ -28,7 +27,7 @@ abstract class NamedNumberExpression with NamedNumberExpressionMappable {
 
 enum NamedNumberExpressionType {
   constant(type: ConstantNamedNumberExpression, create: ConstantNamedNumberExpression.new, title: 'Constant'),
-  boolean(type: BooleanNumberExpression, create: BooleanNumberExpression.new, title: 'Boolean (compare numbers)'),
+  compareNumbers(type: CompareNumbersExpression, create: CompareNumbersExpression.new, title: 'Compare numbers'),
   ;
 
   final Type type;

@@ -11,7 +11,7 @@ import 'package:graph_vn/editor/variables.dart';
 
 part 'set_number_value.mapper.dart';
 
-@MappableClass(discriminatorValue: 'SetNumberValue')
+@MappableClass()
 class SetNumberValue extends BaseAction with SetNumberValueMappable {
   String variableId = "";
   NumberExpression numberExpression = ConstantNumberExpression();

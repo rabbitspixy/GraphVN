@@ -6,7 +6,7 @@ import 'package:rational/rational.dart';
 
 part 'constant_number_expression.mapper.dart';
 
-@MappableClass(discriminatorValue: 'ConstantNumberExpression')
+@MappableClass()
 class ConstantNumberExpression extends NumberExpression with ConstantNumberExpressionMappable {
 
   Rational value = Rational.zero;

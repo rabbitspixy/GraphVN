@@ -9,7 +9,6 @@ import 'package:uuid/uuid.dart';
 part 'base.mapper.dart';
 
 @MappableClass(
-  discriminatorKey: 'subclass',
   includeSubClasses: [
     DoNothing,
     IncreaseNumberValue,

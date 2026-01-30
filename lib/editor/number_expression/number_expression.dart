@@ -5,7 +5,6 @@ import 'package:rational/rational.dart';
 part 'number_expression.mapper.dart';
 
 @MappableClass(
-  discriminatorKey: 'subclass',
   includeSubClasses: [
     ConstantNumberExpression,
   ]

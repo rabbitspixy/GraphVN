@@ -5,7 +5,7 @@
 // ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
-part of 'boolean_number_expression.dart';
+part of 'compare_numbers_expression.dart';
 
 class BooleanOperatorMapper extends EnumMapper<BooleanOperator> {
   BooleanOperatorMapper._();
@@ -69,15 +69,15 @@ extension BooleanOperatorMapperExtension on BooleanOperator {
   }
 }
 
-class BooleanNumberExpressionMapper
-    extends SubClassMapperBase<BooleanNumberExpression> {
-  BooleanNumberExpressionMapper._();
+class CompareNumbersExpressionMapper
+    extends SubClassMapperBase<CompareNumbersExpression> {
+  CompareNumbersExpressionMapper._();
 
-  static BooleanNumberExpressionMapper? _instance;
-  static BooleanNumberExpressionMapper ensureInitialized() {
+  static CompareNumbersExpressionMapper? _instance;
+  static CompareNumbersExpressionMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(
-        _instance = BooleanNumberExpressionMapper._(),
+        _instance = CompareNumbersExpressionMapper._(),
       );
       NamedNumberExpressionMapper.ensureInitialized().addSubMapper(_instance!);
       NumberExpressionMapper.ensureInitialized();
@@ -87,26 +87,24 @@ class BooleanNumberExpressionMapper
   }
 
   @override
-  final String id = 'BooleanNumberExpression';
+  final String id = 'CompareNumbersExpression';
 
-  static String _$namedNumbersTypeId(BooleanNumberExpression v) =>
+  static String _$namedNumbersTypeId(CompareNumbersExpression v) =>
       v.namedNumbersTypeId;
-  static const Field<BooleanNumberExpression, String> _f$namedNumbersTypeId =
+  static const Field<CompareNumbersExpression, String> _f$namedNumbersTypeId =
       Field('namedNumbersTypeId', _$namedNumbersTypeId);
-  static NumberExpression _$left(BooleanNumberExpression v) => v.left;
-  static const Field<BooleanNumberExpression, NumberExpression> _f$left = Field(
-    'left',
-    _$left,
-  );
-  static BooleanOperator _$operator(BooleanNumberExpression v) => v.operator;
-  static const Field<BooleanNumberExpression, BooleanOperator> _f$operator =
+  static NumberExpression _$left(CompareNumbersExpression v) => v.left;
+  static const Field<CompareNumbersExpression, NumberExpression> _f$left =
+      Field('left', _$left);
+  static BooleanOperator _$operator(CompareNumbersExpression v) => v.operator;
+  static const Field<CompareNumbersExpression, BooleanOperator> _f$operator =
       Field('operator', _$operator);
-  static NumberExpression _$right(BooleanNumberExpression v) => v.right;
-  static const Field<BooleanNumberExpression, NumberExpression> _f$right =
+  static NumberExpression _$right(CompareNumbersExpression v) => v.right;
+  static const Field<CompareNumbersExpression, NumberExpression> _f$right =
       Field('right', _$right);
 
   @override
-  final MappableFields<BooleanNumberExpression> fields = const {
+  final MappableFields<CompareNumbersExpression> fields = const {
     #namedNumbersTypeId: _f$namedNumbersTypeId,
     #left: _f$left,
     #operator: _f$operator,
@@ -116,13 +114,13 @@ class BooleanNumberExpressionMapper
   @override
   final String discriminatorKey = 'subclass';
   @override
-  final dynamic discriminatorValue = 'BooleanExpression';
+  final dynamic discriminatorValue = 'CompareNumbersExpression';
   @override
   late final ClassMapperBase superMapper =
       NamedNumberExpressionMapper.ensureInitialized();
 
-  static BooleanNumberExpression _instantiate(DecodingData data) {
-    return BooleanNumberExpression.mappableConstructor(
+  static CompareNumbersExpression _instantiate(DecodingData data) {
+    return CompareNumbersExpression.mappableConstructor(
       namedNumbersTypeId: data.dec(_f$namedNumbersTypeId),
       left: data.dec(_f$left),
       operator: data.dec(_f$operator),
@@ -133,70 +131,70 @@ class BooleanNumberExpressionMapper
   @override
   final Function instantiate = _instantiate;
 
-  static BooleanNumberExpression fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<BooleanNumberExpression>(map);
+  static CompareNumbersExpression fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<CompareNumbersExpression>(map);
   }
 
-  static BooleanNumberExpression fromJson(String json) {
-    return ensureInitialized().decodeJson<BooleanNumberExpression>(json);
+  static CompareNumbersExpression fromJson(String json) {
+    return ensureInitialized().decodeJson<CompareNumbersExpression>(json);
   }
 }
 
-mixin BooleanNumberExpressionMappable {
+mixin CompareNumbersExpressionMappable {
   String toJson() {
-    return BooleanNumberExpressionMapper.ensureInitialized()
-        .encodeJson<BooleanNumberExpression>(this as BooleanNumberExpression);
+    return CompareNumbersExpressionMapper.ensureInitialized()
+        .encodeJson<CompareNumbersExpression>(this as CompareNumbersExpression);
   }
 
   Map<String, dynamic> toMap() {
-    return BooleanNumberExpressionMapper.ensureInitialized()
-        .encodeMap<BooleanNumberExpression>(this as BooleanNumberExpression);
+    return CompareNumbersExpressionMapper.ensureInitialized()
+        .encodeMap<CompareNumbersExpression>(this as CompareNumbersExpression);
   }
 
-  BooleanNumberExpressionCopyWith<
-    BooleanNumberExpression,
-    BooleanNumberExpression,
-    BooleanNumberExpression
+  CompareNumbersExpressionCopyWith<
+    CompareNumbersExpression,
+    CompareNumbersExpression,
+    CompareNumbersExpression
   >
   get copyWith =>
-      _BooleanNumberExpressionCopyWithImpl<
-        BooleanNumberExpression,
-        BooleanNumberExpression
-      >(this as BooleanNumberExpression, $identity, $identity);
+      _CompareNumbersExpressionCopyWithImpl<
+        CompareNumbersExpression,
+        CompareNumbersExpression
+      >(this as CompareNumbersExpression, $identity, $identity);
   @override
   String toString() {
-    return BooleanNumberExpressionMapper.ensureInitialized().stringifyValue(
-      this as BooleanNumberExpression,
+    return CompareNumbersExpressionMapper.ensureInitialized().stringifyValue(
+      this as CompareNumbersExpression,
     );
   }
 
   @override
   bool operator ==(Object other) {
-    return BooleanNumberExpressionMapper.ensureInitialized().equalsValue(
-      this as BooleanNumberExpression,
+    return CompareNumbersExpressionMapper.ensureInitialized().equalsValue(
+      this as CompareNumbersExpression,
       other,
     );
   }
 
   @override
   int get hashCode {
-    return BooleanNumberExpressionMapper.ensureInitialized().hashValue(
-      this as BooleanNumberExpression,
+    return CompareNumbersExpressionMapper.ensureInitialized().hashValue(
+      this as CompareNumbersExpression,
     );
   }
 }
 
-extension BooleanNumberExpressionValueCopy<$R, $Out>
-    on ObjectCopyWith<$R, BooleanNumberExpression, $Out> {
-  BooleanNumberExpressionCopyWith<$R, BooleanNumberExpression, $Out>
-  get $asBooleanNumberExpression => $base.as(
-    (v, t, t2) => _BooleanNumberExpressionCopyWithImpl<$R, $Out>(v, t, t2),
+extension CompareNumbersExpressionValueCopy<$R, $Out>
+    on ObjectCopyWith<$R, CompareNumbersExpression, $Out> {
+  CompareNumbersExpressionCopyWith<$R, CompareNumbersExpression, $Out>
+  get $asCompareNumbersExpression => $base.as(
+    (v, t, t2) => _CompareNumbersExpressionCopyWithImpl<$R, $Out>(v, t, t2),
   );
 }
 
-abstract class BooleanNumberExpressionCopyWith<
+abstract class CompareNumbersExpressionCopyWith<
   $R,
-  $In extends BooleanNumberExpression,
+  $In extends CompareNumbersExpression,
   $Out
 >
     implements NamedNumberExpressionCopyWith<$R, $In, $Out> {
@@ -209,20 +207,20 @@ abstract class BooleanNumberExpressionCopyWith<
     BooleanOperator? operator,
     NumberExpression? right,
   });
-  BooleanNumberExpressionCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
+  CompareNumbersExpressionCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
     Then<$Out2, $R2> t,
   );
 }
 
-class _BooleanNumberExpressionCopyWithImpl<$R, $Out>
-    extends ClassCopyWithBase<$R, BooleanNumberExpression, $Out>
+class _CompareNumbersExpressionCopyWithImpl<$R, $Out>
+    extends ClassCopyWithBase<$R, CompareNumbersExpression, $Out>
     implements
-        BooleanNumberExpressionCopyWith<$R, BooleanNumberExpression, $Out> {
-  _BooleanNumberExpressionCopyWithImpl(super.value, super.then, super.then2);
+        CompareNumbersExpressionCopyWith<$R, CompareNumbersExpression, $Out> {
+  _CompareNumbersExpressionCopyWithImpl(super.value, super.then, super.then2);
 
   @override
-  late final ClassMapperBase<BooleanNumberExpression> $mapper =
-      BooleanNumberExpressionMapper.ensureInitialized();
+  late final ClassMapperBase<CompareNumbersExpression> $mapper =
+      CompareNumbersExpressionMapper.ensureInitialized();
   @override
   NumberExpressionCopyWith<$R, NumberExpression, NumberExpression> get left =>
       $value.left.copyWith.$chain((v) => call(left: v));
@@ -244,8 +242,8 @@ class _BooleanNumberExpressionCopyWithImpl<$R, $Out>
     }),
   );
   @override
-  BooleanNumberExpression $make(CopyWithData data) =>
-      BooleanNumberExpression.mappableConstructor(
+  CompareNumbersExpression $make(CopyWithData data) =>
+      CompareNumbersExpression.mappableConstructor(
         namedNumbersTypeId: data.get(
           #namedNumbersTypeId,
           or: $value.namedNumbersTypeId,
@@ -256,8 +254,8 @@ class _BooleanNumberExpressionCopyWithImpl<$R, $Out>
       );
 
   @override
-  BooleanNumberExpressionCopyWith<$R2, BooleanNumberExpression, $Out2>
+  CompareNumbersExpressionCopyWith<$R2, CompareNumbersExpression, $Out2>
   $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-      _BooleanNumberExpressionCopyWithImpl<$R2, $Out2>($value, $cast, t);
+      _CompareNumbersExpressionCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 

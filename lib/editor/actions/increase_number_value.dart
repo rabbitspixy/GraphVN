@@ -11,7 +11,7 @@ import 'package:graph_vn/editor/variables.dart';
 
 part 'increase_number_value.mapper.dart';
 
-@MappableClass(discriminatorValue: 'IncreaseNumberValue')
+@MappableClass()
 class IncreaseNumberValue extends BaseAction with IncreaseNumberValueMappable {
   String variableId = "";
   NumberExpression numberExpression = ConstantNumberExpression();

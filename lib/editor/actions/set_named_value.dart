@@ -11,7 +11,7 @@ import 'package:graph_vn/editor/variables.dart';
 
 part 'set_named_value.mapper.dart';
 
-@MappableClass(discriminatorValue: 'SetNamedValue')
+@MappableClass()
 class SetNamedValue extends BaseAction with SetNamedValueMappable {
   String variableId = "";
   NamedNumberExpression expression = ConstantNamedNumberExpression(namedNumbersTypeId: namedNumbersTypes.first.id);

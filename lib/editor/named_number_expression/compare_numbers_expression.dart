@@ -8,18 +8,18 @@ import 'package:graph_vn/editor/number_expression/number_expression.dart';
 import 'package:graph_vn/editor/number_expression/number_expression_editor.dart';
 import 'package:graph_vn/editor/variables.dart';
 
-part 'boolean_number_expression.mapper.dart';
+part 'compare_numbers_expression.mapper.dart';
 
-@MappableClass(discriminatorValue: 'BooleanExpression')
-class BooleanNumberExpression extends NamedNumberExpression with BooleanNumberExpressionMappable {
+@MappableClass()
+class CompareNumbersExpression extends NamedNumberExpression with CompareNumbersExpressionMappable {
   NumberExpression left = ConstantNumberExpression();
   BooleanOperator operator = BooleanOperator.equal;
   NumberExpression right = ConstantNumberExpression();
 
-  BooleanNumberExpression({required super.namedNumbersTypeId});
+  CompareNumbersExpression({required super.namedNumbersTypeId});
 
   @MappableConstructor()
-  BooleanNumberExpression.mappableConstructor({
+  CompareNumbersExpression.mappableConstructor({
     required super.namedNumbersTypeId,
     required this.left,
     required this.operator,
@@ -72,7 +72,7 @@ enum BooleanOperator {
 }
 
 class BooleanNumberExpressionEditor extends StatefulWidget {
-  final BooleanNumberExpression expression;
+  final CompareNumbersExpression expression;
   const BooleanNumberExpressionEditor({super.key, required this.expression});
 
   @override

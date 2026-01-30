@@ -5,7 +5,7 @@ import 'package:graph_vn/editor/actions/base.dart';
 
 part 'do_nothing.mapper.dart';
 
-@MappableClass(discriminatorValue: 'DoNothing')
+@MappableClass()
 class DoNothing extends BaseAction with DoNothingMappable {
 
   DoNothing();
