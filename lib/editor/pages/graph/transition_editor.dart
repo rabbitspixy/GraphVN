@@ -91,10 +91,13 @@ class _TransitionEditorState extends State<TransitionEditor> {
       );
     }
     widgets.add(
-      ElevatedButton.icon(
-        onPressed: _addAction,
-        icon: const Icon(Icons.add),
-        label: const Text('Procedure'),
+      SizedBox(
+        width: double.infinity,
+        child: ElevatedButton.icon(
+          onPressed: _addAction,
+          icon: const Icon(Icons.add),
+          label: const Text('Procedure'),
+        ),
       ),
     );
     return Column(children: widgets);
@@ -124,13 +127,16 @@ class _TransitionEditorState extends State<TransitionEditor> {
         const Text('Exec procedures:', style: TextStyle(fontWeight: FontWeight.bold)),
         _buildActionList(),
         const SizedBox(height: 8),
-        ElevatedButton(
-          onPressed: () {
-            EditorState.deleteTransition(widget.transition.id);
-            widget.onChange();
-          },
-          style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-          child: const Text('Delete Transition'),
+        SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: () {
+              EditorState.deleteTransition(widget.transition.id);
+              widget.onChange();
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            child: const Text('Delete Transition'),
+          ),
         ),
       ],
     );

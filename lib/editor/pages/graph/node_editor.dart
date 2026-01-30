@@ -98,10 +98,13 @@ class _NodeEditorState extends State<NodeEditor> {
       );
     }
     widgets.add(
-      ElevatedButton.icon(
-        onPressed: _addAction,
-        icon: const Icon(Icons.add),
-        label: const Text('Add Action'),
+      SizedBox(
+        width: double.infinity,
+        child: ElevatedButton.icon(
+          onPressed: _addAction,
+          icon: const Icon(Icons.add),
+          label: const Text('Add Action'),
+        ),
       ),
     );
     return Column(children: widgets);
@@ -149,13 +152,16 @@ class _NodeEditorState extends State<NodeEditor> {
         const Text('Exec procedures:', style: TextStyle(fontWeight: FontWeight.bold)),
         _buildActionList(),
         const SizedBox(height: 8),
-        ElevatedButton(
-          onPressed: () {
-            EditorState.deleteNode(widget.node.id);
-            widget.onChange();
-          },
-          style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-          child: const Text('Delete Node'),
+        SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: () {
+              EditorState.deleteNode(widget.node.id);
+              widget.onChange();
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            child: const Text('Delete Node'),
+          ),
         ),
       ],
     );
