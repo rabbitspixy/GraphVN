@@ -25,13 +25,18 @@ class ConstantNumberExpression extends NumberExpression with ConstantNumberExpre
   }
 
   @override
-  String asString() {
+  String asText() {
     return value.toString();
   }
 
   @override
   bool isValid() {
     return _isValid;
+  }
+
+  @override
+  Widget widgetEditor() {
+    return ConstantNumberExpressionEditor(expression: this);
   }
 }
 

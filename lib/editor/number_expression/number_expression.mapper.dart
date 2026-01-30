@@ -15,6 +15,7 @@ class NumberExpressionMapper extends ClassMapperBase<NumberExpression> {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = NumberExpressionMapper._());
       ConstantNumberExpressionMapper.ensureInitialized();
+      NumberVariableValueMapper.ensureInitialized();
     }
     return _instance!;
   }

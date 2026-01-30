@@ -48,7 +48,7 @@ class CompareNumbersExpression extends NamedNumberExpression with CompareNumbers
 
   @override
   String asString() {
-    return "Is ${left.asString()} ${operator.str} ${right.asString()}?";
+    return "Is ${left.asText()} ${operator.str} ${right.asText()}?";
   }
 
   @override
@@ -85,7 +85,7 @@ class _BooleanNumberExpressionEditorState extends State<BooleanNumberExpressionE
     return EditorRichText([
       ETextSpan(text: 'Is'),
       ETextSpan(
-        text: widget.expression.left.asString(),
+        text: widget.expression.left.asText(),
         tap: () async {
           final newExpression = await editNumberExpression(context, widget.expression.left);
           if (newExpression != null) {
@@ -105,7 +105,7 @@ class _BooleanNumberExpressionEditorState extends State<BooleanNumberExpressionE
         }
       ),
       ETextSpan(
-        text: widget.expression.right.asString(),
+        text: widget.expression.right.asText(),
         tap: () async {
           final newExpression = await editNumberExpression(context, widget.expression.right);
           if (newExpression != null) {

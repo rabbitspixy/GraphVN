@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:graph_vn/editor/number_expression/constant_number_expression.dart';
 import 'package:graph_vn/editor/number_expression/number_expression.dart';
 
 Future<NumberExpression?> editNumberExpression(BuildContext context, NumberExpression numberExpression, {bool allowChangeType = true}) async {
@@ -31,10 +30,7 @@ Future<NumberExpression?> editNumberExpression(BuildContext context, NumberExpre
             content: SizedBox(
               width: 400,
               height: 300,
-              child: switch (current) {
-                ConstantNumberExpression _ => ConstantNumberExpressionEditor(expression: current as ConstantNumberExpression),
-                _ => const Placeholder(),
-              },
+              child: current.widgetEditor(),
             ),
             actions: [
               TextButton(

@@ -27,7 +27,7 @@ class SetNumberValue extends BaseAction with SetNumberValueMappable {
 
   @override
   String actionText() {
-    return "Set ${EditorState.variableAsString(variableId)} to ${numberExpression.asString()}";
+    return "Set ${EditorState.variableName(variableId)} to ${numberExpression.asText()}";
   }
 
   @override
@@ -53,7 +53,7 @@ class _SetNumberValueEditorState extends State<SetNumberValueEditor> {
     return EditorRichText([
       ETextSpan(text: 'Set'),
       ETextSpan(
-        text: EditorState.variableAsString(widget.action.variableId), 
+        text: EditorState.variableName(widget.action.variableId), 
         tap: () async { 
           widget.action.variableId = (await showVariableSelector(context, VariableType.number))?.id ?? "";
           setState(() {});
@@ -61,7 +61,7 @@ class _SetNumberValueEditorState extends State<SetNumberValueEditor> {
       ),
       ETextSpan(text: 'to'),
       ETextSpan(
-        text: widget.action.numberExpression.asString(),
+        text: widget.action.numberExpression.asText(),
         tap: () async {
           final newNumberExpression = await editNumberExpression(context, widget.action.numberExpression);
           if (newNumberExpression != null) {

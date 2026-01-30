@@ -159,7 +159,7 @@ class EditorState {
     return EditorState.structByProcedureId(procedureId)?.procedureById(procedureId);
   }
 
-  static String variableAsString(String variableId) {
+  static String variableName(String variableId) {
     final struct = EditorState.structByVariableId(variableId);
     if (struct == null) {
       return "variable";

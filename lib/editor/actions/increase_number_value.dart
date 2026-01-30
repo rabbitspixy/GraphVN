@@ -27,7 +27,7 @@ class IncreaseNumberValue extends BaseAction with IncreaseNumberValueMappable {
 
   @override
   String actionText() {
-    return "Increase ${EditorState.variableAsString(variableId)} by ${numberExpression.asString()}";
+    return "Increase ${EditorState.variableName(variableId)} by ${numberExpression.asText()}";
   }
 
   @override
@@ -53,7 +53,7 @@ class _IncreaseNumberValueEditorState extends State<IncreaseNumberValueEditor> {
     return EditorRichText([
       ETextSpan(text: 'Increase'),
       ETextSpan(
-        text: EditorState.variableAsString(widget.action.variableId), 
+        text: EditorState.variableName(widget.action.variableId), 
         tap: () async { 
           final selectedVariable = await showVariableSelector(context, VariableType.number);
           if (selectedVariable != null) {
@@ -64,7 +64,7 @@ class _IncreaseNumberValueEditorState extends State<IncreaseNumberValueEditor> {
       ),
       ETextSpan(text: 'by'),
       ETextSpan(
-        text: widget.action.numberExpression.asString(),
+        text: widget.action.numberExpression.asText(),
         tap: () async {
           final newNumberExpression = await editNumberExpression(context, widget.action.numberExpression);
           if (newNumberExpression != null) {

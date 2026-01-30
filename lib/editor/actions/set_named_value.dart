@@ -39,7 +39,7 @@ class SetNamedValue extends BaseAction with SetNamedValueMappable {
 
   @override
   String actionText() {
-    return "Set ${EditorState.variableAsString(variableId)} to ${expression.asString()}";
+    return "Set ${EditorState.variableName(variableId)} to ${expression.asString()}";
   }
 
   @override
@@ -65,7 +65,7 @@ class _SetNamedValueEditorState extends State<SetNamedValueEditor> {
     return EditorRichText([
       ETextSpan(text: 'Set'),
       ETextSpan(
-        text: EditorState.variableAsString(widget.action.variableId), 
+        text: EditorState.variableName(widget.action.variableId), 
         tap: () async { 
           widget.action.variableId = (await showVariableSelector(context, VariableType.namedNumber))?.id ?? "";
           widget.action.recreateExpressionIfNotValid();
