@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 Future<String?> showRenameDialog(BuildContext context, String title, String currentName) async {
   final controller = TextEditingController(text: currentName);
+  controller.selection = TextSelection(baseOffset: 0, extentOffset: controller.text.length);
   return await showDialog<String>(
     context: context,
     builder: (context) => StatefulBuilder(
