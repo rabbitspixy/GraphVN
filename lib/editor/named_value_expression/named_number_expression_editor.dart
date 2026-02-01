@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:graph_vn/editor/named_number_expression/compare_numbers_expression.dart';
-import 'package:graph_vn/editor/named_number_expression/constant_named_value_expression.dart';
-import 'package:graph_vn/editor/named_number_expression/named_value_expression.dart';
+import 'package:graph_vn/editor/named_value_expression/compare_numbers_expression.dart';
+import 'package:graph_vn/editor/named_value_expression/constant_named_value_expression.dart';
+import 'package:graph_vn/editor/named_value_expression/named_value_expression.dart';
 
 Future<NamedValueExpression?> editNamedValueExpression(BuildContext context, NamedValueExpression namedNumberExpression, {bool allowChangeType = true}) async {
   NamedValueExpression current = namedNumberExpression;

@@ -4,9 +4,9 @@ import 'package:graph_vn/editor/actions/base.dart';
 import 'package:graph_vn/editor/editor_rich_text.dart';
 import 'package:graph_vn/editor/editor_state.dart';
 import 'package:graph_vn/editor/modals/variable_selector.dart';
-import 'package:graph_vn/editor/named_number_expression/constant_named_value_expression.dart';
-import 'package:graph_vn/editor/named_number_expression/named_value_expression.dart';
-import 'package:graph_vn/editor/named_number_expression/named_number_expression_editor.dart';
+import 'package:graph_vn/editor/named_value_expression/constant_named_value_expression.dart';
+import 'package:graph_vn/editor/named_value_expression/named_value_expression.dart';
+import 'package:graph_vn/editor/named_value_expression/named_number_expression_editor.dart';
 import 'package:graph_vn/editor/variables.dart';
 
 part 'set_named_value.mapper.dart';
