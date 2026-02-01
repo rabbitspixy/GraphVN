@@ -10,6 +10,7 @@ Future<String?> showRenameDialog(BuildContext context, String title, String curr
         content: TextField(
           controller: controller,
           decoration: InputDecoration(labelText: 'Name'),
+          autofocus: true,
           onChanged: (_) => setState(() {}),
         ),
         actions: [
