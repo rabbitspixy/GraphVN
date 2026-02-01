@@ -55,18 +55,22 @@ class ConstantNamedValueExpressionEditor extends StatefulWidget {
 class _ConstantNamedValueExpressionEditorState extends State<ConstantNamedValueExpressionEditor> {
   @override
   Widget build(BuildContext context) {
-    return DropdownButton<String>(
-      value: widget.expression.value,
-      items: namedVariableTypes.where((t) => t.id == widget.expression.namedNumbersTypeId).first.list.map((item) {
-        return DropdownMenuItem(value: item.id, child: Text(item.name));
+    return Wrap(
+      spacing: 8.0,
+      children: namedVariableTypes.where((t) => t.id == widget.expression.namedNumbersTypeId).first.list.map((item) {
+        final bool isSelected = item.id == widget.expression.value;
+        return TextButton(
+          style: TextButton.styleFrom(
+            backgroundColor: isSelected ? Theme.of(context).primaryColor.withOpacity(0.2) : null,
+          ),
+          onPressed: () {
+            setState(() {
+              widget.expression.value = item.id;
+            });
+          },
+          child: Text(item.name),
+        );
       }).toList(),
-      onChanged: (String? newValue) {
-        setState(() {
-          if (newValue != null) {
-            widget.expression.value = newValue;
-          }
-        });
-      },
     );
   }
 }
