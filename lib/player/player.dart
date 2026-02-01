@@ -115,7 +115,7 @@ class Player {
         .toList();
     
     if (node.imagePath.isNotEmpty) {
-      final file = File("projects/${EditorState.projectDirName}/images/${node.imagePath}");
+      final file = File("projects/${EditorState.projectDir}/images/${node.imagePath}");
       if (file.existsSync()) {
         imageInfoNotifier.value = PlayerImageInfo(
           path: file.path,

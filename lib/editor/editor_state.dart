@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:graph_vn/app_settings.dart';
 import 'package:graph_vn/editor/editor_constants.dart';
 import 'package:graph_vn/editor/editor_node.dart';
 import 'package:graph_vn/editor/editor_transition.dart';
@@ -13,7 +14,7 @@ import 'dart:ui';
 import 'package:graph_vn/main.dart';
 
 class EditorState {
-  static String projectDirName = "";
+  static String projectDir = "";
 
   static final Map<String, EditorNode> nodes = <String, EditorNode>{};
   static final List<EditorTransition> transitions = List.empty(growable: true);
@@ -27,7 +28,7 @@ class EditorState {
   static final stateUpdatedEvents = _stateUpdatedEventsController.stream;
 
   static void load(String projectDir) {
-    projectDirName = "";
+    EditorState.projectDir = "";
     nodes.clear();
     transitions.clear();
     selectedNode = null;
@@ -38,20 +39,35 @@ class EditorState {
 
     final file = File("./${EditorConstants.projectsDir}/$projectDir/main.json");
     if (!file.existsSync()) {
-      projectDirName = projectDir;
+      EditorState.projectDir = projectDir;
       return;
     }
     final projectData = ProjectDataMapper.fromJson(file.readAsStringSync());
     nodes.addAll(projectData.nodes);
     transitions.addAll(projectData.transitions);
     structs.addAll(projectData.structs);
-
-    projectDirName = projectDir;
     updateAllTransitionPositions();
     _stateUpdatedEventsController.add('');
+
+    //this should be done last
+    EditorState.projectDir = projectDir;
+    if (appSettings.lastOpenedProjectDir != EditorState.projectDir) {
+      appSettings = appSettings.copyWith(lastOpenedProjectDir: EditorState.projectDir);
+    }
+  }
+
+  static void loadLastSavedProject() {
+    final proj = appSettings.lastOpenedProjectDir;
+    if (proj == null) {
+      return;
+    }
+    load(proj);
   }
 
   static Future<void> save() async {
+    if (!isProjectLoaded()) {
+      return;
+    }
     logger.i('start saving project');
 
     final projectData = ProjectData(
@@ -59,7 +75,7 @@ class EditorState {
       transitions:  EditorState.transitions,
       structs: EditorState.structs,
     );
-    final file = File("./${EditorConstants.projectsDir}/$projectDirName/main.json");
+    final file = File("./${EditorConstants.projectsDir}/$projectDir/main.json");
     final dir = file.parent;
     if (!dir.existsSync()) {
       await dir.create(recursive: true);
@@ -78,6 +94,10 @@ class EditorState {
         variable.reset();
       }
     }
+  }
+
+  static bool isProjectLoaded() {
+    return projectDir.isNotEmpty;
   }
 
   static void addTransition(EditorTransition transition) {

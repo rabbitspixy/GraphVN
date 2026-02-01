@@ -11,7 +11,28 @@ class Editor extends StatefulWidget {
 }
 
 class _EditorState extends State<Editor> {
-  EditorPage _page = EditorPage.graph;
+  EditorPage _page = EditorPage.project;
+
+  Widget buildPageButton(EditorPage page, IconData iconData) {
+    return SizedBox(
+      width: 50,
+      height: 50,
+      child: TextButton(
+        onPressed: () {
+          setState(() {
+            _page = page;
+          });
+        },
+        style: TextButton.styleFrom(
+          backgroundColor: _page == page ? Colors.black12 : Colors.transparent,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.zero
+          ),
+        ),
+        child: Icon(iconData),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,66 +44,21 @@ class _EditorState extends State<Editor> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              SizedBox(
-                width: 50,
-                height: 50,
-                child: TextButton(
-                  onPressed: () {
-                    setState(() {
-                      _page = EditorPage.graph;
-                    });
-                  },
-                  style: TextButton.styleFrom(
-                    backgroundColor: _page == EditorPage.graph ? Colors.black12 : Colors.transparent,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.zero
-                    ),
-                  ),
-                  child: const Icon(Icons.hub),
-                ),
-              ),
-              SizedBox(
-                width: 50,
-                height: 50,
-                child: TextButton(
-                  onPressed: () {
-                    setState(() {
-                      _page = EditorPage.variables;
-                    });
-                  },
-                  style: TextButton.styleFrom(
-                    backgroundColor: _page == EditorPage.variables ? Colors.black12 : Colors.transparent,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.zero
-                    ),
-                  ),
-                  child: const Icon(Icons.data_object),
-                ),
-              ),
-              SizedBox(
-                width: 50,
-                height: 50,
-                child: TextButton(
-                  onPressed: () {
-                    setState(() {
-                      _page = EditorPage.settings;
-                    });
-                  },
-                  style: TextButton.styleFrom(
-                    backgroundColor: _page == EditorPage.settings ? Colors.black12 : Colors.transparent,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.zero
-                    ),
-                  ),
-                  child: const Icon(Icons.settings),
-                ),
-              ),
+              buildPageButton(EditorPage.project, Icons.folder_open),
+              buildPageButton(EditorPage.graph, Icons.hub),
+              buildPageButton(EditorPage.variables, Icons.data_object),
+              buildPageButton(EditorPage.settings, Icons.settings),
             ],
           ),
         ),
         Expanded(
           child: Stack(
             children: [
+              Visibility(
+                visible: _page == EditorPage.project,
+                maintainState: true,
+                child: const Placeholder(),
+              ),
               Visibility(
                 visible: _page == EditorPage.graph,
                 maintainState: true,
@@ -108,6 +84,7 @@ class _EditorState extends State<Editor> {
 
 
 enum EditorPage {
+  project,
   graph,
   variables,
   settings,
