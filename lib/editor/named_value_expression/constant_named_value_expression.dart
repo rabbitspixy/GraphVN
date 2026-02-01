@@ -55,8 +55,8 @@ class ConstantNamedValueExpressionEditor extends StatefulWidget {
 class _ConstantNamedValueExpressionEditorState extends State<ConstantNamedValueExpressionEditor> {
   @override
   Widget build(BuildContext context) {
-    return Wrap(
-      spacing: 8.0,
+    return Column(
+      mainAxisSize: MainAxisSize.min,
       children: namedVariableTypes.where((t) => t.id == widget.expression.namedNumbersTypeId).first.list.map((item) {
         final bool isSelected = item.id == widget.expression.value;
         return TextButton(
