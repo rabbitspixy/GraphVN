@@ -105,7 +105,7 @@ class Player {
     String nt = node.text;
     for (final struct in EditorState.structs) {
       for (final variable in struct.variables) {
-        nt = nt.replaceAll("[${struct.name}->${variable.name}]", variable.currentValueAsString());
+        nt = nt.replaceAll("[${struct.name}->${variable.name}]", variable.currentValueAsText());
       }
     }
     narrativeText.value = nt;

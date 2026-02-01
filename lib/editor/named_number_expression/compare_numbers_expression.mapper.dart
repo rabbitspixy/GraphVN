@@ -79,7 +79,7 @@ class CompareNumbersExpressionMapper
       MapperContainer.globals.use(
         _instance = CompareNumbersExpressionMapper._(),
       );
-      NamedNumberExpressionMapper.ensureInitialized().addSubMapper(_instance!);
+      NamedValueExpressionMapper.ensureInitialized().addSubMapper(_instance!);
       NumberExpressionMapper.ensureInitialized();
       BooleanOperatorMapper.ensureInitialized();
     }
@@ -117,7 +117,7 @@ class CompareNumbersExpressionMapper
   final dynamic discriminatorValue = 'CompareNumbersExpression';
   @override
   late final ClassMapperBase superMapper =
-      NamedNumberExpressionMapper.ensureInitialized();
+      NamedValueExpressionMapper.ensureInitialized();
 
   static CompareNumbersExpression _instantiate(DecodingData data) {
     return CompareNumbersExpression.mappableConstructor(
@@ -197,7 +197,7 @@ abstract class CompareNumbersExpressionCopyWith<
   $In extends CompareNumbersExpression,
   $Out
 >
-    implements NamedNumberExpressionCopyWith<$R, $In, $Out> {
+    implements NamedValueExpressionCopyWith<$R, $In, $Out> {
   NumberExpressionCopyWith<$R, NumberExpression, NumberExpression> get left;
   NumberExpressionCopyWith<$R, NumberExpression, NumberExpression> get right;
   @override

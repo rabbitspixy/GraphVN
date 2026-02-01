@@ -4,8 +4,8 @@ import 'package:graph_vn/editor/actions/base.dart';
 import 'package:graph_vn/editor/editor_rich_text.dart';
 import 'package:graph_vn/editor/editor_state.dart';
 import 'package:graph_vn/editor/modals/variable_selector.dart';
-import 'package:graph_vn/editor/named_number_expression/constant_named_number_expression.dart';
-import 'package:graph_vn/editor/named_number_expression/named_number_expression.dart';
+import 'package:graph_vn/editor/named_number_expression/constant_named_value_expression.dart';
+import 'package:graph_vn/editor/named_number_expression/named_value_expression.dart';
 import 'package:graph_vn/editor/named_number_expression/named_number_expression_editor.dart';
 import 'package:graph_vn/editor/variables.dart';
 
@@ -14,7 +14,7 @@ part 'set_named_value.mapper.dart';
 @MappableClass()
 class SetNamedValue extends BaseAction with SetNamedValueMappable {
   String variableId = "";
-  NamedNumberExpression expression = ConstantNamedNumberExpression(namedNumbersTypeId: namedNumbersTypes.first.id);
+  NamedValueExpression expression = ConstantNamedValueExpression(namedNumbersTypeId: namedVariableTypes.first.id);
 
   SetNamedValue();
 
@@ -30,22 +30,22 @@ class SetNamedValue extends BaseAction with SetNamedValueMappable {
     if (variable == null) {
       return;
     }
-    if (variable is NamedNumberVariable) {
+    if (variable is NamedVariable) {
       if (variable.typeId != expression.namedNumbersTypeId) {
-        expression = ConstantNamedNumberExpression(namedNumbersTypeId: variable.typeId);
+        expression = ConstantNamedValueExpression(namedNumbersTypeId: variable.typeId);
       }
     }
   }
 
   @override
   String actionText() {
-    return "Set ${EditorState.variableName(variableId)} to ${expression.asString()}";
+    return "Set ${EditorState.variableName(variableId)} to ${expression.asText()}";
   }
 
   @override
   void exec() {
     final variable = EditorState.variableById(variableId);
-    if (variable != null && variable is NamedNumberVariable) {
+    if (variable != null && variable is NamedVariable) {
       variable.value = expression.evaluate();
     }
   }
@@ -74,9 +74,9 @@ class _SetNamedValueEditorState extends State<SetNamedValueEditor> {
       ),
       ETextSpan(text: 'to'),
       ETextSpan(
-        text: widget.action.expression.asString(),
+        text: widget.action.expression.asText(),
         tap: () async {
-          final newNumberExpression = await editNamedNumberExpression(context, widget.action.expression);
+          final newNumberExpression = await editNamedValueExpression(context, widget.action.expression);
           if (newNumberExpression != null) {
             widget.action.expression = newNumberExpression;
             setState(() {});

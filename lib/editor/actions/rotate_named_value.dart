@@ -29,10 +29,10 @@ class RotateNamedValue extends BaseAction with RotateNamedValueMappable {
   void exec() {
     final variable = EditorState.variableById(variableId);
     
-    if (variable != null && variable is NamedNumberVariable) {
-      final type = namedNumbersTypes.where((t) => t.id == variable.typeId).first;
-      final index = type.list.indexWhere((x) => x.key == variable.value);
-      final nextValue = type.list[(index + 1) % type.list.length].key;
+    if (variable != null && variable is NamedVariable) {
+      final type = namedVariableTypes.where((t) => t.id == variable.typeId).first;
+      final index = type.list.indexWhere((x) => x.id == variable.value);
+      final nextValue = type.list[(index + 1) % type.list.length].id;
       variable.value = nextValue;
     }
   }

@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:graph_vn/editor/named_number_expression/compare_numbers_expression.dart';
-import 'package:graph_vn/editor/named_number_expression/constant_named_number_expression.dart';
-import 'package:graph_vn/editor/named_number_expression/named_number_expression.dart';
+import 'package:graph_vn/editor/named_number_expression/constant_named_value_expression.dart';
+import 'package:graph_vn/editor/named_number_expression/named_value_expression.dart';
 
-Future<NamedNumberExpression?> editNamedNumberExpression(BuildContext context, NamedNumberExpression namedNumberExpression, {bool allowChangeType = true}) async {
-  NamedNumberExpression current = namedNumberExpression;
-  NamedNumberExpressionType currentType = NamedNumberExpressionType.values.singleWhere((item) => item.type == current.runtimeType);
+Future<NamedValueExpression?> editNamedValueExpression(BuildContext context, NamedValueExpression namedNumberExpression, {bool allowChangeType = true}) async {
+  NamedValueExpression current = namedNumberExpression;
+  NamedExpressionType currentType = NamedExpressionType.values.singleWhere((item) => item.type == current.runtimeType);
 
-  final result = await showDialog<NamedNumberExpression>(
+  final result = await showDialog<NamedValueExpression>(
     context: context,
     builder: (context) {
       return StatefulBuilder(
         builder: (context, setState) {
           return AlertDialog(
             title: switch (allowChangeType) {
-              true => DropdownButton<NamedNumberExpressionType>(
+              true => DropdownButton<NamedExpressionType>(
                 value: currentType,
-                items: NamedNumberExpressionType.values.map((item) {
+                items: NamedExpressionType.values.map((item) {
                   return DropdownMenuItem(value: item, child: Text(item.title));
                 }).toList(),
-                onChanged: (NamedNumberExpressionType? newType) {
+                onChanged: (NamedExpressionType? newType) {
                   if (newType == null || newType == currentType) return;
                   setState(() {
                     currentType = newType;
@@ -33,7 +33,7 @@ Future<NamedNumberExpression?> editNamedNumberExpression(BuildContext context, N
               width: 400,
               height: 300,
               child: switch (current) {
-                ConstantNamedNumberExpression exp => ConstantNamedNumberExpressionEditor(expression: exp),
+                ConstantNamedValueExpression exp => ConstantNamedValueExpressionEditor(expression: exp),
                 CompareNumbersExpression exp => BooleanNumberExpressionEditor(expression: exp),
                 _ => const Placeholder(),
               },

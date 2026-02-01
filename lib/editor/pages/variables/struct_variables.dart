@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:graph_vn/editor/named_number_expression/constant_named_number_expression.dart';
+import 'package:graph_vn/editor/named_number_expression/constant_named_value_expression.dart';
 import 'package:graph_vn/editor/named_number_expression/named_number_expression_editor.dart';
 import 'package:graph_vn/editor/number_expression/constant_number_expression.dart';
 import 'package:graph_vn/editor/number_expression/number_expression_editor.dart';
@@ -75,7 +75,7 @@ class _StructVariablesState extends State<StructVariables> {
                     child: InputDecorator(
                       decoration: InputDecoration(labelText: 'Current value'),
                       child: Text(
-                        variable.currentValueAsString(),
+                        variable.currentValueAsText(),
                         style: TextStyle(fontSize: 16),
                       ),
                     ),
@@ -89,18 +89,18 @@ class _StructVariablesState extends State<StructVariables> {
                           switch (variable) {
                             case NumberVariable _: {
                               final fakeExpression = ConstantNumberExpression()
-                                ..value = variable.startValue;
+                                ..value = variable.initialValue;
                               final number = (await editNumberExpression(context, fakeExpression, allowChangeType: false))?.evaluate();
                               if (number != null) {
-                                variable.startValue = number;
+                                variable.initialValue = number;
                               }
                             }
-                            case NamedNumberVariable _ : {
-                              final fakeExpression = ConstantNamedNumberExpression(namedNumbersTypeId: variable.typeId)
-                                ..value = variable.startValue;
-                              final newStartValue = (await editNamedNumberExpression(context, fakeExpression, allowChangeType: false))?.evaluate();
+                            case NamedVariable _ : {
+                              final fakeExpression = ConstantNamedValueExpression(namedNumbersTypeId: variable.typeId)
+                                ..value = variable.initialValue;
+                              final newStartValue = (await editNamedValueExpression(context, fakeExpression, allowChangeType: false))?.evaluate();
                               if (newStartValue != null) {
-                                variable.startValue = newStartValue;
+                                variable.initialValue = newStartValue;
                               }
                             }
                           }
@@ -109,7 +109,7 @@ class _StructVariablesState extends State<StructVariables> {
                         child: MouseRegion(
                           cursor: SystemMouseCursors.click,
                           child: Text(
-                            variable.initialValueAsString(),
+                            variable.initialValueAsText(),
                             style: TextStyle(fontSize: 16),
                           ),
                         ),

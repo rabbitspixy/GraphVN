@@ -2,7 +2,7 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/material.dart';
 import 'package:graph_vn/editor/editor_rich_text.dart';
 import 'package:graph_vn/editor/modals/enum_selector.dart';
-import 'package:graph_vn/editor/named_number_expression/named_number_expression.dart';
+import 'package:graph_vn/editor/named_number_expression/named_value_expression.dart';
 import 'package:graph_vn/editor/number_expression/constant_number_expression.dart';
 import 'package:graph_vn/editor/number_expression/number_expression.dart';
 import 'package:graph_vn/editor/number_expression/number_expression_editor.dart';
@@ -11,7 +11,7 @@ import 'package:graph_vn/editor/variables.dart';
 part 'compare_numbers_expression.mapper.dart';
 
 @MappableClass()
-class CompareNumbersExpression extends NamedNumberExpression with CompareNumbersExpressionMappable {
+class CompareNumbersExpression extends NamedValueExpression with CompareNumbersExpressionMappable {
   NumberExpression left = ConstantNumberExpression();
   BooleanOperator operator = BooleanOperator.equal;
   NumberExpression right = ConstantNumberExpression();
@@ -29,9 +29,9 @@ class CompareNumbersExpression extends NamedNumberExpression with CompareNumbers
   @override
   String evaluate() {
     if (evaluateAsBoolean()) {
-      return booleanTrue;
+      return PredefinedNamedTypes.booleanTrue.id;
     } else {
-      return booleanFalse;
+      return PredefinedNamedTypes.booleanFalse.id;
     }
   }
 
@@ -47,13 +47,18 @@ class CompareNumbersExpression extends NamedNumberExpression with CompareNumbers
   }
 
   @override
-  String asString() {
+  String asText() {
     return "Is ${left.asText()} ${operator.str} ${right.asText()}?";
   }
 
   @override
   bool isValid() {
     return true;
+  }
+
+  @override
+  Widget widgetEditor() {
+    return BooleanNumberExpressionEditor(expression: this);
   }
 }
 

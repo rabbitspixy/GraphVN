@@ -177,7 +177,7 @@ class VariableMapper extends ClassMapperBase<Variable> {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = VariableMapper._());
       NumberVariableMapper.ensureInitialized();
-      NamedNumberVariableMapper.ensureInitialized();
+      NamedVariableMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -372,6 +372,123 @@ class _StructProcedureCopyWithImpl<$R, $Out>
   ) => _StructProcedureCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
+class NamedValueMapper extends ClassMapperBase<NamedValue> {
+  NamedValueMapper._();
+
+  static NamedValueMapper? _instance;
+  static NamedValueMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = NamedValueMapper._());
+    }
+    return _instance!;
+  }
+
+  @override
+  final String id = 'NamedValue';
+
+  static String _$id(NamedValue v) => v.id;
+  static const Field<NamedValue, String> _f$id = Field('id', _$id);
+  static String _$name(NamedValue v) => v.name;
+  static const Field<NamedValue, String> _f$name = Field('name', _$name);
+
+  @override
+  final MappableFields<NamedValue> fields = const {#id: _f$id, #name: _f$name};
+
+  static NamedValue _instantiate(DecodingData data) {
+    return NamedValue(id: data.dec(_f$id), name: data.dec(_f$name));
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  static NamedValue fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<NamedValue>(map);
+  }
+
+  static NamedValue fromJson(String json) {
+    return ensureInitialized().decodeJson<NamedValue>(json);
+  }
+}
+
+mixin NamedValueMappable {
+  String toJson() {
+    return NamedValueMapper.ensureInitialized().encodeJson<NamedValue>(
+      this as NamedValue,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return NamedValueMapper.ensureInitialized().encodeMap<NamedValue>(
+      this as NamedValue,
+    );
+  }
+
+  NamedValueCopyWith<NamedValue, NamedValue, NamedValue> get copyWith =>
+      _NamedValueCopyWithImpl<NamedValue, NamedValue>(
+        this as NamedValue,
+        $identity,
+        $identity,
+      );
+  @override
+  String toString() {
+    return NamedValueMapper.ensureInitialized().stringifyValue(
+      this as NamedValue,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return NamedValueMapper.ensureInitialized().equalsValue(
+      this as NamedValue,
+      other,
+    );
+  }
+
+  @override
+  int get hashCode {
+    return NamedValueMapper.ensureInitialized().hashValue(this as NamedValue);
+  }
+}
+
+extension NamedValueValueCopy<$R, $Out>
+    on ObjectCopyWith<$R, NamedValue, $Out> {
+  NamedValueCopyWith<$R, NamedValue, $Out> get $asNamedValue =>
+      $base.as((v, t, t2) => _NamedValueCopyWithImpl<$R, $Out>(v, t, t2));
+}
+
+abstract class NamedValueCopyWith<$R, $In extends NamedValue, $Out>
+    implements ClassCopyWith<$R, $In, $Out> {
+  $R call({String? id, String? name});
+  NamedValueCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
+}
+
+class _NamedValueCopyWithImpl<$R, $Out>
+    extends ClassCopyWithBase<$R, NamedValue, $Out>
+    implements NamedValueCopyWith<$R, NamedValue, $Out> {
+  _NamedValueCopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<NamedValue> $mapper =
+      NamedValueMapper.ensureInitialized();
+  @override
+  $R call({Object? id = $none, String? name}) => $apply(
+    FieldCopyWithData({
+      if (id != $none) #id: id,
+      if (name != null) #name: name,
+    }),
+  );
+  @override
+  NamedValue $make(CopyWithData data) => NamedValue(
+    id: data.get(#id, or: $value.id),
+    name: data.get(#name, or: $value.name),
+  );
+
+  @override
+  NamedValueCopyWith<$R2, NamedValue, $Out2> $chain<$R2, $Out2>(
+    Then<$Out2, $R2> t,
+  ) => _NamedValueCopyWithImpl<$R2, $Out2>($value, $cast, t);
+}
+
 class NumberVariableMapper extends SubClassMapperBase<NumberVariable> {
   NumberVariableMapper._();
 
@@ -391,10 +508,10 @@ class NumberVariableMapper extends SubClassMapperBase<NumberVariable> {
   static const Field<NumberVariable, String> _f$id = Field('id', _$id);
   static String _$name(NumberVariable v) => v.name;
   static const Field<NumberVariable, String> _f$name = Field('name', _$name);
-  static Rational _$startValue(NumberVariable v) => v.startValue;
-  static const Field<NumberVariable, Rational> _f$startValue = Field(
-    'startValue',
-    _$startValue,
+  static Rational _$initialValue(NumberVariable v) => v.initialValue;
+  static const Field<NumberVariable, Rational> _f$initialValue = Field(
+    'initialValue',
+    _$initialValue,
   );
   static Rational _$value(NumberVariable v) => v.value;
   static const Field<NumberVariable, Rational> _f$value = Field(
@@ -406,7 +523,7 @@ class NumberVariableMapper extends SubClassMapperBase<NumberVariable> {
   final MappableFields<NumberVariable> fields = const {
     #id: _f$id,
     #name: _f$name,
-    #startValue: _f$startValue,
+    #initialValue: _f$initialValue,
     #value: _f$value,
   };
 
@@ -421,7 +538,7 @@ class NumberVariableMapper extends SubClassMapperBase<NumberVariable> {
     return NumberVariable.mappableConstructor(
       id: data.dec(_f$id),
       name: data.dec(_f$name),
-      startValue: data.dec(_f$startValue),
+      initialValue: data.dec(_f$initialValue),
       value: data.dec(_f$value),
     );
   }
@@ -489,7 +606,7 @@ extension NumberVariableValueCopy<$R, $Out>
 abstract class NumberVariableCopyWith<$R, $In extends NumberVariable, $Out>
     implements VariableCopyWith<$R, $In, $Out> {
   @override
-  $R call({String? id, String? name, Rational? startValue, Rational? value});
+  $R call({String? id, String? name, Rational? initialValue, Rational? value});
   NumberVariableCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
     Then<$Out2, $R2> t,
   );
@@ -504,20 +621,24 @@ class _NumberVariableCopyWithImpl<$R, $Out>
   late final ClassMapperBase<NumberVariable> $mapper =
       NumberVariableMapper.ensureInitialized();
   @override
-  $R call({String? id, String? name, Rational? startValue, Rational? value}) =>
-      $apply(
-        FieldCopyWithData({
-          if (id != null) #id: id,
-          if (name != null) #name: name,
-          if (startValue != null) #startValue: startValue,
-          if (value != null) #value: value,
-        }),
-      );
+  $R call({
+    String? id,
+    String? name,
+    Rational? initialValue,
+    Rational? value,
+  }) => $apply(
+    FieldCopyWithData({
+      if (id != null) #id: id,
+      if (name != null) #name: name,
+      if (initialValue != null) #initialValue: initialValue,
+      if (value != null) #value: value,
+    }),
+  );
   @override
   NumberVariable $make(CopyWithData data) => NumberVariable.mappableConstructor(
     id: data.get(#id, or: $value.id),
     name: data.get(#name, or: $value.name),
-    startValue: data.get(#startValue, or: $value.startValue),
+    initialValue: data.get(#initialValue, or: $value.initialValue),
     value: data.get(#value, or: $value.value),
   );
 
@@ -527,67 +648,60 @@ class _NumberVariableCopyWithImpl<$R, $Out>
   ) => _NumberVariableCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
-class NamedNumberVariableMapper
-    extends SubClassMapperBase<NamedNumberVariable> {
-  NamedNumberVariableMapper._();
+class NamedVariableMapper extends SubClassMapperBase<NamedVariable> {
+  NamedVariableMapper._();
 
-  static NamedNumberVariableMapper? _instance;
-  static NamedNumberVariableMapper ensureInitialized() {
+  static NamedVariableMapper? _instance;
+  static NamedVariableMapper ensureInitialized() {
     if (_instance == null) {
-      MapperContainer.globals.use(_instance = NamedNumberVariableMapper._());
+      MapperContainer.globals.use(_instance = NamedVariableMapper._());
       VariableMapper.ensureInitialized().addSubMapper(_instance!);
     }
     return _instance!;
   }
 
   @override
-  final String id = 'NamedNumberVariable';
+  final String id = 'NamedVariable';
 
-  static String _$id(NamedNumberVariable v) => v.id;
-  static const Field<NamedNumberVariable, String> _f$id = Field('id', _$id);
-  static String _$name(NamedNumberVariable v) => v.name;
-  static const Field<NamedNumberVariable, String> _f$name = Field(
-    'name',
-    _$name,
-  );
-  static String _$typeId(NamedNumberVariable v) => v.typeId;
-  static const Field<NamedNumberVariable, String> _f$typeId = Field(
+  static String _$id(NamedVariable v) => v.id;
+  static const Field<NamedVariable, String> _f$id = Field('id', _$id);
+  static String _$name(NamedVariable v) => v.name;
+  static const Field<NamedVariable, String> _f$name = Field('name', _$name);
+  static String _$typeId(NamedVariable v) => v.typeId;
+  static const Field<NamedVariable, String> _f$typeId = Field(
     'typeId',
     _$typeId,
   );
-  static String _$startValue(NamedNumberVariable v) => v.startValue;
-  static const Field<NamedNumberVariable, String> _f$startValue = Field(
-    'startValue',
-    _$startValue,
+  static String _$initialValue(NamedVariable v) => v.initialValue;
+  static const Field<NamedVariable, String> _f$initialValue = Field(
+    'initialValue',
+    _$initialValue,
   );
-  static String _$value(NamedNumberVariable v) => v.value;
-  static const Field<NamedNumberVariable, String> _f$value = Field(
-    'value',
-    _$value,
-  );
+  static String _$value(NamedVariable v) => v.value;
+  static const Field<NamedVariable, String> _f$value = Field('value', _$value);
 
   @override
-  final MappableFields<NamedNumberVariable> fields = const {
+  final MappableFields<NamedVariable> fields = const {
     #id: _f$id,
     #name: _f$name,
     #typeId: _f$typeId,
-    #startValue: _f$startValue,
+    #initialValue: _f$initialValue,
     #value: _f$value,
   };
 
   @override
   final String discriminatorKey = 'subclass';
   @override
-  final dynamic discriminatorValue = 'NamedNumberVariable';
+  final dynamic discriminatorValue = 'NamedVariable';
   @override
   late final ClassMapperBase superMapper = VariableMapper.ensureInitialized();
 
-  static NamedNumberVariable _instantiate(DecodingData data) {
-    return NamedNumberVariable.mappableConstructor(
+  static NamedVariable _instantiate(DecodingData data) {
+    return NamedVariable.mappableConstructor(
       id: data.dec(_f$id),
       name: data.dec(_f$name),
       typeId: data.dec(_f$typeId),
-      startValue: data.dec(_f$startValue),
+      initialValue: data.dec(_f$initialValue),
       value: data.dec(_f$value),
     );
   }
@@ -595,123 +709,112 @@ class NamedNumberVariableMapper
   @override
   final Function instantiate = _instantiate;
 
-  static NamedNumberVariable fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<NamedNumberVariable>(map);
+  static NamedVariable fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<NamedVariable>(map);
   }
 
-  static NamedNumberVariable fromJson(String json) {
-    return ensureInitialized().decodeJson<NamedNumberVariable>(json);
+  static NamedVariable fromJson(String json) {
+    return ensureInitialized().decodeJson<NamedVariable>(json);
   }
 }
 
-mixin NamedNumberVariableMappable {
+mixin NamedVariableMappable {
   String toJson() {
-    return NamedNumberVariableMapper.ensureInitialized()
-        .encodeJson<NamedNumberVariable>(this as NamedNumberVariable);
+    return NamedVariableMapper.ensureInitialized().encodeJson<NamedVariable>(
+      this as NamedVariable,
+    );
   }
 
   Map<String, dynamic> toMap() {
-    return NamedNumberVariableMapper.ensureInitialized()
-        .encodeMap<NamedNumberVariable>(this as NamedNumberVariable);
+    return NamedVariableMapper.ensureInitialized().encodeMap<NamedVariable>(
+      this as NamedVariable,
+    );
   }
 
-  NamedNumberVariableCopyWith<
-    NamedNumberVariable,
-    NamedNumberVariable,
-    NamedNumberVariable
-  >
-  get copyWith =>
-      _NamedNumberVariableCopyWithImpl<
-        NamedNumberVariable,
-        NamedNumberVariable
-      >(this as NamedNumberVariable, $identity, $identity);
+  NamedVariableCopyWith<NamedVariable, NamedVariable, NamedVariable>
+  get copyWith => _NamedVariableCopyWithImpl<NamedVariable, NamedVariable>(
+    this as NamedVariable,
+    $identity,
+    $identity,
+  );
   @override
   String toString() {
-    return NamedNumberVariableMapper.ensureInitialized().stringifyValue(
-      this as NamedNumberVariable,
+    return NamedVariableMapper.ensureInitialized().stringifyValue(
+      this as NamedVariable,
     );
   }
 
   @override
   bool operator ==(Object other) {
-    return NamedNumberVariableMapper.ensureInitialized().equalsValue(
-      this as NamedNumberVariable,
+    return NamedVariableMapper.ensureInitialized().equalsValue(
+      this as NamedVariable,
       other,
     );
   }
 
   @override
   int get hashCode {
-    return NamedNumberVariableMapper.ensureInitialized().hashValue(
-      this as NamedNumberVariable,
+    return NamedVariableMapper.ensureInitialized().hashValue(
+      this as NamedVariable,
     );
   }
 }
 
-extension NamedNumberVariableValueCopy<$R, $Out>
-    on ObjectCopyWith<$R, NamedNumberVariable, $Out> {
-  NamedNumberVariableCopyWith<$R, NamedNumberVariable, $Out>
-  get $asNamedNumberVariable => $base.as(
-    (v, t, t2) => _NamedNumberVariableCopyWithImpl<$R, $Out>(v, t, t2),
-  );
+extension NamedVariableValueCopy<$R, $Out>
+    on ObjectCopyWith<$R, NamedVariable, $Out> {
+  NamedVariableCopyWith<$R, NamedVariable, $Out> get $asNamedVariable =>
+      $base.as((v, t, t2) => _NamedVariableCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
-abstract class NamedNumberVariableCopyWith<
-  $R,
-  $In extends NamedNumberVariable,
-  $Out
->
+abstract class NamedVariableCopyWith<$R, $In extends NamedVariable, $Out>
     implements VariableCopyWith<$R, $In, $Out> {
   @override
   $R call({
     String? id,
     String? name,
     String? typeId,
-    String? startValue,
+    String? initialValue,
     String? value,
   });
-  NamedNumberVariableCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
-    Then<$Out2, $R2> t,
-  );
+  NamedVariableCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
-class _NamedNumberVariableCopyWithImpl<$R, $Out>
-    extends ClassCopyWithBase<$R, NamedNumberVariable, $Out>
-    implements NamedNumberVariableCopyWith<$R, NamedNumberVariable, $Out> {
-  _NamedNumberVariableCopyWithImpl(super.value, super.then, super.then2);
+class _NamedVariableCopyWithImpl<$R, $Out>
+    extends ClassCopyWithBase<$R, NamedVariable, $Out>
+    implements NamedVariableCopyWith<$R, NamedVariable, $Out> {
+  _NamedVariableCopyWithImpl(super.value, super.then, super.then2);
 
   @override
-  late final ClassMapperBase<NamedNumberVariable> $mapper =
-      NamedNumberVariableMapper.ensureInitialized();
+  late final ClassMapperBase<NamedVariable> $mapper =
+      NamedVariableMapper.ensureInitialized();
   @override
   $R call({
     String? id,
     String? name,
     String? typeId,
-    String? startValue,
+    String? initialValue,
     String? value,
   }) => $apply(
     FieldCopyWithData({
       if (id != null) #id: id,
       if (name != null) #name: name,
       if (typeId != null) #typeId: typeId,
-      if (startValue != null) #startValue: startValue,
+      if (initialValue != null) #initialValue: initialValue,
       if (value != null) #value: value,
     }),
   );
   @override
-  NamedNumberVariable $make(CopyWithData data) =>
-      NamedNumberVariable.mappableConstructor(
-        id: data.get(#id, or: $value.id),
-        name: data.get(#name, or: $value.name),
-        typeId: data.get(#typeId, or: $value.typeId),
-        startValue: data.get(#startValue, or: $value.startValue),
-        value: data.get(#value, or: $value.value),
-      );
+  NamedVariable $make(CopyWithData data) => NamedVariable.mappableConstructor(
+    id: data.get(#id, or: $value.id),
+    name: data.get(#name, or: $value.name),
+    typeId: data.get(#typeId, or: $value.typeId),
+    initialValue: data.get(#initialValue, or: $value.initialValue),
+    value: data.get(#value, or: $value.value),
+  );
 
   @override
-  NamedNumberVariableCopyWith<$R2, NamedNumberVariable, $Out2>
-  $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-      _NamedNumberVariableCopyWithImpl<$R2, $Out2>($value, $cast, t);
+  NamedVariableCopyWith<$R2, NamedVariable, $Out2> $chain<$R2, $Out2>(
+    Then<$Out2, $R2> t,
+  ) => _NamedVariableCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 

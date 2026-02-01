@@ -35,7 +35,7 @@ Future<Variable?> showAddVariableDialog(BuildContext context) async {
                         selectedType = val;
                         if (selectedType == 'Named Number' &&
                             selectedNamedTypeId == null) {
-                          selectedNamedTypeId = namedNumbersTypes.first.id;
+                          selectedNamedTypeId = namedVariableTypes.first.id;
                         }
                       });
                     }
@@ -44,7 +44,7 @@ Future<Variable?> showAddVariableDialog(BuildContext context) async {
                 if (selectedType == 'Named Number')
                   DropdownButton<String>(
                     value: selectedNamedTypeId,
-                    items: namedNumbersTypes
+                    items: namedVariableTypes
                         .map((t) => DropdownMenuItem(
                               value: t.id,
                               child: Text(t.name),
@@ -72,7 +72,7 @@ Future<Variable?> showAddVariableDialog(BuildContext context) async {
                   if (selectedType == 'Number') {
                     newVariable = NumberVariable()..name = name;
                   } else {
-                    newVariable = NamedNumberVariable(typeId: selectedNamedTypeId!)
+                    newVariable = NamedVariable(typeId: selectedNamedTypeId!)
                       ..name = name;
                   }
                   Navigator.pop(context, newVariable);

@@ -171,6 +171,10 @@ class EditorState {
     return "${struct.name}->${variable.name}";
   }
 
+  static NamedValue? namedValue(String typeId, String valueId) {
+    return namedVariableTypes.where((type) => type.id == typeId).firstOrNull?.list.where((v) => v.id == valueId).firstOrNull;
+  }
+
   static void updateAllTransitionPositions() {
     final Map<String, int> precalculatedPairCount = {};
     for (final transition in EditorState.transitions) {

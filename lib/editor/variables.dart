@@ -1,5 +1,6 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:graph_vn/editor/actions/base.dart';
+import 'package:graph_vn/editor/editor_state.dart';
 import 'package:rational/rational.dart';
 import 'package:uuid/uuid.dart';
 
@@ -31,21 +32,37 @@ class Struct with StructMappable {
   }
 }
 
-const booleanNamedNumberTypeId = 'a16100bc-5afb-4e8c-b2c1-eb14e523e0d0';
-const booleanFalse = 'False';
-const booleanTrue = 'True';
+class PredefinedNamedTypes {
+  static const booleanTypeId = 'a16100bc-5afb-4e8c-b2c1-eb14e523e0d0';
+  static final booleanFalse = NamedValue(id: '8e3cc0d8-dd9d-4062-951c-158c62b32e35', name: 'False');
+  static final booleanTrue = NamedValue(id: '12bb0e0d-674f-4ce8-b03c-38cfe66f3040', name: 'True');
+}
 
-final namedNumbersTypes = [
-  NamedNumbersType()
-    ..id = booleanNamedNumberTypeId
+final namedVariableTypes = [
+  NamedValuesType()
+    ..id = PredefinedNamedTypes.booleanTypeId
     ..name = 'Boolean'
-    ..list = [MapEntry(booleanFalse, Rational.zero), MapEntry(booleanTrue, Rational.one)]
+    ..list = [
+      PredefinedNamedTypes.booleanFalse,
+      PredefinedNamedTypes.booleanTrue,
+    ]
 ];
 
-class NamedNumbersType {
+class NamedValuesType {
   String id = Uuid().v4();
   String name = '';
-  List<MapEntry<String, Rational>> list = List.empty();
+  List<NamedValue> list = List.empty();
+}
+
+@MappableClass()
+class NamedValue with NamedValueMappable {
+  String id;
+  String name;
+
+  NamedValue({
+    required String? id,
+    required this.name,
+  }) : id = id ?? Uuid().v4();
 }
 
 @MappableClass()
@@ -62,13 +79,13 @@ abstract class Variable with VariableMappable {
   });
 
   void reset();
-  String initialValueAsString();
-  String currentValueAsString();
+  String initialValueAsText();
+  String currentValueAsText();
 }
 
 @MappableClass()
 class NumberVariable extends Variable with NumberVariableMappable {
-  Rational startValue = Rational.zero;
+  Rational initialValue = Rational.zero;
   Rational value = Rational.zero;
 
   NumberVariable();
@@ -77,68 +94,68 @@ class NumberVariable extends Variable with NumberVariableMappable {
   NumberVariable.mappableConstructor({
     required super.id,
     required super.name,
-    required this.startValue,
+    required this.initialValue,
     required this.value,
   }) : super.mappableConstructor();
 
   @override
   void reset() {
-    value = startValue;
+    value = initialValue;
   }
 
   @override
-  String initialValueAsString() {
-    return startValue.toString();
+  String initialValueAsText() {
+    return initialValue.toString();
   }
 
   @override
-  String currentValueAsString() {
+  String currentValueAsText() {
     return value.toString();
   }
 }
 
 @MappableClass()
-class NamedNumberVariable extends Variable with NamedNumberVariableMappable {
+class NamedVariable extends Variable with NamedVariableMappable {
   String typeId;
-  String startValue = '';
+  String initialValue = '';
   String value = '';
 
   @override
   void reset() {
-    value = startValue;
+    value = initialValue;
   }
 
-  NamedNumberVariable({required this.typeId}) {
-    final type = namedNumbersTypes.where((v) => v.id == typeId).firstOrNull;
+  NamedVariable({required this.typeId}) {
+    final type = namedVariableTypes.where((v) => v.id == typeId).firstOrNull;
     if (type != null) {
-      startValue = type.list.first.key;
-      value = startValue;
+      initialValue = type.list.first.id;
+      value = initialValue;
     }
   }
 
   @MappableConstructor()
-  NamedNumberVariable.mappableConstructor({
+  NamedVariable.mappableConstructor({
     required super.id,
     required super.name,
     required this.typeId,
-    required this.startValue,
+    required this.initialValue,
     required this.value,
   }) : super.mappableConstructor();
 
   @override
-  String initialValueAsString() {
-    return startValue;
+  String initialValueAsText() {
+    return EditorState.namedValue(typeId, initialValue)?.name ?? "?";
   }
 
   @override
-  String currentValueAsString() {
-    return value;
+  String currentValueAsText() {
+    return EditorState.namedValue(typeId, value)?.name ?? "?";
   }
 }
 
 enum VariableType {
   number(type: NumberVariable),
-  namedNumber(type: NamedNumberVariable)
+  namedNumber(type: NamedVariable)
   ;
 
   const VariableType({required this.type});

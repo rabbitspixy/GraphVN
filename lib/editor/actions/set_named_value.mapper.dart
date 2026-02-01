@@ -15,7 +15,7 @@ class SetNamedValueMapper extends SubClassMapperBase<SetNamedValue> {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = SetNamedValueMapper._());
       BaseActionMapper.ensureInitialized().addSubMapper(_instance!);
-      NamedNumberExpressionMapper.ensureInitialized();
+      NamedValueExpressionMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -30,9 +30,11 @@ class SetNamedValueMapper extends SubClassMapperBase<SetNamedValue> {
     'variableId',
     _$variableId,
   );
-  static NamedNumberExpression _$expression(SetNamedValue v) => v.expression;
-  static const Field<SetNamedValue, NamedNumberExpression> _f$expression =
-      Field('expression', _$expression);
+  static NamedValueExpression _$expression(SetNamedValue v) => v.expression;
+  static const Field<SetNamedValue, NamedValueExpression> _f$expression = Field(
+    'expression',
+    _$expression,
+  );
 
   @override
   final MappableFields<SetNamedValue> fields = const {
@@ -118,14 +120,10 @@ extension SetNamedValueValueCopy<$R, $Out>
 
 abstract class SetNamedValueCopyWith<$R, $In extends SetNamedValue, $Out>
     implements BaseActionCopyWith<$R, $In, $Out> {
-  NamedNumberExpressionCopyWith<
-    $R,
-    NamedNumberExpression,
-    NamedNumberExpression
-  >
+  NamedValueExpressionCopyWith<$R, NamedValueExpression, NamedValueExpression>
   get expression;
   @override
-  $R call({String? id, String? variableId, NamedNumberExpression? expression});
+  $R call({String? id, String? variableId, NamedValueExpression? expression});
   SetNamedValueCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -138,25 +136,18 @@ class _SetNamedValueCopyWithImpl<$R, $Out>
   late final ClassMapperBase<SetNamedValue> $mapper =
       SetNamedValueMapper.ensureInitialized();
   @override
-  NamedNumberExpressionCopyWith<
-    $R,
-    NamedNumberExpression,
-    NamedNumberExpression
-  >
+  NamedValueExpressionCopyWith<$R, NamedValueExpression, NamedValueExpression>
   get expression =>
       $value.expression.copyWith.$chain((v) => call(expression: v));
   @override
-  $R call({
-    String? id,
-    String? variableId,
-    NamedNumberExpression? expression,
-  }) => $apply(
-    FieldCopyWithData({
-      if (id != null) #id: id,
-      if (variableId != null) #variableId: variableId,
-      if (expression != null) #expression: expression,
-    }),
-  );
+  $R call({String? id, String? variableId, NamedValueExpression? expression}) =>
+      $apply(
+        FieldCopyWithData({
+          if (id != null) #id: id,
+          if (variableId != null) #variableId: variableId,
+          if (expression != null) #expression: expression,
+        }),
+      );
   @override
   SetNamedValue $make(CopyWithData data) => SetNamedValue.mappableConstructor(
     id: data.get(#id, or: $value.id),
