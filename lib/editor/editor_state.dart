@@ -23,6 +23,18 @@ class EditorState {
   static final List<Struct> structs = List.empty(growable: true);
   static Offset? storedOffset;
   static String currentNode = "";
+
+  static List<String> getProjectFolders() {
+    final dir = Directory("./${EditorConstants.projectsDir}");
+    if (!dir.existsSync()) {
+      return [];
+    }
+    return dir
+        .listSync()
+        .whereType<Directory>()
+        .map((d) => d.path.split(Platform.pathSeparator).last)
+        .toList();
+  }
   
   static final _stateUpdatedEventsController = StreamController<String>();
   static final stateUpdatedEvents = _stateUpdatedEventsController.stream;
