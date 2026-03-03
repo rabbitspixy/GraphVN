@@ -46,7 +46,7 @@ class _EditorCanvasState extends State<EditorCanvas> {
   Offset? _hoverNodePosition;
   int _forcedRepaint = 0;
 
-  StreamSubscription<String>? _stateUpdatedEventsSubscription = null;
+  StreamSubscription<String>? _stateUpdatedEventsSubscription;
 
 
   void _onPointerDown(PointerDownEvent event) {

@@ -4,10 +4,10 @@ class TooltipPositioned extends StatefulWidget {
   final Offset position;
   final Widget child;
   const TooltipPositioned({
-    Key? key,
+    super.key,
     required this.position,
     required this.child,
-  }) : super(key: key);
+  });
 
   @override
   State<TooltipPositioned> createState() => _TooltipPositionedState();

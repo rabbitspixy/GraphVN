@@ -6,10 +6,10 @@ class NodeTooltip extends StatelessWidget {
   final Offset position;
   final EditorNode node;
   const NodeTooltip({
-    Key? key,
+    super.key,
     required this.position,
     required this.node,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

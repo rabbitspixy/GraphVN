@@ -6,10 +6,10 @@ class TransitionTooltip extends StatelessWidget {
   final Offset position;
   final EditorTransition transition;
   const TransitionTooltip({
-    Key? key,
+    super.key,
     required this.position,
     required this.transition,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
