@@ -1,6 +1,7 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_window_close/flutter_window_close.dart';
+import 'package:graph_vn/editor/project_selector.dart';
 import 'package:graph_vn/app_settings.dart';
 import 'package:graph_vn/common/rational_mapper.dart';
 import 'package:graph_vn/editor/editor_state.dart';
@@ -88,6 +89,7 @@ class _RootWidgetState extends State<RootWidget> {
   void initState() {
     super.initState();
     HardwareKeyboard.instance.addHandler(_handleKey);
+    EditorState.stateUpdatedEvents.listen((_) => setState(() {}));
   }
 
   @override
@@ -105,20 +107,22 @@ class _RootWidgetState extends State<RootWidget> {
         body: KeyboardListener(
           focusNode: _focusNode,
           autofocus: true,
-          child: Stack(
-            children: [
-              Visibility(
-                visible: _showEditor,
-                maintainState: true,
-                child: const Editor(),
-              ),
-              Visibility(
-                visible: !_showEditor,
-                maintainState: true,
-                child: const GamePlayer(),
-              ),
-            ],
-          ),
+          child: EditorState.isProjectLoaded()
+              ? Stack(
+                  children: [
+                    Visibility(
+                      visible: _showEditor,
+                      maintainState: true,
+                      child: const Editor(),
+                    ),
+                    Visibility(
+                      visible: !_showEditor,
+                      maintainState: true,
+                      child: const GamePlayer(),
+                    ),
+                  ],
+                )
+              : const ProjectSelector(),
         ),
       ),
     );
