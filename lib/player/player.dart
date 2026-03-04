@@ -131,7 +131,14 @@ class Player {
       updateState(goToNode: startNode.id);
       return true;
     } else {
+      clearState();
       return false;
     }
+  }
+
+  static void clearState() {
+    imageInfoNotifier.value = PlayerImageInfo();
+    narrativeText.value = "";
+    buttons.value = [];
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:graph_vn/editor/pages/graph/editor_graph_page.dart';
+import 'package:graph_vn/editor/pages/project/editor_project_page.dart';
 import 'package:graph_vn/editor/pages/settings/editor_settings_page.dart';
 import 'package:graph_vn/editor/pages/variables/editor_variables_page.dart';
 
@@ -57,7 +58,7 @@ class _EditorState extends State<Editor> {
               Visibility(
                 visible: _page == EditorPage.project,
                 maintainState: true,
-                child: const Placeholder(),
+                child: const EditorProjectPage(),
               ),
               Visibility(
                 visible: _page == EditorPage.graph,

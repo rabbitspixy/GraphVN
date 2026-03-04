@@ -24,7 +24,7 @@ void main() {
 void initWindowCloseHandler() {
   FlutterWindowClose.setWindowShouldCloseHandler(() async {
     try {
-      await EditorState.save();
+      EditorState.save();
       saveAppSettings();
     } catch (e, s) {
       logger.e('project saving error', error: e, stackTrace: s);

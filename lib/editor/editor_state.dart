@@ -39,13 +39,7 @@ class EditorState {
   static final _stateUpdatedEventsController = StreamController<String>.broadcast();
   static final stateUpdatedEvents = _stateUpdatedEventsController.stream;
 
-  static void load(String projectDir) {
-    logger.i("loading project $projectDir");
-    _load(projectDir);
-    logger.i("project $projectDir loaded");
-  }
-
-  static void _load(String projectDir) {
+  static void closeProject() {
     EditorState.projectDir = "";
     nodes.clear();
     transitions.clear();
@@ -54,6 +48,22 @@ class EditorState {
     structs.clear();
     storedOffset = null;
     currentNode = "";
+
+    if (appSettings.lastOpenedProjectDir != EditorState.projectDir) {
+      appSettings = appSettings.copyWith(lastOpenedProjectDir: EditorState.projectDir);
+    }
+    
+    _stateUpdatedEventsController.add('');
+  }
+
+  static void load(String projectDir) {
+    logger.i("loading project $projectDir");
+    _load(projectDir);
+    logger.i("project $projectDir loaded");
+  }
+
+  static void _load(String projectDir) {
+    closeProject();
 
     final file = File("./${EditorConstants.projectsDir}/$projectDir/main.json");
     if (!file.existsSync()) {
@@ -92,7 +102,7 @@ class EditorState {
     load(projectDir);
   }
 
-  static Future<void> save() async {
+  static void save() {
     if (!isProjectLoaded()) {
       return;
     }
@@ -106,12 +116,17 @@ class EditorState {
     final file = File("./${EditorConstants.projectsDir}/$projectDir/main.json");
     final dir = file.parent;
     if (!dir.existsSync()) {
-      await dir.create(recursive: true);
+      dir.createSync(recursive: true);
     }
     final json = const JsonEncoder.withIndent('  ').convert(projectData.toMap());
     ProjectDataMapper.fromJson(json); //deserialize check
-    await file.writeAsString(json);
+    file.writeAsStringSync(json);
     logger.i('saving project done');
+  }
+
+  static void saveAndCloseProject() {
+    save();
+    closeProject();
   }
 
   static void restart() {

@@ -6,7 +6,10 @@ part 'app_settings_model.mapper.dart';
 class AppSettingsModel with AppSettingsModelMappable {
   String? lastOpenedProjectDir;
 
-  AppSettingsModel({
-    this.lastOpenedProjectDir,
+  AppSettingsModel();
+
+  @MappableConstructor()
+  AppSettingsModel.mappableContructor({
+    required this.lastOpenedProjectDir,
   });
 }

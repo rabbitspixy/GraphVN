@@ -26,7 +26,6 @@ class AppSettingsModelMapper extends ClassMapperBase<AppSettingsModel> {
   static const Field<AppSettingsModel, String> _f$lastOpenedProjectDir = Field(
     'lastOpenedProjectDir',
     _$lastOpenedProjectDir,
-    opt: true,
   );
 
   @override
@@ -35,7 +34,7 @@ class AppSettingsModelMapper extends ClassMapperBase<AppSettingsModel> {
   };
 
   static AppSettingsModel _instantiate(DecodingData data) {
-    return AppSettingsModel(
+    return AppSettingsModel.mappableContructor(
       lastOpenedProjectDir: data.dec(_f$lastOpenedProjectDir),
     );
   }
@@ -124,12 +123,13 @@ class _AppSettingsModelCopyWithImpl<$R, $Out>
     }),
   );
   @override
-  AppSettingsModel $make(CopyWithData data) => AppSettingsModel(
-    lastOpenedProjectDir: data.get(
-      #lastOpenedProjectDir,
-      or: $value.lastOpenedProjectDir,
-    ),
-  );
+  AppSettingsModel $make(CopyWithData data) =>
+      AppSettingsModel.mappableContructor(
+        lastOpenedProjectDir: data.get(
+          #lastOpenedProjectDir,
+          or: $value.lastOpenedProjectDir,
+        ),
+      );
 
   @override
   AppSettingsModelCopyWith<$R2, AppSettingsModel, $Out2> $chain<$R2, $Out2>(

@@ -5,7 +5,7 @@ import 'package:graph_vn/app_settings_model.dart';
 import 'package:graph_vn/editor/editor_constants.dart';
 import 'package:graph_vn/main.dart';
 
-AppSettingsModel _appSettings = AppSettingsModel();
+AppSettingsModel _appSettings = _loadAppSettings();
 
 AppSettingsModel get appSettings => _appSettings;
 set appSettings(AppSettingsModel x) {
@@ -14,11 +14,14 @@ set appSettings(AppSettingsModel x) {
 
 final _settingsFile = File("./${EditorConstants.projectsDir}/settings.json");
 
-void loadAppSettings() {
+AppSettingsModel _loadAppSettings() {
   if (!_settingsFile.existsSync()) {
-    return;
+    logger.d("created new default config");
+    return AppSettingsModel();
   }
-  _appSettings = AppSettingsModelMapper.fromJson(_settingsFile.readAsStringSync());
+  var result = AppSettingsModelMapper.fromJson(_settingsFile.readAsStringSync());
+  logger.d("loaded config: $result");
+  return result;
 }
 
 void saveAppSettings() async {
