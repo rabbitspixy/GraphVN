@@ -58,6 +58,7 @@ class EditorState {
     final file = File("./${EditorConstants.projectsDir}/$projectDir/main.json");
     if (!file.existsSync()) {
       EditorState.projectDir = projectDir;
+      _stateUpdatedEventsController.add('');
       return;
     }
     final projectData = ProjectDataMapper.fromJson(file.readAsStringSync());
@@ -65,10 +66,10 @@ class EditorState {
     transitions.addAll(projectData.transitions);
     structs.addAll(projectData.structs);
     updateAllTransitionPositions();
-    _stateUpdatedEventsController.add('');
 
     //this should be done last
     EditorState.projectDir = projectDir;
+    _stateUpdatedEventsController.add('');
     if (appSettings.lastOpenedProjectDir != EditorState.projectDir) {
       appSettings = appSettings.copyWith(lastOpenedProjectDir: EditorState.projectDir);
     }
