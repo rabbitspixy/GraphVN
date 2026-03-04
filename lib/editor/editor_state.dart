@@ -36,7 +36,7 @@ class EditorState {
         .toList();
   }
   
-  static final _stateUpdatedEventsController = StreamController<String>();
+  static final _stateUpdatedEventsController = StreamController<String>.broadcast();
   static final stateUpdatedEvents = _stateUpdatedEventsController.stream;
 
   static void load(String projectDir) {
