@@ -40,6 +40,12 @@ class EditorState {
   static final stateUpdatedEvents = _stateUpdatedEventsController.stream;
 
   static void load(String projectDir) {
+    logger.i("loading project $projectDir");
+    _load(projectDir);
+    logger.i("project $projectDir loaded");
+  }
+
+  static void _load(String projectDir) {
     EditorState.projectDir = "";
     nodes.clear();
     transitions.clear();
