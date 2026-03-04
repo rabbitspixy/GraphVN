@@ -76,6 +76,15 @@ class EditorState {
     load(proj);
   }
 
+  static void createAndLoadNewProject(String projectDir) {
+    final dir = Directory("./${EditorConstants.projectsDir}/$projectDir");
+    if (dir.existsSync()) {
+      throw Exception('Project directory already exists: $projectDir');
+    }
+    dir.createSync(recursive: true);
+    load(projectDir);
+  }
+
   static Future<void> save() async {
     if (!isProjectLoaded()) {
       return;
