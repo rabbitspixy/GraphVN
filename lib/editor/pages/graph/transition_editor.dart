@@ -104,6 +104,76 @@ class _TransitionEditorState extends State<TransitionEditor> {
     return Column(children: widgets);
   }
 
+  Future<void> _addCondition() async {
+    final newCond = ConstantNamedValueExpression(value: "0");
+    setState(() {
+      widget.transition.conditions.add(newCond);
+      widget.onChange();
+    });
+  }
+
+  Future<void> _editCondition(int index) async {
+    final cond = widget.transition.conditions[index];
+    await showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Edit Condition'),
+        content: cond.widgetEditor(),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(ctx).pop();
+              widget.onChange();
+              setState(() {});
+            },
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildConditionList() {
+    final widgets = <Widget>[];
+    for (int i = 0; i < widget.transition.conditions.length; i++) {
+      final cond = widget.transition.conditions[i];
+      widgets.add(
+        ListTile(
+          title: Text(cond.asText()),
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.edit),
+                onPressed: () => _editCondition(i),
+              ),
+              IconButton(
+                icon: const Icon(Icons.delete),
+                onPressed: () {
+                  setState(() {
+                    widget.transition.conditions.removeAt(i);
+                    widget.onChange();
+                  });
+                },
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+    widgets.add(
+      SizedBox(
+        width: double.infinity,
+        child: ElevatedButton.icon(
+          onPressed: _addCondition,
+          icon: const Icon(Icons.add),
+          label: const Text('Condition'),
+        ),
+      ),
+    );
+    return Column(children: widgets);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -127,6 +197,8 @@ class _TransitionEditorState extends State<TransitionEditor> {
         const SizedBox(height: 8),
         const Text('Exec procedures:', style: TextStyle(fontWeight: FontWeight.bold)),
         _buildActionList(),
+        const SizedBox(height: 8),
+        _buildConditionList(),
         const SizedBox(height: 8),
         SizedBox(
           width: double.infinity,
