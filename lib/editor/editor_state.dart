@@ -231,7 +231,7 @@ class EditorState {
     if (variable == null) {
       return "variable";
     }
-    return "${struct.name}->${variable.name}";
+    return "${struct.name} - ${variable.name}";
   }
 
   static NamedValue? namedValue(String valueId) {
