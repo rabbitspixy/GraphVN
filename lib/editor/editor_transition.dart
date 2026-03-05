@@ -1,5 +1,6 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/services.dart';
+import 'package:graph_vn/editor/named_value_expression/named_value_expression.dart';
 import 'package:graph_vn/editor/transition_position.dart';
 import 'package:uuid/uuid.dart';
 
@@ -14,6 +15,7 @@ class EditorTransition with EditorTransitionMappable {
   //must be greater than 0
   int weight = 1;
   List<String> procedureIds = [];
+  List<NamedValueExpression> conditions = [];
 
   bool get isButton => text.isNotEmpty;
 
@@ -35,7 +37,9 @@ class EditorTransition with EditorTransitionMappable {
     required this.to,
     this.weight = 1,
     List<String>? procedureIds,
+    List<NamedValueExpression>? conditions,
   }) {
     this.procedureIds = procedureIds ?? [];
+    this.conditions = conditions ?? [];
   }
 }

@@ -14,6 +14,7 @@ class EditorTransitionMapper extends ClassMapperBase<EditorTransition> {
   static EditorTransitionMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = EditorTransitionMapper._());
+      NamedValueExpressionMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -42,6 +43,10 @@ class EditorTransitionMapper extends ClassMapperBase<EditorTransition> {
     _$procedureIds,
     opt: true,
   );
+  static List<NamedValueExpression> _$conditions(EditorTransition v) =>
+      v.conditions;
+  static const Field<EditorTransition, List<NamedValueExpression>>
+  _f$conditions = Field('conditions', _$conditions, opt: true);
   static TransitionPosition _$pos(EditorTransition v) => v.pos;
   static const Field<EditorTransition, TransitionPosition> _f$pos = Field(
     'pos',
@@ -57,6 +62,7 @@ class EditorTransitionMapper extends ClassMapperBase<EditorTransition> {
     #to: _f$to,
     #weight: _f$weight,
     #procedureIds: _f$procedureIds,
+    #conditions: _f$conditions,
     #pos: _f$pos,
   };
 
@@ -68,6 +74,7 @@ class EditorTransitionMapper extends ClassMapperBase<EditorTransition> {
       to: data.dec(_f$to),
       weight: data.dec(_f$weight),
       procedureIds: data.dec(_f$procedureIds),
+      conditions: data.dec(_f$conditions),
     );
   }
 
@@ -134,6 +141,12 @@ extension EditorTransitionValueCopy<$R, $Out>
 abstract class EditorTransitionCopyWith<$R, $In extends EditorTransition, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>> get procedureIds;
+  ListCopyWith<
+    $R,
+    NamedValueExpression,
+    NamedValueExpressionCopyWith<$R, NamedValueExpression, NamedValueExpression>
+  >
+  get conditions;
   $R call({
     String? id,
     String? text,
@@ -141,6 +154,7 @@ abstract class EditorTransitionCopyWith<$R, $In extends EditorTransition, $Out>
     String? to,
     int? weight,
     List<String>? procedureIds,
+    List<NamedValueExpression>? conditions,
   });
   EditorTransitionCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
     Then<$Out2, $R2> t,
@@ -163,6 +177,17 @@ class _EditorTransitionCopyWithImpl<$R, $Out>
     (v) => call(procedureIds: v),
   );
   @override
+  ListCopyWith<
+    $R,
+    NamedValueExpression,
+    NamedValueExpressionCopyWith<$R, NamedValueExpression, NamedValueExpression>
+  >
+  get conditions => ListCopyWith(
+    $value.conditions,
+    (v, t) => v.copyWith.$chain(t),
+    (v) => call(conditions: v),
+  );
+  @override
   $R call({
     String? id,
     String? text,
@@ -170,6 +195,7 @@ class _EditorTransitionCopyWithImpl<$R, $Out>
     String? to,
     int? weight,
     Object? procedureIds = $none,
+    Object? conditions = $none,
   }) => $apply(
     FieldCopyWithData({
       if (id != null) #id: id,
@@ -178,6 +204,7 @@ class _EditorTransitionCopyWithImpl<$R, $Out>
       if (to != null) #to: to,
       if (weight != null) #weight: weight,
       if (procedureIds != $none) #procedureIds: procedureIds,
+      if (conditions != $none) #conditions: conditions,
     }),
   );
   @override
@@ -189,6 +216,7 @@ class _EditorTransitionCopyWithImpl<$R, $Out>
         to: data.get(#to, or: $value.to),
         weight: data.get(#weight, or: $value.weight),
         procedureIds: data.get(#procedureIds, or: $value.procedureIds),
+        conditions: data.get(#conditions, or: $value.conditions),
       );
 
   @override
