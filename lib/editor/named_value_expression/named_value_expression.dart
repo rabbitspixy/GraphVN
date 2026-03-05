@@ -1,5 +1,6 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/material.dart';
+import 'package:graph_vn/editor/named_value_expression/compare_named_value_expression.dart';
 import 'package:graph_vn/editor/named_value_expression/compare_numbers_expression.dart';
 import 'package:graph_vn/editor/named_value_expression/constant_named_value_expression.dart';
 
@@ -9,6 +10,7 @@ part 'named_value_expression.mapper.dart';
   includeSubClasses: [
     ConstantNamedValueExpression,
     CompareNumbersExpression,
+    CompareNamedValueExpression,
   ]
 )
 abstract class NamedValueExpression with NamedValueExpressionMappable {
@@ -30,6 +32,7 @@ abstract class NamedValueExpression with NamedValueExpressionMappable {
 enum NamedExpressionType {
   constant(type: ConstantNamedValueExpression, create: ConstantNamedValueExpression.new, title: 'Constant'),
   compareNumbers(type: CompareNumbersExpression, create: CompareNumbersExpression.new, title: 'Compare numbers'),
+  compareNamedValues(type: CompareNamedValueExpression, create: CompareNamedValueExpression.new, title: 'Compare named values'),
   ;
 
   final Type type;

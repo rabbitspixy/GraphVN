@@ -16,6 +16,7 @@ class NamedValueExpressionMapper extends ClassMapperBase<NamedValueExpression> {
       MapperContainer.globals.use(_instance = NamedValueExpressionMapper._());
       ConstantNamedValueExpressionMapper.ensureInitialized();
       CompareNumbersExpressionMapper.ensureInitialized();
+      CompareNamedValueExpressionMapper.ensureInitialized();
     }
     return _instance!;
   }

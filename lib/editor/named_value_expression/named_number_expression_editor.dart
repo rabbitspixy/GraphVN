@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:graph_vn/editor/named_value_expression/compare_numbers_expression.dart';
-import 'package:graph_vn/editor/named_value_expression/constant_named_value_expression.dart';
 import 'package:graph_vn/editor/named_value_expression/named_value_expression.dart';
 
 Future<NamedValueExpression?> editNamedValueExpression(BuildContext context, NamedValueExpression namedNumberExpression, {bool allowChangeType = true}) async {
@@ -32,11 +30,7 @@ Future<NamedValueExpression?> editNamedValueExpression(BuildContext context, Nam
             content: SizedBox(
               width: 400,
               height: 300,
-              child: switch (current) {
-                ConstantNamedValueExpression exp => ConstantNamedValueExpressionEditor(expression: exp),
-                CompareNumbersExpression exp => BooleanNumberExpressionEditor(expression: exp),
-                _ => const Placeholder(),
-              },
+              child: current.widgetEditor(),
             ),
             actions: [
               TextButton(
