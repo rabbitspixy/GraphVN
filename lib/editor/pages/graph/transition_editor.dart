@@ -3,6 +3,7 @@ import 'package:graph_vn/common/number_util.dart';
 import 'package:graph_vn/editor/editor_state.dart';
 import 'package:graph_vn/editor/editor_transition.dart';
 import 'package:graph_vn/editor/modals/procedure_selector.dart';
+import 'package:graph_vn/editor/named_value_expression/constant_named_value_expression.dart';
 
 class TransitionEditor extends StatefulWidget {
   final EditorTransition transition;
