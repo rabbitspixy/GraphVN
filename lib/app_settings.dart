@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:graph_vn/app_settings_model.dart';
-import 'package:graph_vn/editor/editor_constants.dart';
+import 'package:graph_vn/app_constants.dart';
 import 'package:graph_vn/main.dart';
 
 AppSettingsModel _appSettings = _loadAppSettings();
@@ -12,7 +12,7 @@ set appSettings(AppSettingsModel x) {
   _appSettings = x;
 }
 
-final _settingsFile = File("./${EditorConstants.projectsDir}/settings.json");
+final _settingsFile = File("./${AppConstants.projectsDir}/settings.json");
 
 AppSettingsModel _loadAppSettings() {
   if (!_settingsFile.existsSync()) {

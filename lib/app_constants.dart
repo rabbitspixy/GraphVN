@@ -1,4 +1,4 @@
-class EditorConstants {
+class AppConstants {
   static final transitionDeviationMagnitude = 30.0;
   static final projectsDir = 'projects';
 }

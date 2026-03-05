@@ -1,6 +1,6 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/material.dart';
-import 'package:graph_vn/editor/editor_rich_text.dart';
+import 'package:graph_vn/editor/widgets/editor_rich_text.dart';
 import 'package:graph_vn/editor/modals/enum_selector.dart';
 import 'package:graph_vn/editor/named_value_expression/constant_named_value_expression.dart';
 import 'package:graph_vn/editor/named_value_expression/named_number_expression_editor.dart';

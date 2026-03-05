@@ -1,6 +1,6 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/material.dart';
-import 'package:graph_vn/editor/editor_rich_text.dart';
+import 'package:graph_vn/editor/widgets/editor_rich_text.dart';
 import 'package:graph_vn/editor/editor_state.dart';
 import 'package:graph_vn/editor/number_expression/constant_number_expression.dart';
 import 'package:graph_vn/editor/number_expression/number_expression.dart';

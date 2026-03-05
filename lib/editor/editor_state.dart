@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:graph_vn/app_settings.dart';
-import 'package:graph_vn/editor/editor_constants.dart';
+import 'package:graph_vn/app_constants.dart';
 import 'package:graph_vn/editor/editor_node.dart';
 import 'package:graph_vn/editor/editor_transition.dart';
 import 'package:graph_vn/editor/project_data.dart';
@@ -25,7 +25,7 @@ class EditorState {
   static String currentNode = "";
 
   static List<String> getProjectFolders() {
-    final dir = Directory("./${EditorConstants.projectsDir}");
+    final dir = Directory("./${AppConstants.projectsDir}");
     if (!dir.existsSync()) {
       return [];
     }
@@ -65,7 +65,7 @@ class EditorState {
   static void _load(String projectDir) {
     closeProject();
 
-    final file = File("./${EditorConstants.projectsDir}/$projectDir/main.json");
+    final file = File("./${AppConstants.projectsDir}/$projectDir/main.json");
     if (!file.existsSync()) {
       EditorState.projectDir = projectDir;
       _stateUpdatedEventsController.add('');
@@ -94,7 +94,7 @@ class EditorState {
   }
 
   static void createAndLoadNewProject(String projectDir) {
-    final dir = Directory("./${EditorConstants.projectsDir}/$projectDir");
+    final dir = Directory("./${AppConstants.projectsDir}/$projectDir");
     if (dir.existsSync()) {
       throw Exception('Project directory already exists: $projectDir');
     }
@@ -113,7 +113,7 @@ class EditorState {
       transitions:  EditorState.transitions,
       structs: EditorState.structs,
     );
-    final file = File("./${EditorConstants.projectsDir}/$projectDir/main.json");
+    final file = File("./${AppConstants.projectsDir}/$projectDir/main.json");
     final dir = file.parent;
     if (!dir.existsSync()) {
       dir.createSync(recursive: true);
@@ -287,7 +287,7 @@ class EditorState {
       final Offset d = end - start;
       final Offset perp = Offset(-d.dy, d.dx);
       final double perpLength = perp.distance;
-      final double magnitude = EditorConstants.transitionDeviationMagnitude * t;
+      final double magnitude = AppConstants.transitionDeviationMagnitude * t;
       final Offset unitPerp = perpLength == 0 ? Offset.zero : Offset(perp.dx / perpLength, perp.dy / perpLength);
       final Offset control = mid + unitPerp * magnitude;
 

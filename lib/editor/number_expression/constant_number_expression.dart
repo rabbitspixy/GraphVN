@@ -1,7 +1,7 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/material.dart';
 import 'package:graph_vn/editor/number_expression/number_expression.dart';
-import 'package:graph_vn/editor/rational_util.dart';
+import 'package:graph_vn/common/rational_util.dart';
 import 'package:rational/rational.dart';
 
 part 'constant_number_expression.mapper.dart';

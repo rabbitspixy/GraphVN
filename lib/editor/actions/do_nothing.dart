@@ -1,6 +1,6 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/material.dart';
-import 'package:graph_vn/editor/editor_rich_text.dart';
+import 'package:graph_vn/editor/widgets/editor_rich_text.dart';
 import 'package:graph_vn/editor/actions/base.dart';
 
 part 'do_nothing.mapper.dart';
