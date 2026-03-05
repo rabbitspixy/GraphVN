@@ -105,7 +105,7 @@ class _TransitionEditorState extends State<TransitionEditor> {
   }
 
   Future<void> _addCondition() async {
-    final newCond = ConstantNamedValueExpression(value: "0");
+    final newCond = ConstantNamedValueExpression.mappableConstructor(value: "0");
     setState(() {
       widget.transition.conditions.add(newCond);
       widget.onChange();
