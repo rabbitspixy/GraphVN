@@ -10,13 +10,10 @@ part 'constant_named_value_expression.mapper.dart';
 class ConstantNamedValueExpression extends NamedValueExpression with ConstantNamedValueExpressionMappable {
   String value = "";
 
-  ConstantNamedValueExpression({required super.namedNumbersTypeId}) {
-    value = namedVariableTypes.where((type) => type.id == namedNumbersTypeId).first.list.first.id;
-  }
+  ConstantNamedValueExpression();
 
   @MappableConstructor()
   ConstantNamedValueExpression.mappableConstructor({
-    required super.namedNumbersTypeId,
     required this.value,
   }) : super.mappableConstructor();
 
@@ -27,7 +24,7 @@ class ConstantNamedValueExpression extends NamedValueExpression with ConstantNam
 
   @override
   String asText() {
-    return EditorState.namedValue(namedNumbersTypeId, value)?.name ?? "?";
+    return EditorState.namedValue(value)?.name ?? "?";
   }
 
   @override
@@ -38,6 +35,10 @@ class ConstantNamedValueExpression extends NamedValueExpression with ConstantNam
   @override
   Widget widgetEditor() {
     return ConstantNamedValueExpressionEditor(expression: this);
+  }
+
+  NamedValuesType? type() {
+    return EditorState.namedValueType(value);
   }
 }
 
@@ -57,11 +58,11 @@ class _ConstantNamedValueExpressionEditorState extends State<ConstantNamedValueE
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
-      children: namedVariableTypes.where((t) => t.id == widget.expression.namedNumbersTypeId).first.list.map((item) {
+      children: namedVariableTypes.expand((t) => t.list).map((item) {
         final bool isSelected = item.id == widget.expression.value;
         return TextButton(
           style: TextButton.styleFrom(
-            backgroundColor: isSelected ? Theme.of(context).primaryColor.withOpacity(0.2) : null,
+            backgroundColor: isSelected ? Theme.of(context).primaryColor.withAlpha(50) : null,
           ),
           onPressed: () {
             setState(() {

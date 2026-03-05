@@ -25,10 +25,6 @@ class ConstantNamedValueExpressionMapper
   @override
   final String id = 'ConstantNamedValueExpression';
 
-  static String _$namedNumbersTypeId(ConstantNamedValueExpression v) =>
-      v.namedNumbersTypeId;
-  static const Field<ConstantNamedValueExpression, String>
-  _f$namedNumbersTypeId = Field('namedNumbersTypeId', _$namedNumbersTypeId);
   static String _$value(ConstantNamedValueExpression v) => v.value;
   static const Field<ConstantNamedValueExpression, String> _f$value = Field(
     'value',
@@ -37,7 +33,6 @@ class ConstantNamedValueExpressionMapper
 
   @override
   final MappableFields<ConstantNamedValueExpression> fields = const {
-    #namedNumbersTypeId: _f$namedNumbersTypeId,
     #value: _f$value,
   };
 
@@ -51,7 +46,6 @@ class ConstantNamedValueExpressionMapper
 
   static ConstantNamedValueExpression _instantiate(DecodingData data) {
     return ConstantNamedValueExpression.mappableConstructor(
-      namedNumbersTypeId: data.dec(_f$namedNumbersTypeId),
       value: data.dec(_f$value),
     );
   }
@@ -130,7 +124,7 @@ abstract class ConstantNamedValueExpressionCopyWith<
 >
     implements NamedValueExpressionCopyWith<$R, $In, $Out> {
   @override
-  $R call({String? namedNumbersTypeId, String? value});
+  $R call({String? value});
   ConstantNamedValueExpressionCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
     Then<$Out2, $R2> t,
   );
@@ -154,19 +148,11 @@ class _ConstantNamedValueExpressionCopyWithImpl<$R, $Out>
   late final ClassMapperBase<ConstantNamedValueExpression> $mapper =
       ConstantNamedValueExpressionMapper.ensureInitialized();
   @override
-  $R call({String? namedNumbersTypeId, String? value}) => $apply(
-    FieldCopyWithData({
-      if (namedNumbersTypeId != null) #namedNumbersTypeId: namedNumbersTypeId,
-      if (value != null) #value: value,
-    }),
-  );
+  $R call({String? value}) =>
+      $apply(FieldCopyWithData({if (value != null) #value: value}));
   @override
   ConstantNamedValueExpression $make(CopyWithData data) =>
       ConstantNamedValueExpression.mappableConstructor(
-        namedNumbersTypeId: data.get(
-          #namedNumbersTypeId,
-          or: $value.namedNumbersTypeId,
-        ),
         value: data.get(#value, or: $value.value),
       );
 

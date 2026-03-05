@@ -16,11 +16,10 @@ class CompareNumbersExpression extends NamedValueExpression with CompareNumbersE
   BooleanOperator operator = BooleanOperator.equal;
   NumberExpression right = ConstantNumberExpression();
 
-  CompareNumbersExpression({required super.namedNumbersTypeId});
+  CompareNumbersExpression();
 
   @MappableConstructor()
   CompareNumbersExpression.mappableConstructor({
-    required super.namedNumbersTypeId,
     required this.left,
     required this.operator,
     required this.right,

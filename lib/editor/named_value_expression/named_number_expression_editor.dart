@@ -21,7 +21,7 @@ Future<NamedValueExpression?> editNamedValueExpression(BuildContext context, Nam
                   if (newType == null || newType == currentType) return;
                   setState(() {
                     currentType = newType;
-                    current = newType.create(namedNumbersTypeId: current.namedNumbersTypeId);
+                    current = newType.create();
                   });
                 },
               ),

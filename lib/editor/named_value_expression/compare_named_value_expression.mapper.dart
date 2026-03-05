@@ -78,10 +78,6 @@ class CompareNamedValueExpressionMapper
   @override
   final String id = 'CompareNamedValueExpression';
 
-  static String _$namedNumbersTypeId(CompareNamedValueExpression v) =>
-      v.namedNumbersTypeId;
-  static const Field<CompareNamedValueExpression, String>
-  _f$namedNumbersTypeId = Field('namedNumbersTypeId', _$namedNumbersTypeId);
   static NamedValueExpression _$left(CompareNamedValueExpression v) => v.left;
   static const Field<CompareNamedValueExpression, NamedValueExpression>
   _f$left = Field('left', _$left);
@@ -95,7 +91,6 @@ class CompareNamedValueExpressionMapper
 
   @override
   final MappableFields<CompareNamedValueExpression> fields = const {
-    #namedNumbersTypeId: _f$namedNumbersTypeId,
     #left: _f$left,
     #operator: _f$operator,
     #right: _f$right,
@@ -111,7 +106,6 @@ class CompareNamedValueExpressionMapper
 
   static CompareNamedValueExpression _instantiate(DecodingData data) {
     return CompareNamedValueExpression.mappableConstructor(
-      namedNumbersTypeId: data.dec(_f$namedNumbersTypeId),
       left: data.dec(_f$left),
       operator: data.dec(_f$operator),
       right: data.dec(_f$right),
@@ -198,7 +192,6 @@ abstract class CompareNamedValueExpressionCopyWith<
   get right;
   @override
   $R call({
-    String? namedNumbersTypeId,
     NamedValueExpression? left,
     CompareNamedValueOperator? operator,
     NamedValueExpression? right,
@@ -233,13 +226,11 @@ class _CompareNamedValueExpressionCopyWithImpl<$R, $Out>
   get right => $value.right.copyWith.$chain((v) => call(right: v));
   @override
   $R call({
-    String? namedNumbersTypeId,
     NamedValueExpression? left,
     CompareNamedValueOperator? operator,
     NamedValueExpression? right,
   }) => $apply(
     FieldCopyWithData({
-      if (namedNumbersTypeId != null) #namedNumbersTypeId: namedNumbersTypeId,
       if (left != null) #left: left,
       if (operator != null) #operator: operator,
       if (right != null) #right: right,
@@ -248,10 +239,6 @@ class _CompareNamedValueExpressionCopyWithImpl<$R, $Out>
   @override
   CompareNamedValueExpression $make(CopyWithData data) =>
       CompareNamedValueExpression.mappableConstructor(
-        namedNumbersTypeId: data.get(
-          #namedNumbersTypeId,
-          or: $value.namedNumbersTypeId,
-        ),
         left: data.get(#left, or: $value.left),
         operator: data.get(#operator, or: $value.operator),
         right: data.get(#right, or: $value.right),

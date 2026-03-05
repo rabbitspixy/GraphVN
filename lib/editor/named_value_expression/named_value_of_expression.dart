@@ -13,13 +13,10 @@ part 'named_value_of_expression.mapper.dart';
 class NamedValueOfExpression extends NamedValueExpression with NamedValueOfExpressionMappable {
   String variableId = "";
 
-  NamedValueOfExpression({
-    required super.namedNumbersTypeId
-  });
+  NamedValueOfExpression();
 
   @MappableConstructor()
   NamedValueOfExpression.mappableConstructor({
-    required super.namedNumbersTypeId,
     required this.variableId,
   }) : super.mappableConstructor();
 

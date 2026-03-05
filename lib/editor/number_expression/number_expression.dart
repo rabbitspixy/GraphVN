@@ -27,7 +27,7 @@ abstract class NumberExpression with NumberExpressionMappable {
 
 enum NumberExpressionType {
   constant(type: ConstantNumberExpression, create: ConstantNumberExpression.new, title: 'Constant'),
-  numberValue(type: NumberVariableValue, create: NumberVariableValue.new, title: 'Value of number variable')
+  variableValue(type: NumberVariableValue, create: NumberVariableValue.new, title: 'Value of variable'),
   ;
 
   final Type type;

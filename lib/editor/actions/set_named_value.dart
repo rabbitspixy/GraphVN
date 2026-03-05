@@ -14,7 +14,7 @@ part 'set_named_value.mapper.dart';
 @MappableClass()
 class SetNamedValue extends BaseAction with SetNamedValueMappable {
   String variableId = "";
-  NamedValueExpression expression = ConstantNamedValueExpression(namedNumbersTypeId: namedVariableTypes.first.id);
+  NamedValueExpression expression = ConstantNamedValueExpression();
 
   SetNamedValue();
 
@@ -24,18 +24,6 @@ class SetNamedValue extends BaseAction with SetNamedValueMappable {
     required this.variableId,
     required this.expression,
   }) : super.mappableConstructor();
-
-  void recreateExpressionIfNotValid() {
-    final variable = EditorState.variableById(variableId);
-    if (variable == null) {
-      return;
-    }
-    if (variable is NamedVariable) {
-      if (variable.typeId != expression.namedNumbersTypeId) {
-        expression = ConstantNamedValueExpression(namedNumbersTypeId: variable.typeId);
-      }
-    }
-  }
 
   @override
   String actionText() {
@@ -68,7 +56,6 @@ class _SetNamedValueEditorState extends State<SetNamedValueEditor> {
         text: EditorState.variableName(widget.action.variableId), 
         tap: () async { 
           widget.action.variableId = (await showVariableSelector(context, VariableType.namedNumber))?.id ?? "";
-          widget.action.recreateExpressionIfNotValid();
           setState(() {});
         }
       ),

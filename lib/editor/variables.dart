@@ -144,12 +144,12 @@ class NamedVariable extends Variable with NamedVariableMappable {
 
   @override
   String initialValueAsText() {
-    return EditorState.namedValue(typeId, initialValue)?.name ?? "?";
+    return EditorState.namedValue(initialValue)?.name ?? "?";
   }
 
   @override
   String currentValueAsText() {
-    return EditorState.namedValue(typeId, value)?.name ?? "?";
+    return EditorState.namedValue(value)?.name ?? "?";
   }
 }
 

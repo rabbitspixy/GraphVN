@@ -52,7 +52,7 @@ class EditorState {
     if (appSettings.lastOpenedProjectDir != EditorState.projectDir) {
       appSettings = appSettings.copyWith(lastOpenedProjectDir: EditorState.projectDir);
     }
-    
+
     _stateUpdatedEventsController.add('');
   }
 
@@ -234,8 +234,12 @@ class EditorState {
     return "${struct.name}->${variable.name}";
   }
 
-  static NamedValue? namedValue(String typeId, String valueId) {
-    return namedVariableTypes.where((type) => type.id == typeId).firstOrNull?.list.where((v) => v.id == valueId).firstOrNull;
+  static NamedValue? namedValue(String valueId) {
+    return namedVariableTypes.expand((t) => t.list).where((v) => v.id == valueId).firstOrNull;
+  }
+
+  static NamedValuesType? namedValueType(String valueId) {
+    return namedVariableTypes.where((t) => t.list.where((v) => v.id == valueId).isNotEmpty).firstOrNull;
   }
 
   static void updateAllTransitionPositions() {

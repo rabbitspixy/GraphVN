@@ -89,10 +89,6 @@ class CompareNumbersExpressionMapper
   @override
   final String id = 'CompareNumbersExpression';
 
-  static String _$namedNumbersTypeId(CompareNumbersExpression v) =>
-      v.namedNumbersTypeId;
-  static const Field<CompareNumbersExpression, String> _f$namedNumbersTypeId =
-      Field('namedNumbersTypeId', _$namedNumbersTypeId);
   static NumberExpression _$left(CompareNumbersExpression v) => v.left;
   static const Field<CompareNumbersExpression, NumberExpression> _f$left =
       Field('left', _$left);
@@ -105,7 +101,6 @@ class CompareNumbersExpressionMapper
 
   @override
   final MappableFields<CompareNumbersExpression> fields = const {
-    #namedNumbersTypeId: _f$namedNumbersTypeId,
     #left: _f$left,
     #operator: _f$operator,
     #right: _f$right,
@@ -121,7 +116,6 @@ class CompareNumbersExpressionMapper
 
   static CompareNumbersExpression _instantiate(DecodingData data) {
     return CompareNumbersExpression.mappableConstructor(
-      namedNumbersTypeId: data.dec(_f$namedNumbersTypeId),
       left: data.dec(_f$left),
       operator: data.dec(_f$operator),
       right: data.dec(_f$right),
@@ -202,7 +196,6 @@ abstract class CompareNumbersExpressionCopyWith<
   NumberExpressionCopyWith<$R, NumberExpression, NumberExpression> get right;
   @override
   $R call({
-    String? namedNumbersTypeId,
     NumberExpression? left,
     BooleanOperator? operator,
     NumberExpression? right,
@@ -229,13 +222,11 @@ class _CompareNumbersExpressionCopyWithImpl<$R, $Out>
       $value.right.copyWith.$chain((v) => call(right: v));
   @override
   $R call({
-    String? namedNumbersTypeId,
     NumberExpression? left,
     BooleanOperator? operator,
     NumberExpression? right,
   }) => $apply(
     FieldCopyWithData({
-      if (namedNumbersTypeId != null) #namedNumbersTypeId: namedNumbersTypeId,
       if (left != null) #left: left,
       if (operator != null) #operator: operator,
       if (right != null) #right: right,
@@ -244,10 +235,6 @@ class _CompareNumbersExpressionCopyWithImpl<$R, $Out>
   @override
   CompareNumbersExpression $make(CopyWithData data) =>
       CompareNumbersExpression.mappableConstructor(
-        namedNumbersTypeId: data.get(
-          #namedNumbersTypeId,
-          or: $value.namedNumbersTypeId,
-        ),
         left: data.get(#left, or: $value.left),
         operator: data.get(#operator, or: $value.operator),
         right: data.get(#right, or: $value.right),

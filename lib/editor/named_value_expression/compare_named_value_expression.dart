@@ -11,16 +11,15 @@ part 'compare_named_value_expression.mapper.dart';
 
 @MappableClass()
 class CompareNamedValueExpression extends NamedValueExpression with CompareNamedValueExpressionMappable {
-  NamedValueExpression left = ConstantNamedValueExpression(namedNumbersTypeId: PredefinedNamedTypes.booleanTypeId);
+  NamedValueExpression left = ConstantNamedValueExpression();
   CompareNamedValueOperator operator = CompareNamedValueOperator.equal;
-  NamedValueExpression right = ConstantNamedValueExpression(namedNumbersTypeId: PredefinedNamedTypes.booleanTypeId);
+  NamedValueExpression right = ConstantNamedValueExpression();
   
   
-  CompareNamedValueExpression({required super.namedNumbersTypeId});
+  CompareNamedValueExpression();
 
   @MappableConstructor()
   CompareNamedValueExpression.mappableConstructor({
-    required super.namedNumbersTypeId,
     required this.left,
     required this.operator,
     required this.right,

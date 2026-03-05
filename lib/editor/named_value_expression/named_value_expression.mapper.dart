@@ -17,6 +17,7 @@ class NamedValueExpressionMapper extends ClassMapperBase<NamedValueExpression> {
       ConstantNamedValueExpressionMapper.ensureInitialized();
       CompareNumbersExpressionMapper.ensureInitialized();
       CompareNamedValueExpressionMapper.ensureInitialized();
+      NamedValueOfExpressionMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -24,15 +25,8 @@ class NamedValueExpressionMapper extends ClassMapperBase<NamedValueExpression> {
   @override
   final String id = 'NamedValueExpression';
 
-  static String _$namedNumbersTypeId(NamedValueExpression v) =>
-      v.namedNumbersTypeId;
-  static const Field<NamedValueExpression, String> _f$namedNumbersTypeId =
-      Field('namedNumbersTypeId', _$namedNumbersTypeId);
-
   @override
-  final MappableFields<NamedValueExpression> fields = const {
-    #namedNumbersTypeId: _f$namedNumbersTypeId,
-  };
+  final MappableFields<NamedValueExpression> fields = const {};
 
   static NamedValueExpression _instantiate(DecodingData data) {
     throw MapperException.missingSubclass(
@@ -71,7 +65,7 @@ abstract class NamedValueExpressionCopyWith<
   $Out
 >
     implements ClassCopyWith<$R, $In, $Out> {
-  $R call({String? namedNumbersTypeId});
+  $R call();
   NamedValueExpressionCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
     Then<$Out2, $R2> t,
   );

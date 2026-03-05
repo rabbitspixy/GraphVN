@@ -23,10 +23,6 @@ class NamedValueOfExpressionMapper
   @override
   final String id = 'NamedValueOfExpression';
 
-  static String _$namedNumbersTypeId(NamedValueOfExpression v) =>
-      v.namedNumbersTypeId;
-  static const Field<NamedValueOfExpression, String> _f$namedNumbersTypeId =
-      Field('namedNumbersTypeId', _$namedNumbersTypeId);
   static String _$variableId(NamedValueOfExpression v) => v.variableId;
   static const Field<NamedValueOfExpression, String> _f$variableId = Field(
     'variableId',
@@ -35,7 +31,6 @@ class NamedValueOfExpressionMapper
 
   @override
   final MappableFields<NamedValueOfExpression> fields = const {
-    #namedNumbersTypeId: _f$namedNumbersTypeId,
     #variableId: _f$variableId,
   };
 
@@ -49,7 +44,6 @@ class NamedValueOfExpressionMapper
 
   static NamedValueOfExpression _instantiate(DecodingData data) {
     return NamedValueOfExpression.mappableConstructor(
-      namedNumbersTypeId: data.dec(_f$namedNumbersTypeId),
       variableId: data.dec(_f$variableId),
     );
   }
@@ -125,7 +119,7 @@ abstract class NamedValueOfExpressionCopyWith<
 >
     implements NamedValueExpressionCopyWith<$R, $In, $Out> {
   @override
-  $R call({String? namedNumbersTypeId, String? variableId});
+  $R call({String? variableId});
   NamedValueOfExpressionCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
     Then<$Out2, $R2> t,
   );
@@ -141,19 +135,12 @@ class _NamedValueOfExpressionCopyWithImpl<$R, $Out>
   late final ClassMapperBase<NamedValueOfExpression> $mapper =
       NamedValueOfExpressionMapper.ensureInitialized();
   @override
-  $R call({String? namedNumbersTypeId, String? variableId}) => $apply(
-    FieldCopyWithData({
-      if (namedNumbersTypeId != null) #namedNumbersTypeId: namedNumbersTypeId,
-      if (variableId != null) #variableId: variableId,
-    }),
+  $R call({String? variableId}) => $apply(
+    FieldCopyWithData({if (variableId != null) #variableId: variableId}),
   );
   @override
   NamedValueOfExpression $make(CopyWithData data) =>
       NamedValueOfExpression.mappableConstructor(
-        namedNumbersTypeId: data.get(
-          #namedNumbersTypeId,
-          or: $value.namedNumbersTypeId,
-        ),
         variableId: data.get(#variableId, or: $value.variableId),
       );
 
