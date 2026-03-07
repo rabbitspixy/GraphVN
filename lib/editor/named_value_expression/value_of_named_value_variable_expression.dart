@@ -7,16 +7,16 @@ import 'package:graph_vn/editor/modals/variable_selector.dart';
 import 'package:graph_vn/editor/named_value_expression/named_value_expression.dart';
 import 'package:graph_vn/editor/variables.dart';
 
-part 'named_value_of_expression.mapper.dart';
+part 'value_of_named_value_variable_expression.mapper.dart';
 
 @MappableClass()
-class NamedValueOfExpression extends NamedValueExpression with NamedValueOfExpressionMappable {
+class ValueOfNamedValueVariableExpression extends NamedValueExpression with ValueOfNamedValueVariableExpressionMappable {
   String variableId = "";
 
-  NamedValueOfExpression();
+  ValueOfNamedValueVariableExpression();
 
   @MappableConstructor()
-  NamedValueOfExpression.mappableConstructor({
+  ValueOfNamedValueVariableExpression.mappableConstructor({
     required this.variableId,
   }) : super.mappableConstructor();
 
@@ -42,19 +42,19 @@ class NamedValueOfExpression extends NamedValueExpression with NamedValueOfExpre
 
   @override
   Widget widgetEditor() {
-    return NamedValueOfExpressionEditor(expression: this);
+    return ValueOfNamedValueVariableExpressionEditor(expression: this);
   }
 }
 
-class NamedValueOfExpressionEditor extends StatefulWidget {
-  final NamedValueOfExpression expression;
-  const NamedValueOfExpressionEditor({super.key, required this.expression});
+class ValueOfNamedValueVariableExpressionEditor extends StatefulWidget {
+  final ValueOfNamedValueVariableExpression expression;
+  const ValueOfNamedValueVariableExpressionEditor({super.key, required this.expression});
 
   @override
-  State<NamedValueOfExpressionEditor> createState() => _NamedValueOfExpressionEditorState();
+  State<ValueOfNamedValueVariableExpressionEditor> createState() => _ValueOfNamedValueVariableExpressionEditorState();
 }
 
-class _NamedValueOfExpressionEditorState extends State<NamedValueOfExpressionEditor> {
+class _ValueOfNamedValueVariableExpressionEditorState extends State<ValueOfNamedValueVariableExpressionEditor> {
   @override
   Widget build(BuildContext context) {
     return EditorRichText([

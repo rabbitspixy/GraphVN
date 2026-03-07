@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:graph_vn/common/random_util.dart';
 import 'package:graph_vn/editor/editor_node.dart';
 import 'package:graph_vn/editor/editor_transition.dart';
+import 'package:graph_vn/editor/named_value_expression/boolean_expression.dart';
 import 'package:graph_vn/player/components.dart';
 import 'package:graph_vn/editor/editor_state.dart';
 
@@ -45,9 +46,10 @@ class Player {
     if (goToNode != null) {
       node = EditorState.nodes[goToNode];
     }
+    
     int iterations = 0;
     int maxIterations = 10000;
-    while (true) {
+    while (transition != null || node != null) {
       if (transition != null) {
         _runProcedures(transition.procedureIds);
         node = EditorState.nodes[transition.to];
@@ -63,10 +65,6 @@ class Player {
           }
         }
         node = null;
-      }
-
-      if (transition == null && node == null) {
-        break;
       }
 
       iterations++;
@@ -87,6 +85,7 @@ class Player {
   static List<EditorTransition> allowedTransitionsForCurrentState() {
     return EditorState.transitions
       .where((t) => t.from == EditorState.currentNode)
+      .where((t) => t.conditions.map((c) => c as BooleanExpression?).nonNulls.every((c) => c.evaluateAsBoolean()))
       .toList();
   }
 

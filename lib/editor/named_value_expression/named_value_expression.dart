@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:graph_vn/editor/named_value_expression/compare_named_value_expression.dart';
 import 'package:graph_vn/editor/named_value_expression/compare_numbers_expression.dart';
 import 'package:graph_vn/editor/named_value_expression/constant_named_value_expression.dart';
-import 'package:graph_vn/editor/named_value_expression/named_value_of_expression.dart';
+import 'package:graph_vn/editor/named_value_expression/value_of_named_value_variable_expression.dart';
 
 part 'named_value_expression.mapper.dart';
 
@@ -12,7 +12,7 @@ part 'named_value_expression.mapper.dart';
     ConstantNamedValueExpression,
     CompareNumbersExpression,
     CompareNamedValueExpression,
-    NamedValueOfExpression,
+    ValueOfNamedValueVariableExpression,
   ]
 )
 abstract class NamedValueExpression with NamedValueExpressionMappable {
@@ -31,7 +31,7 @@ enum NamedExpressionType {
   constant(type: ConstantNamedValueExpression, create: ConstantNamedValueExpression.new, title: 'Constant'),
   compareNumbers(type: CompareNumbersExpression, create: CompareNumbersExpression.new, title: 'Compare numbers'),
   compareNamedValues(type: CompareNamedValueExpression, create: CompareNamedValueExpression.new, title: 'Compare named values'),
-  variableValue(type: NamedValueOfExpression, create: NamedValueOfExpression.new, title: 'Value of variable'),
+  variableValue(type: ValueOfNamedValueVariableExpression, create: ValueOfNamedValueVariableExpression.new, title: 'Value of variable'),
   ;
 
   final Type type;
