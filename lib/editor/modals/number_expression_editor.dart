@@ -3,7 +3,7 @@ import 'package:graph_vn/editor/number_expression/number_expression.dart';
 
 Future<NumberExpression?> editNumberExpression(BuildContext context, NumberExpression numberExpression, {bool allowChangeType = true}) async {
   NumberExpression current = numberExpression;
-  NumberExpressionType currentType = NumberExpressionType.values.singleWhere((item) => item.type == current.runtimeType);
+  NumberExpressionType currentType = NumberExpressionType.of(current);
 
   final result = await showDialog<NumberExpression>(
     context: context,

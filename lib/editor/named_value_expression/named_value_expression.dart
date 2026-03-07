@@ -13,7 +13,7 @@ part 'named_value_expression.mapper.dart';
     CompareNumbersExpression,
     CompareNamedValueExpression,
     ValueOfNamedValueVariableExpression,
-  ]
+  ],
 )
 abstract class NamedValueExpression with NamedValueExpressionMappable {
   NamedValueExpression();
@@ -22,25 +22,47 @@ abstract class NamedValueExpression with NamedValueExpressionMappable {
   NamedValueExpression.mappableConstructor();
 
   String evaluate();
+
   String asText();
+
   bool isValid();
+
   Widget widgetEditor();
 }
 
-enum NamedExpressionType {
-  constant(type: ConstantNamedValueExpression, create: ConstantNamedValueExpression.new, title: 'Constant'),
-  compareNumbers(type: CompareNumbersExpression, create: CompareNumbersExpression.new, title: 'Compare numbers'),
-  compareNamedValues(type: CompareNamedValueExpression, create: CompareNamedValueExpression.new, title: 'Compare named values'),
-  variableValue(type: ValueOfNamedValueVariableExpression, create: ValueOfNamedValueVariableExpression.new, title: 'Value of variable'),
-  ;
+enum NamedValueExpressionType {
+  constant(
+    type: ConstantNamedValueExpression,
+    create: ConstantNamedValueExpression.new,
+    title: 'Constant',
+  ),
+  compareNumbers(
+    type: CompareNumbersExpression,
+    create: CompareNumbersExpression.new,
+    title: 'Compare numbers',
+  ),
+  compareNamedValues(
+    type: CompareNamedValueExpression,
+    create: CompareNamedValueExpression.new,
+    title: 'Compare named values',
+  ),
+  variableValue(
+    type: ValueOfNamedValueVariableExpression,
+    create: ValueOfNamedValueVariableExpression.new,
+    title: 'Value of variable',
+  );
 
   final Type type;
   final NamedValueExpression Function() create;
   final String title;
 
-  const NamedExpressionType({
+  const NamedValueExpressionType({
     required this.type,
     required this.create,
     required this.title,
   });
+
+  static NamedValueExpressionType of(NamedValueExpression expression) {
+    return values.singleWhere((item) => item.type == expression.runtimeType);
+  }
 }

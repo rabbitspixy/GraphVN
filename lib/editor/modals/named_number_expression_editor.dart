@@ -1,9 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:graph_vn/editor/named_value_expression/named_value_expression.dart';
 
-Future<NamedValueExpression?> editNamedValueExpression(BuildContext context, NamedValueExpression namedNumberExpression, {bool allowChangeType = true}) async {
+List<DropdownMenuItem<NamedValueExpressionType>> _dropdownItems() {
+  var types = NamedValueExpressionType.values;
+  return types.map((item) => DropdownMenuItem(value: item, child: Text(item.title))).toList();
+}
+
+Future<NamedValueExpression?> editNamedValueExpression(
+  BuildContext context,
+  NamedValueExpression namedNumberExpression, {
+  bool allowChangeType = true,
+}) async {
   NamedValueExpression current = namedNumberExpression;
-  NamedExpressionType currentType = NamedExpressionType.values.singleWhere((item) => item.type == current.runtimeType);
+  NamedValueExpressionType currentType = NamedValueExpressionType.of(current);
 
   final result = await showDialog<NamedValueExpression>(
     context: context,
@@ -12,12 +21,10 @@ Future<NamedValueExpression?> editNamedValueExpression(BuildContext context, Nam
         builder: (context, setState) {
           return AlertDialog(
             title: switch (allowChangeType) {
-              true => DropdownButton<NamedExpressionType>(
+              true => DropdownButton<NamedValueExpressionType>(
                 value: currentType,
-                items: NamedExpressionType.values.map((item) {
-                  return DropdownMenuItem(value: item, child: Text(item.title));
-                }).toList(),
-                onChanged: (NamedExpressionType? newType) {
+                items: _dropdownItems(),
+                onChanged: (NamedValueExpressionType? newType) {
                   if (newType == null || newType == currentType) return;
                   setState(() {
                     currentType = newType;
@@ -25,7 +32,7 @@ Future<NamedValueExpression?> editNamedValueExpression(BuildContext context, Nam
                   });
                 },
               ),
-              false => Text(currentType.title)
+              false => Text(currentType.title),
             },
             content: SizedBox(
               width: 400,

@@ -1,6 +1,5 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/material.dart';
-import 'package:graph_vn/editor/named_value_expression/boolean_expression.dart';
 import 'package:graph_vn/editor/widgets/editor_rich_text.dart';
 import 'package:graph_vn/editor/modals/enum_selector.dart';
 import 'package:graph_vn/editor/named_value_expression/named_value_expression.dart';
@@ -12,7 +11,7 @@ import 'package:graph_vn/editor/variables.dart';
 part 'compare_numbers_expression.mapper.dart';
 
 @MappableClass()
-class CompareNumbersExpression extends NamedValueExpression with CompareNumbersExpressionMappable implements BooleanExpression {
+class CompareNumbersExpression extends NamedValueExpression with CompareNumbersExpressionMappable {
   NumberExpression left = ConstantNumberExpression();
   BooleanOperator operator = BooleanOperator.equal;
   NumberExpression right = ConstantNumberExpression();
@@ -35,7 +34,6 @@ class CompareNumbersExpression extends NamedValueExpression with CompareNumbersE
     }
   }
 
-  @override
   bool evaluateAsBoolean() {
     return switch(operator) {
       BooleanOperator.equal => left.evaluate() == right.evaluate(),

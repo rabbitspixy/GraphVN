@@ -39,4 +39,8 @@ enum NumberExpressionType {
     required this.create,
     required this.title,
   });
+
+  static NumberExpressionType of(NumberExpression expression) {
+    return values.singleWhere((item) => item.type == expression.runtimeType);
+  }
 }
