@@ -63,8 +63,12 @@ class _RootWidgetState extends State<RootWidget> {
       toggleEditor();
       return true;
     }
-    if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.f5) {
+    if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.f5 && HardwareKeyboard.instance.isShiftPressed) {
       EditorState.restart();
+      Player.updateState();
+      return true;
+    }
+    if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.f5) {
       Player.updateState();
       return true;
     }
