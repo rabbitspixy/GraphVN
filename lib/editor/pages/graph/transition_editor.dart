@@ -99,7 +99,7 @@ class _TransitionEditorState extends State<TransitionEditor> {
         child: ElevatedButton.icon(
           onPressed: _addAction,
           icon: const Icon(Icons.add),
-          label: const Text('Procedure'),
+          label: const Text('Add action'),
         ),
       ),
     );
@@ -164,7 +164,7 @@ class _TransitionEditorState extends State<TransitionEditor> {
         child: ElevatedButton.icon(
           onPressed: _addCondition,
           icon: const Icon(Icons.add),
-          label: const Text('Condition'),
+          label: const Text('Conditions'),
         ),
       ),
     );
