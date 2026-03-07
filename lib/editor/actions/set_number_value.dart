@@ -4,7 +4,7 @@ import 'package:graph_vn/editor/widgets/editor_rich_text.dart';
 import 'package:graph_vn/editor/editor_state.dart';
 import 'package:graph_vn/editor/number_expression/constant_number_expression.dart';
 import 'package:graph_vn/editor/number_expression/number_expression.dart';
-import 'package:graph_vn/editor/number_expression/number_expression_editor.dart';
+import 'package:graph_vn/editor/modals/number_expression_editor.dart';
 import 'package:graph_vn/editor/actions/base.dart';
 import 'package:graph_vn/editor/modals/variable_selector.dart';
 import 'package:graph_vn/editor/variables.dart';

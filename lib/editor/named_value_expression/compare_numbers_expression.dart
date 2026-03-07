@@ -6,7 +6,7 @@ import 'package:graph_vn/editor/modals/enum_selector.dart';
 import 'package:graph_vn/editor/named_value_expression/named_value_expression.dart';
 import 'package:graph_vn/editor/number_expression/constant_number_expression.dart';
 import 'package:graph_vn/editor/number_expression/number_expression.dart';
-import 'package:graph_vn/editor/number_expression/number_expression_editor.dart';
+import 'package:graph_vn/editor/modals/number_expression_editor.dart';
 import 'package:graph_vn/editor/variables.dart';
 
 part 'compare_numbers_expression.mapper.dart';

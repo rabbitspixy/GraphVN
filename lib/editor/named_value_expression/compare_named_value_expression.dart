@@ -4,7 +4,7 @@ import 'package:graph_vn/editor/named_value_expression/boolean_expression.dart';
 import 'package:graph_vn/editor/widgets/editor_rich_text.dart';
 import 'package:graph_vn/editor/modals/enum_selector.dart';
 import 'package:graph_vn/editor/named_value_expression/constant_named_value_expression.dart';
-import 'package:graph_vn/editor/named_value_expression/named_number_expression_editor.dart';
+import 'package:graph_vn/editor/modals/named_number_expression_editor.dart';
 import 'package:graph_vn/editor/named_value_expression/named_value_expression.dart';
 import 'package:graph_vn/editor/variables.dart';
 

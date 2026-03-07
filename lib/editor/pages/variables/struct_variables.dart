@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:graph_vn/editor/named_value_expression/constant_named_value_expression.dart';
-import 'package:graph_vn/editor/named_value_expression/named_number_expression_editor.dart';
+import 'package:graph_vn/editor/modals/named_number_expression_editor.dart';
 import 'package:graph_vn/editor/number_expression/constant_number_expression.dart';
-import 'package:graph_vn/editor/number_expression/number_expression_editor.dart';
-import 'package:graph_vn/editor/pages/variables/add_variable_dialog.dart';
+import 'package:graph_vn/editor/modals/number_expression_editor.dart';
+import 'package:graph_vn/editor/modals/add_variable_dialog.dart';
 import 'package:graph_vn/editor/modals/rename_dialog.dart';
 import 'package:graph_vn/editor/variables.dart';
 
