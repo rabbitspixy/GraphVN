@@ -12,7 +12,7 @@ class Editor extends StatefulWidget {
 }
 
 class _EditorState extends State<Editor> {
-  EditorPage _page = EditorPage.project;
+  EditorPage _page = EditorPage.graph;
 
   Widget buildPageButton(EditorPage page, IconData iconData) {
     return SizedBox(

@@ -25,15 +25,15 @@ class ConstantNamedValueExpressionMapper
   @override
   final String id = 'ConstantNamedValueExpression';
 
-  static String _$value(ConstantNamedValueExpression v) => v.value;
-  static const Field<ConstantNamedValueExpression, String> _f$value = Field(
-    'value',
-    _$value,
+  static String _$valueId(ConstantNamedValueExpression v) => v.valueId;
+  static const Field<ConstantNamedValueExpression, String> _f$valueId = Field(
+    'valueId',
+    _$valueId,
   );
 
   @override
   final MappableFields<ConstantNamedValueExpression> fields = const {
-    #value: _f$value,
+    #valueId: _f$valueId,
   };
 
   @override
@@ -46,7 +46,7 @@ class ConstantNamedValueExpressionMapper
 
   static ConstantNamedValueExpression _instantiate(DecodingData data) {
     return ConstantNamedValueExpression.mappableConstructor(
-      value: data.dec(_f$value),
+      valueId: data.dec(_f$valueId),
     );
   }
 
@@ -124,7 +124,7 @@ abstract class ConstantNamedValueExpressionCopyWith<
 >
     implements NamedValueExpressionCopyWith<$R, $In, $Out> {
   @override
-  $R call({String? value});
+  $R call({String? valueId});
   ConstantNamedValueExpressionCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
     Then<$Out2, $R2> t,
   );
@@ -148,12 +148,12 @@ class _ConstantNamedValueExpressionCopyWithImpl<$R, $Out>
   late final ClassMapperBase<ConstantNamedValueExpression> $mapper =
       ConstantNamedValueExpressionMapper.ensureInitialized();
   @override
-  $R call({String? value}) =>
-      $apply(FieldCopyWithData({if (value != null) #value: value}));
+  $R call({String? valueId}) =>
+      $apply(FieldCopyWithData({if (valueId != null) #valueId: valueId}));
   @override
   ConstantNamedValueExpression $make(CopyWithData data) =>
       ConstantNamedValueExpression.mappableConstructor(
-        value: data.get(#value, or: $value.value),
+        valueId: data.get(#valueId, or: $value.valueId),
       );
 
   @override

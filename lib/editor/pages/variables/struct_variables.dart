@@ -97,7 +97,7 @@ class _StructVariablesState extends State<StructVariables> {
                             }
                             case NamedVariable _ : {
                               final fakeExpression = ConstantNamedValueExpression()
-                                ..value = variable.initialValue;
+                                ..valueId = variable.initialValue;
                               final newStartValue = (await editNamedValueExpression(context, fakeExpression, allowChangeType: false))?.evaluate();
                               if (newStartValue != null) {
                                 variable.initialValue = newStartValue;

@@ -71,7 +71,14 @@ class EditorState {
       _stateUpdatedEventsController.add('');
       return;
     }
-    final projectData = ProjectDataMapper.fromJson(file.readAsStringSync());
+    ProjectData projectData;
+    try {
+      projectData = ProjectDataMapper.fromJson(file.readAsStringSync());
+    } catch (e) {
+      logger.e("Error loading project $projectDir", error: e);
+      _stateUpdatedEventsController.add('');
+      return;
+    }
     nodes.addAll(projectData.nodes);
     transitions.addAll(projectData.transitions);
     structs.addAll(projectData.structs);

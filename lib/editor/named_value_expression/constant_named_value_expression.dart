@@ -8,23 +8,23 @@ part 'constant_named_value_expression.mapper.dart';
 
 @MappableClass()
 class ConstantNamedValueExpression extends NamedValueExpression with ConstantNamedValueExpressionMappable {
-  String value = "";
+  String valueId = "";
 
   ConstantNamedValueExpression();
 
   @MappableConstructor()
   ConstantNamedValueExpression.mappableConstructor({
-    required this.value,
+    required this.valueId,
   }) : super.mappableConstructor();
 
   @override
   String evaluate() {
-    return value;
+    return valueId;
   }
 
   @override
   String asText() {
-    return EditorState.namedValue(value)?.name ?? "?";
+    return EditorState.namedValue(valueId)?.name ?? "?";
   }
 
   @override
@@ -38,7 +38,7 @@ class ConstantNamedValueExpression extends NamedValueExpression with ConstantNam
   }
 
   NamedValuesType? type() {
-    return EditorState.namedValueType(value);
+    return EditorState.namedValueType(valueId);
   }
 }
 
@@ -59,14 +59,14 @@ class _ConstantNamedValueExpressionEditorState extends State<ConstantNamedValueE
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: namedVariableTypes.expand((t) => t.list).map((item) {
-        final bool isSelected = item.id == widget.expression.value;
+        final bool isSelected = item.id == widget.expression.valueId;
         return TextButton(
           style: TextButton.styleFrom(
             backgroundColor: isSelected ? Theme.of(context).primaryColor.withAlpha(50) : null,
           ),
           onPressed: () {
             setState(() {
-              widget.expression.value = item.id;
+              widget.expression.valueId = item.id;
             });
           },
           child: Text(item.name),

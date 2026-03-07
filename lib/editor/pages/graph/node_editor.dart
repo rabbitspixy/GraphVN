@@ -149,7 +149,7 @@ class _NodeEditorState extends State<NodeEditor> {
           ],
         ),
         const SizedBox(height: 8),
-        const Text('Exec procedures:', style: TextStyle(fontWeight: FontWeight.bold)),
+        const Text('Actions:', style: TextStyle(fontWeight: FontWeight.bold)),
         _buildActionList(),
         const SizedBox(height: 8),
         SizedBox(

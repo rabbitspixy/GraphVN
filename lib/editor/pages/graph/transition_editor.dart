@@ -5,6 +5,8 @@ import 'package:graph_vn/editor/editor_transition.dart';
 import 'package:graph_vn/editor/modals/procedure_selector.dart';
 import 'package:graph_vn/editor/named_value_expression/constant_named_value_expression.dart';
 
+import '../../named_value_expression/named_number_expression_editor.dart';
+
 class TransitionEditor extends StatefulWidget {
   final EditorTransition transition;
   final VoidCallback onChange;
@@ -105,7 +107,10 @@ class _TransitionEditorState extends State<TransitionEditor> {
   }
 
   Future<void> _addCondition() async {
-    final newCond = ConstantNamedValueExpression.mappableConstructor(value: "0");
+    final newCond = await editNamedValueExpression(context, ConstantNamedValueExpression());
+    if (newCond == null) {
+      return;
+    }
     setState(() {
       widget.transition.conditions.add(newCond);
       widget.onChange();
@@ -114,23 +119,15 @@ class _TransitionEditorState extends State<TransitionEditor> {
 
   Future<void> _editCondition(int index) async {
     final cond = widget.transition.conditions[index];
-    await showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Edit Condition'),
-        content: cond.widgetEditor(),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(ctx).pop();
-              widget.onChange();
-              setState(() {});
-            },
-            child: const Text('OK'),
-          ),
-        ],
-      ),
-    );
+    final newCondition = await editNamedValueExpression(context, cond);
+    if (newCondition == null) {
+      return;
+    }
+    widget.transition.conditions[index] = newCondition;
+    widget.onChange();
+    setState(() {
+
+    });
   }
 
   Widget _buildConditionList() {
@@ -195,10 +192,11 @@ class _TransitionEditorState extends State<TransitionEditor> {
           ),
         ),
         const SizedBox(height: 8),
-        const Text('Exec procedures:', style: TextStyle(fontWeight: FontWeight.bold)),
-        _buildActionList(),
-        const SizedBox(height: 8),
+        const Text('Condition:', style: TextStyle(fontWeight: FontWeight.bold)),
         _buildConditionList(),
+        const SizedBox(height: 8),
+        const Text('Actions:', style: TextStyle(fontWeight: FontWeight.bold)),
+        _buildActionList(),
         const SizedBox(height: 8),
         SizedBox(
           width: double.infinity,
