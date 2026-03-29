@@ -8,7 +8,7 @@ import 'package:graph_vn/editor/number_expression/number_expression.dart';
 import 'package:graph_vn/editor/modals/number_expression_editor.dart';
 import 'package:graph_vn/editor/variables.dart';
 
-part 'compare_numbers_expression.mapper.dart';
+part 'package:graph_vn/generated/editor/named_value_expression/compare_numbers_expression.mapper.dart';
 
 @MappableClass()
 class CompareNumbersExpression extends NamedValueExpression with CompareNumbersExpressionMappable {

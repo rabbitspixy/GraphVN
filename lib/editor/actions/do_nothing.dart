@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:graph_vn/editor/widgets/editor_rich_text.dart';
 import 'package:graph_vn/editor/actions/base.dart';
 
-part 'do_nothing.mapper.dart';
+part 'package:graph_vn/generated/editor/actions/do_nothing.mapper.dart';
 
 @MappableClass()
 class DoNothing extends BaseAction with DoNothingMappable {

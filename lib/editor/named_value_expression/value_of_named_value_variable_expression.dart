@@ -7,7 +7,7 @@ import 'package:graph_vn/editor/modals/variable_selector.dart';
 import 'package:graph_vn/editor/named_value_expression/named_value_expression.dart';
 import 'package:graph_vn/editor/variables.dart';
 
-part 'value_of_named_value_variable_expression.mapper.dart';
+part 'package:graph_vn/generated/editor/named_value_expression/value_of_named_value_variable_expression.mapper.dart';
 
 @MappableClass()
 class ValueOfNamedValueVariableExpression extends NamedValueExpression with ValueOfNamedValueVariableExpressionMappable {

@@ -6,7 +6,7 @@ import 'package:graph_vn/editor/actions/set_named_value.dart';
 import 'package:graph_vn/editor/actions/set_number_value.dart';
 import 'package:uuid/uuid.dart';
 
-part 'base.mapper.dart';
+part 'package:graph_vn/generated/editor/actions/base.mapper.dart';
 
 @MappableClass(
   includeSubClasses: [

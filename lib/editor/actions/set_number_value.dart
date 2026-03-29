@@ -9,7 +9,7 @@ import 'package:graph_vn/editor/actions/base.dart';
 import 'package:graph_vn/editor/modals/variable_selector.dart';
 import 'package:graph_vn/editor/variables.dart';
 
-part 'set_number_value.mapper.dart';
+part 'package:graph_vn/generated/editor/actions/set_number_value.mapper.dart';
 
 @MappableClass()
 class SetNumberValue extends BaseAction with SetNumberValueMappable {

@@ -8,7 +8,7 @@ import 'package:graph_vn/editor/number_expression/number_expression.dart';
 import 'package:graph_vn/editor/variables.dart';
 import 'package:rational/rational.dart';
 
-part 'number_variable_value.mapper.dart';
+part 'package:graph_vn/generated/editor/number_expression/number_variable_value.mapper.dart';
 
 @MappableClass()
 class NumberVariableValue extends NumberExpression with NumberVariableValueMappable {

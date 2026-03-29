@@ -9,7 +9,7 @@ import 'package:graph_vn/editor/actions/base.dart';
 import 'package:graph_vn/editor/modals/variable_selector.dart';
 import 'package:graph_vn/editor/variables.dart';
 
-part 'increase_number_value.mapper.dart';
+part 'package:graph_vn/generated/editor/actions/increase_number_value.mapper.dart';
 
 @MappableClass()
 class IncreaseNumberValue extends BaseAction with IncreaseNumberValueMappable {

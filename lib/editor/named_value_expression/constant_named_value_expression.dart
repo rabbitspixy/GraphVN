@@ -4,7 +4,7 @@ import 'package:graph_vn/editor/editor_state.dart';
 import 'package:graph_vn/editor/named_value_expression/named_value_expression.dart';
 import 'package:graph_vn/editor/variables.dart';
 
-part 'constant_named_value_expression.mapper.dart';
+part 'package:graph_vn/generated/editor/named_value_expression/constant_named_value_expression.mapper.dart';
 
 @MappableClass()
 class ConstantNamedValueExpression extends NamedValueExpression with ConstantNamedValueExpressionMappable {

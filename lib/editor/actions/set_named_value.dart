@@ -9,7 +9,7 @@ import 'package:graph_vn/editor/named_value_expression/named_value_expression.da
 import 'package:graph_vn/editor/modals/named_number_expression_editor.dart';
 import 'package:graph_vn/editor/variables.dart';
 
-part 'set_named_value.mapper.dart';
+part 'package:graph_vn/generated/editor/actions/set_named_value.mapper.dart';
 
 @MappableClass()
 class SetNamedValue extends BaseAction with SetNamedValueMappable {

@@ -4,7 +4,7 @@ import 'package:graph_vn/editor/number_expression/constant_number_expression.dar
 import 'package:graph_vn/editor/number_expression/number_variable_value.dart';
 import 'package:rational/rational.dart';
 
-part 'number_expression.mapper.dart';
+part 'package:graph_vn/generated/editor/number_expression/number_expression.mapper.dart';
 
 @MappableClass(
   includeSubClasses: [

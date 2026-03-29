@@ -4,7 +4,7 @@ import 'package:graph_vn/editor/number_expression/number_expression.dart';
 import 'package:graph_vn/common/rational_util.dart';
 import 'package:rational/rational.dart';
 
-part 'constant_number_expression.mapper.dart';
+part 'package:graph_vn/generated/editor/number_expression/constant_number_expression.mapper.dart';
 
 @MappableClass()
 class ConstantNumberExpression extends NumberExpression with ConstantNumberExpressionMappable {

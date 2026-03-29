@@ -5,7 +5,7 @@ import 'package:graph_vn/editor/named_value_expression/compare_numbers_expressio
 import 'package:graph_vn/editor/named_value_expression/constant_named_value_expression.dart';
 import 'package:graph_vn/editor/named_value_expression/value_of_named_value_variable_expression.dart';
 
-part 'named_value_expression.mapper.dart';
+part 'package:graph_vn/generated/editor/named_value_expression/named_value_expression.mapper.dart';
 
 @MappableClass(
   includeSubClasses: [

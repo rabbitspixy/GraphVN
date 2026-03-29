@@ -6,7 +6,7 @@ import 'package:graph_vn/editor/editor_state.dart';
 import 'package:graph_vn/editor/modals/variable_selector.dart';
 import 'package:graph_vn/editor/variables.dart';
 
-part 'rotate_named_value.mapper.dart';
+part 'package:graph_vn/generated/editor/actions/rotate_named_value.mapper.dart';
 
 @MappableClass()
 class RotateNamedValue extends BaseAction with RotateNamedValueMappable {
