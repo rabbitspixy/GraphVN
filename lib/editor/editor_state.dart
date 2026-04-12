@@ -73,9 +73,16 @@ class EditorState {
       _stateUpdatedEventsController.add('');
       return;
     }
+    ProjectProto proto;
+    try {
+      proto = ProjectProto.fromBuffer(file.readAsBytesSync());
+    } catch (e) {
+      logger.e("Error loading project $projectDir", error: e);
+      return;
+    }
     ProjectData projectData;
     try {
-      projectData = ProjectData.fromProto(ProjectProto.fromBuffer(file.readAsBytesSync()));
+      projectData = ProjectData.fromProto(proto);
     } catch (e) {
       logger.e("Error loading project $projectDir", error: e);
       _stateUpdatedEventsController.add('');

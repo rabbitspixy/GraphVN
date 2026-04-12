@@ -1,6 +1,7 @@
 import 'package:graph_vn/editor/actions/do_nothing.dart';
 import 'package:graph_vn/editor/actions/increase_number_value.dart';
 import 'package:graph_vn/editor/actions/rotate_named_value.dart';
+import 'package:graph_vn/editor/actions/run_procedure.dart';
 import 'package:graph_vn/editor/actions/set_named_value.dart';
 import 'package:graph_vn/editor/actions/set_number_value.dart';
 import 'package:graph_vn/generated-proto/data.pb.dart';
@@ -24,7 +25,8 @@ abstract class BaseAction {
       AbstractActionProto_Type.rotateNamedValue => RotateNamedValue.fromProto(proto.rotateNamedValue),
       AbstractActionProto_Type.setNamedValue => SetNamedValue.fromProto(proto.setNamedValue),
       AbstractActionProto_Type.setNumberValue => SetNumberValue.fromProto(proto.setNumberValue),
-      _ => throw UnimplementedError()
+      AbstractActionProto_Type.runProcedure => RunProcedure.fromProto(proto.runProcedure),
+      AbstractActionProto_Type.notSet => throw Exception("AbstractActionProto type is not set")
     };
     result.id = proto.id;
     return result;
@@ -37,6 +39,7 @@ enum StructActionType {
   setNamedValue(type: SetNamedValue, create: SetNamedValue.new, title: 'Set named value'),
   increaseNumberValue(type: IncreaseNumberValue, create: IncreaseNumberValue.new, title: 'Increase number value'),
   rotateNamedValue(type: RotateNamedValue, create: RotateNamedValue.new, title: 'Rotate named value'),
+  runProcedure(type: RunProcedure, create: RunProcedure.new, title: 'Run procedure'),
   ;
 
   final Type type;

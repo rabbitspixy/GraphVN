@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:graph_vn/editor/actions/do_nothing.dart';
 import 'package:graph_vn/editor/editor_node.dart';
 import 'package:graph_vn/editor/editor_state.dart';
-import 'package:graph_vn/editor/modals/procedure_selector.dart';
+import 'package:graph_vn/editor/modals/struct_action_editor.dart';
 
 class NodeEditor extends StatefulWidget {
   final EditorNode node;
@@ -60,10 +61,10 @@ class _NodeEditorState extends State<NodeEditor> {
   }
 
   Future<void> _addAction() async {
-    final proc = await showProcedureSelector(context);
-    if (proc != null && !widget.node.procedureIds.contains(proc.id)) {
+    final action = await editStructAction(context, DoNothing());
+    if (action != null) {
       setState(() {
-        widget.node.procedureIds.add(proc.id);
+        widget.node.actions.add(action);
         widget.onChange();
       });
     }
@@ -71,16 +72,16 @@ class _NodeEditorState extends State<NodeEditor> {
 
   Widget _buildActionList() {
     final widgets = <Widget>[];
-    for (final actionId in widget.node.procedureIds) {
-      final name = EditorState.structProcedureName(actionId);
+    for (final action in widget.node.actions) {
+      final actionText = action.actionText();
       widgets.add(
         ListTile(
-          title: Text(name),
+          title: Text(actionText),
           trailing: IconButton(
             icon: const Icon(Icons.delete),
             onPressed: () {
               setState(() {
-                widget.node.procedureIds.remove(actionId);
+                widget.node.actions.remove(action);
                 widget.onChange();
               });
             },

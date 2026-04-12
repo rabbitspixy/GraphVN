@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:graph_vn/common/random_util.dart';
+import 'package:graph_vn/editor/actions/base.dart';
 import 'package:graph_vn/editor/editor_node.dart';
 import 'package:graph_vn/editor/editor_transition.dart';
 import 'package:graph_vn/editor/variables.dart';
@@ -51,12 +52,12 @@ class Player {
     int maxIterations = 10000;
     while (transition != null || node != null) {
       if (transition != null) {
-        _runProcedures(transition.procedureIds);
+        _runActions(transition.actions);
         node = EditorState.nodes[transition.to];
         transition = null;
       }
       if (node != null) {
-        _runProcedures(node.procedureIds);
+        _runActions(node.actions);
         EditorState.currentNode = node.id;
         if (node.isEmpty) {
           final allowedTransitions = Player.allowedTransitionsForCurrentState();
@@ -79,6 +80,12 @@ class Player {
   static void _runProcedures(List<String> ids) {
     for (final actionId in ids) {
       EditorState.procedureById(actionId)?.exec();
+    }
+  }
+
+  static void _runActions(List<BaseAction> actions) {
+    for (final action in actions) {
+      action.exec();
     }
   }
 

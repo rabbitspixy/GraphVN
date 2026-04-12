@@ -50,7 +50,7 @@ abstract class Variable {
     return switch (proto.whichType()) {
       VariableProto_Type.numberVariable => NumberVariable.fromProto(proto.numberVariable),
       VariableProto_Type.namedVariable => NamedVariable.fromProto(proto.namedVariable),
-      _ => throw UnimplementedError()
+      VariableProto_Type.notSet => throw Exception("VariableProto type is not set"),
     };
   }
 }

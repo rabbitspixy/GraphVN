@@ -19,7 +19,7 @@ abstract class NumberExpression {
     return switch(proto.whichType()) {
       NumberExpressionProto_Type.constantNumberExpression => ConstantNumberExpression.fromProto(proto.constantNumberExpression),
       NumberExpressionProto_Type.numberVariableValue => NumberVariableValue.fromProto(proto.numberVariableValue),
-      _ => throw UnimplementedError()
+      NumberExpressionProto_Type.notSet => throw Exception("NumberExpressionProto type is not set"),
     };
   }
 }

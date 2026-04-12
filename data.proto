@@ -12,9 +12,9 @@ message EditorTransitionProto {
   string from = 3;
   string to = 4;
   int32 weight = 5;
-  repeated string procedureIds = 6;
   repeated NamedValueExpressionProto conditions = 7;
   repeated GenerateImageMetadataProto generatedImages = 8;
+  repeated AbstractActionProto actions = 9;
 }
 
 message NumberExpressionProto {
@@ -68,9 +68,9 @@ message EditorNodeProto {
   int64 x = 4;
   int64 y = 5;
   bool isStart = 6;
-  repeated string procedureIds = 7;
   string imagePath = 8;
   repeated GenerateImageMetadataProto generatedImages = 9;
+  repeated AbstractActionProto actions = 10;
 }
 
 message StructProto {

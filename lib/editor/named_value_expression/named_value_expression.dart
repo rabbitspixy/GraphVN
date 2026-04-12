@@ -24,7 +24,7 @@ abstract class NamedValueExpression {
       NamedValueExpressionProto_Type.compareNumbersExpression => CompareNumbersExpression.fromProto(proto.compareNumbersExpression),
       NamedValueExpressionProto_Type.compareNamedValueExpression => CompareNamedValueExpression.fromProto(proto.compareNamedValueExpression),
       NamedValueExpressionProto_Type.valueOfNamedValueVariableExpression => ValueOfNamedValueVariableExpression.fromProto(proto.valueOfNamedValueVariableExpression),
-      _ => throw UnimplementedError()
+      NamedValueExpressionProto_Type.notSet => throw Exception("NamedValueExpressionProto type is not set"),
     };
   }
 }

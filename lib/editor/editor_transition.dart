@@ -5,6 +5,8 @@ import 'package:graph_vn/generated-proto/data.pb.dart';
 import 'package:graph_vn/image_generation/generate_image_metadata.dart';
 import 'package:uuid/uuid.dart';
 
+import 'actions/base.dart';
+
 class EditorTransition {
   String id = Uuid().v4();
   String text = "";
@@ -12,9 +14,9 @@ class EditorTransition {
   String to = "";
   //must be greater than 0
   int weight = 1;
-  List<String> procedureIds = [];
   List<NamedValueExpression> conditions = [];
   List<GenerateImageMetadata> generateImageMetadata = [];
+  List<BaseAction> actions = [];
 
   bool get isButton => text.isNotEmpty;
 
@@ -35,9 +37,9 @@ class EditorTransition {
     result.from = from;
     result.to = to;
     result.weight = weight;
-    result.procedureIds.addAll(procedureIds);
     result.conditions.addAll(conditions.map((x) => x.toProto()));
     result.generatedImages.addAll(generateImageMetadata.map((x) => x.toProto()));
+    result.actions.addAll(actions.map((x) => x.toProto()));
     return result;
   }
 
@@ -48,9 +50,9 @@ class EditorTransition {
     result.from = proto.from;
     result.to = proto.to;
     result.weight = proto.weight;
-    result.procedureIds.addAll(proto.procedureIds);
     result.conditions.addAll(proto.conditions.map((x) => NamedValueExpression.fromProto(x)));
     result.generateImageMetadata.addAll(proto.generatedImages.map((x) => GenerateImageMetadata.fromProto(x)));
+    result.actions.addAll(proto.actions.map((x) => BaseAction.fromProto(x)));
     return result;
   }
 }

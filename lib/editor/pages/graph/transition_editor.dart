@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:graph_vn/common/number_util.dart';
 import 'package:graph_vn/editor/editor_state.dart';
 import 'package:graph_vn/editor/editor_transition.dart';
-import 'package:graph_vn/editor/modals/procedure_selector.dart';
 import 'package:graph_vn/editor/named_value_expression/constant_named_value_expression.dart';
 
+import '../../actions/do_nothing.dart';
 import '../../modals/named_number_expression_editor.dart';
+import '../../modals/struct_action_editor.dart';
 
 class TransitionEditor extends StatefulWidget {
   final EditorTransition transition;
@@ -56,10 +57,10 @@ class _TransitionEditorState extends State<TransitionEditor> {
   }
 
   Future<void> _addAction() async {
-    final proc = await showProcedureSelector(context);
-    if (proc != null && !widget.transition.procedureIds.contains(proc.id)) {
+    final action = await editStructAction(context, DoNothing());
+    if (action != null) {
       setState(() {
-        widget.transition.procedureIds.add(proc.id);
+        widget.transition.actions.add(action);
         widget.onChange();
       });
     }
@@ -76,16 +77,16 @@ class _TransitionEditorState extends State<TransitionEditor> {
 
   Widget _buildActionList() {
     final widgets = <Widget>[];
-    for (final actionId in widget.transition.procedureIds) {
-      final name = _procedureName(actionId) ?? actionId;
+    for (final action in widget.transition.actions) {
+      final actionText = action.actionText();
       widgets.add(
         ListTile(
-          title: Text(name),
+          title: Text(actionText),
           trailing: IconButton(
             icon: const Icon(Icons.delete),
             onPressed: () {
               setState(() {
-                widget.transition.procedureIds.remove(actionId);
+                widget.transition.actions.remove(action);
                 widget.onChange();
               });
             },
