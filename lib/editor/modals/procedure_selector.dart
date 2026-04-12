@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:graph_vn/editor/variables.dart';
+import 'package:graph_vn/editor/struct.dart';
+import 'package:graph_vn/editor/struct_procedure.dart';
 import 'package:graph_vn/editor/editor_state.dart';
 
 /// Shows a modal dialog that lists all [StructProcedure]s in a selected [Struct]

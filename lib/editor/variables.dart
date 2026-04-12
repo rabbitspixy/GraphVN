@@ -1,43 +1,7 @@
-import 'package:graph_vn/editor/actions/base.dart';
 import 'package:graph_vn/editor/editor_state.dart';
 import 'package:graph_vn/generated-proto/data.pb.dart';
 import 'package:rational/rational.dart';
 import 'package:uuid/uuid.dart';
-
-class Struct {
-  String id = Uuid().v4();
-  String name = "";
-  List<Variable> variables = List.empty(growable: true);
-  List<StructProcedure> procedures = List.empty(growable: true);
-
-  Struct();
-
-  Variable? variableById(String id) {
-    return variables.where((v) => v.id == id).firstOrNull;
-  }
-
-  StructProcedure? procedureById(String id) {
-    return procedures.where((x) => x.id == id).firstOrNull;
-  }
-
-  StructProto toProto() {
-    final result = StructProto();
-    result.id = id;
-    result.name = name;
-    result.variables.addAll(variables.map((x) => x.toProto()));
-    result.procedures.addAll(procedures.map((x) => x.toProto()));
-    return result;
-  }
-
-  factory Struct.fromProto(StructProto proto) {
-    final result = Struct();
-    result.id = proto.id;
-    result.name = proto.name;
-    result.variables.addAll(proto.variables.map((x) => Variable.fromProto(x)));
-    result.procedures.addAll(proto.procedures.map((x) => StructProcedure.fromProto(x)));
-    return result;
-  }
-}
 
 class PredefinedNamedTypes {
   static const booleanTypeId = 'a16100bc-5afb-4e8c-b2c1-eb14e523e0d0';
@@ -191,34 +155,4 @@ enum VariableType {
   const VariableType({required this.type});
 
   final Type type;
-}
-
-class StructProcedure {
-  String id = Uuid().v4();
-  String name = "Unnamed procedure";
-  List<BaseAction> actions = List.empty(growable: true);
-
-  StructProcedure();
-
-  void exec() {
-    for (final action in actions) {
-      action.exec();
-    }
-  }
-
-  StructProcedureProto toProto() {
-    final result = StructProcedureProto();
-    result.id = id;
-    result.name = name;
-    result.actions.addAll(actions.map((x) => x.toProto()));
-    return result;
-  }
-
-  factory StructProcedure.fromProto(StructProcedureProto proto) {
-    final result = StructProcedure();
-    result.id = proto.id;
-    result.name = proto.name;
-    result.actions = [ for (var a in proto.actions) BaseAction.fromProto(a) ];
-    return result;
-  }
 }

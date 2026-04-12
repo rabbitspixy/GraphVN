@@ -7,6 +7,8 @@ import 'package:graph_vn/editor/modals/add_variable_dialog.dart';
 import 'package:graph_vn/editor/modals/rename_dialog.dart';
 import 'package:graph_vn/editor/variables.dart';
 
+import '../../struct.dart';
+
 class StructVariables extends StatefulWidget {
   final Struct struct;
   

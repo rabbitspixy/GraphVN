@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:graph_vn/editor/struct.dart';
+import 'package:graph_vn/editor/struct_procedure.dart';
 import 'package:graph_vn/settings/app_settings.dart';
 import 'package:graph_vn/app_constants.dart';
 import 'package:graph_vn/editor/editor_node.dart';

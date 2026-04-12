@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:graph_vn/editor/modals/rename_dialog.dart';
-import 'package:graph_vn/editor/variables.dart';
+import 'package:graph_vn/editor/struct.dart';
 import 'package:graph_vn/editor/actions/do_nothing.dart';
 import 'package:graph_vn/editor/modals/struct_action_editor.dart';
+
+import '../../struct_procedure.dart';
 
 class StructProcedures extends StatefulWidget {
   final Struct struct;

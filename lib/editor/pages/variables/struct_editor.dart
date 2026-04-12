@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:graph_vn/editor/pages/variables/struct_procedures.dart';
 import 'package:graph_vn/editor/pages/variables/struct_variables.dart';
-import 'package:graph_vn/editor/variables.dart';
+import 'package:graph_vn/editor/struct.dart';
 
 class StructEditor extends StatefulWidget {
   final Struct struct;

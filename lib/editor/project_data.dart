@@ -1,6 +1,6 @@
 import 'package:graph_vn/editor/editor_node.dart';
 import 'package:graph_vn/editor/editor_transition.dart';
-import 'package:graph_vn/editor/variables.dart';
+import 'package:graph_vn/editor/struct.dart';
 import 'package:graph_vn/generated-proto/data.pb.dart';
 
 class ProjectData {
