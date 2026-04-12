@@ -6,6 +6,12 @@ import 'package:graph_vn/editor/modals/number_expression_editor.dart';
 import 'package:graph_vn/editor/modals/add_variable_dialog.dart';
 import 'package:graph_vn/editor/modals/rename_dialog.dart';
 import 'package:graph_vn/editor/variables.dart';
+import 'package:graph_vn/editor/number_variable_stringifier.dart';
+import 'package:graph_vn/editor/named_variable_stringifier.dart';
+import 'package:graph_vn/editor/modals/number_variable_stringifier_editor.dart';
+import 'package:graph_vn/editor/modals/named_variable_stringifier_editor.dart';
+import 'package:graph_vn/editor/editor_state.dart';
+import 'package:rational/rational.dart';
 
 import '../../struct.dart';
 
