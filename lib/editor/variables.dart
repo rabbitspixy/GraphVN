@@ -1,4 +1,6 @@
 import 'package:graph_vn/editor/editor_state.dart';
+import 'package:graph_vn/editor/named_variable_stringifier.dart';
+import 'package:graph_vn/editor/number_variable_stringifier.dart';
 import 'package:graph_vn/generated-proto/data.pb.dart';
 import 'package:rational/rational.dart';
 import 'package:uuid/uuid.dart';
@@ -44,6 +46,7 @@ abstract class Variable {
   void reset();
   String initialValueAsText();
   String currentValueAsText();
+  String? currentValueAsTextForPlayer();
 
   VariableProto toProto();
   factory Variable.fromProto(VariableProto proto) {
@@ -58,6 +61,7 @@ abstract class Variable {
 class NumberVariable extends Variable {
   Rational initialValue = Rational.zero;
   Rational value = Rational.zero;
+  List<NumberVariableStringifier> stringifiers = [];
 
   NumberVariable();
 
@@ -74,6 +78,17 @@ class NumberVariable extends Variable {
   @override
   String currentValueAsText() {
     return value.toString();
+  }
+
+  @override
+  String? currentValueAsTextForPlayer() {
+    for (final stringifier in stringifiers) {
+      final result = stringifier.evaluate(value);
+      if (result != null) {
+        return result;
+      }
+    }
+    return null;
   }
 
   @override
@@ -101,6 +116,7 @@ class NamedVariable extends Variable {
   String typeId;
   String initialValue = '';
   String value = '';
+  List<NamedVariableStringifier> stringifiers = [];
 
   @override
   void reset() {
@@ -123,6 +139,17 @@ class NamedVariable extends Variable {
   @override
   String currentValueAsText() {
     return EditorState.namedValue(value)?.name ?? "?";
+  }
+
+  @override
+  String? currentValueAsTextForPlayer() {
+    for (final stringifier in stringifiers) {
+      final result = stringifier.evaluate(value);
+      if (result != null) {
+        return result;
+      }
+    }
+    return null;
   }
 
   @override

@@ -120,7 +120,12 @@ class Player {
     final st = StringBuffer();
     for (final struct in EditorState.structs) {
       for (final variable in struct.variables) {
-        st.writeln("${struct.name}-${variable.name}: ${variable.currentValueAsText()}");
+        var currentValueAsTextForPlayer = variable.currentValueAsTextForPlayer();
+        if (currentValueAsTextForPlayer != null) {
+          st.writeln(currentValueAsTextForPlayer);
+        } else {
+          st.writeln("${struct.name}-${variable.name}: ${variable.currentValueAsText()}");
+        }
       }
     }
     statusText.value = st.toString();
