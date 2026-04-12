@@ -155,7 +155,7 @@ class Player {
   static void clearState() {
     imageInfoNotifier.value = PlayerImageInfo();
     narrativeText.value = "";
-    statusText = "";
+    statusText.value = "";
     buttons.value = [];
   }
 }
