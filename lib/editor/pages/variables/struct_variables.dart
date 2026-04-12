@@ -24,115 +24,150 @@ class _StructVariablesState extends State<StructVariables> {
   int? _selectedIndex;
   @override
   Widget build(BuildContext context) {
-    return Column(
+    final sortedVariables = List<Variable>.from(widget.struct.variables)
+      ..sort((a, b) => a.name.compareTo(b.name));
+    if (_selectedIndex == null && sortedVariables.isNotEmpty) {
+      _selectedIndex = 0;
+    }
+    return Row(
       children: [
         Expanded(
-          child: ListView.builder(
-            itemCount: widget.struct.variables.length + 1,
-            itemBuilder: (context, varIndex) {
-              if (varIndex == widget.struct.variables.length) {
-                return Padding(
-                  padding: EdgeInsets.all(8),
-                  child: OutlinedButton.icon(
-                    icon: Icon(Icons.add),
-                    label: Text('Variable'),
-                    onPressed: () async {
-                      final newVariable = await showAddVariableDialog(context);
-                      if (newVariable != null) {
+          flex: 1,
+          child: Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  itemCount: sortedVariables.length,
+                  itemBuilder: (context, index) {
+                    final variable = sortedVariables[index];
+                    return ListTile(
+                      title: Text(variable.name),
+                      subtitle: Text(variable.currentValueAsText()),
+                      selected: _selectedIndex == index,
+                      onTap: () {
                         setState(() {
-                          widget.struct.variables.add(newVariable);
+                          _selectedIndex = index;
                         });
-                      }
-                    },
-                  ),
-                );
-              }
-              final variable = widget.struct.variables[varIndex];
-              return Row(
-                children: [
-                  Expanded(
-                    flex: 3,
-                    child: InputDecorator(
-                      decoration: InputDecoration(labelText: 'Name'),
-                      child: GestureDetector(
-                        onTap: () async {
-                          final newName = await showRenameDialog(context, 'Edit Variable Name', variable.name);
-                          if (newName != null) {
-                            setState(() {
-                              variable.name = newName;
-                            });
-                          }
-                        },
-                        child: MouseRegion(
-                          cursor: SystemMouseCursors.click,
-                          child: Text(
-                            variable.name,
-                            style: TextStyle(fontSize: 16),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 3,
-                    child: InputDecorator(
-                      decoration: InputDecoration(labelText: 'Current value'),
-                      child: Text(
-                        variable.currentValueAsText(),
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 3,
-                    child: InputDecorator(
-                      decoration: InputDecoration(labelText: 'Initial value'),
-                      child: GestureDetector(
-                        onTap: () async {
-                          switch (variable) {
-                            case NumberVariable _: {
-                              final fakeExpression = ConstantNumberExpression()
-                                ..value = variable.initialValue;
-                              final number = (await editNumberExpression(context, fakeExpression, allowChangeType: false))?.evaluate();
-                              if (number != null) {
-                                variable.initialValue = number;
-                              }
-                            }
-                            case NamedVariable _ : {
-                              final fakeExpression = ConstantNamedValueExpression()
-                                ..valueId = variable.initialValue;
-                              final newStartValue = (await editNamedValueExpression(context, fakeExpression, allowChangeType: false))?.evaluate();
-                              if (newStartValue != null) {
-                                variable.initialValue = newStartValue;
-                              }
-                            }
-                          }
-                          setState(() {});
-                        },
-                        child: MouseRegion(
-                          cursor: SystemMouseCursors.click,
-                          child: Text(
-                            variable.initialValueAsText(),
-                            style: TextStyle(fontSize: 16),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  // IconButton(
-                  //   icon: Icon(Icons.delete, color: Colors.red),
-                  //   onPressed: () {
-                  //     setState(() {
-                  //       widget.struct.variables.removeAt(varIndex);
-                  //     });
-                  //   },
-                  // ),
-                ],
-              );
-            },
+                      },
+                    );
+                  },
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(8),
+                child: OutlinedButton.icon(
+                  icon: Icon(Icons.add),
+                  label: Text('Variable'),
+                  onPressed: () async {
+                    final newVariable = await showAddVariableDialog(context);
+                    if (newVariable != null) {
+                      setState(() {
+                        widget.struct.variables.add(newVariable);
+                        if (_selectedIndex == null) _selectedIndex = 0;
+                      });
+                    }
+                  },
+                ),
+              ),
+            ],
           ),
         ),
+        Expanded(
+          flex: 3,
+          child: _selectedIndex == null
+              ? Center(child: Text('Select a variable'))
+              : _buildVariableDetails(sortedVariables[_selectedIndex!]),
+        ),
       ],
+    );
+  }
+
+  Widget _buildVariableDetails(Variable variable) {
+    return Padding(
+      padding: EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          InputDecorator(
+            decoration: InputDecoration(labelText: 'Name'),
+            child: GestureDetector(
+              onTap: () async {
+                final newName = await showRenameDialog(context, 'Edit Variable Name', variable.name);
+                if (newName != null) {
+                  setState(() {
+                    variable.name = newName;
+                  });
+                }
+              },
+              child: MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: Text(
+                  variable.name,
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: 8),
+          InputDecorator(
+            decoration: InputDecoration(labelText: 'Current value'),
+            child: GestureDetector(
+              onTap: () async {
+                if (variable is NumberVariable) {
+                  final fake = ConstantNumberExpression()..value = variable.value;
+                  final number = (await editNumberExpression(context, fake, allowChangeType: false))?.evaluate();
+                  if (number != null) {
+                    variable.value = number;
+                  }
+                } else if (variable is NamedVariable) {
+                  final fake = ConstantNamedValueExpression()..valueId = variable.value;
+                  final newVal = (await editNamedValueExpression(context, fake, allowChangeType: false))?.evaluate();
+                  if (newVal != null) {
+                    variable.value = newVal;
+                  }
+                }
+                setState(() {});
+              },
+              child: MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: Text(
+                  variable.currentValueAsText(),
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: 8),
+          InputDecorator(
+            decoration: InputDecoration(labelText: 'Initial value'),
+            child: GestureDetector(
+              onTap: () async {
+                if (variable is NumberVariable) {
+                  final fake = ConstantNumberExpression()..value = variable.initialValue;
+                  final number = (await editNumberExpression(context, fake, allowChangeType: false))?.evaluate();
+                  if (number != null) {
+                    variable.initialValue = number;
+                  }
+                } else if (variable is NamedVariable) {
+                  final fake = ConstantNamedValueExpression()..valueId = variable.initialValue;
+                  final newVal = (await editNamedValueExpression(context, fake, allowChangeType: false))?.evaluate();
+                  if (newVal != null) {
+                    variable.initialValue = newVal;
+                  }
+                }
+                setState(() {});
+              },
+              child: MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: Text(
+                  variable.initialValueAsText(),
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
