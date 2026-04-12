@@ -172,6 +172,91 @@ class _StructVariablesState extends State<StructVariables> {
               ),
             ),
           ),
+          SizedBox(height: 8),
+          InputDecorator(
+            decoration: InputDecoration(labelText: 'Stringifiers'),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (variable is NumberVariable) ...[
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: variable.stringifiers.length,
+                    itemBuilder: (context, idx) {
+                      final s = variable.stringifiers[idx];
+                      return ListTile(
+                        title: Text('Range: \${s.rangeStart} - \${s.rangeEnd}'),
+                        subtitle: Text(s.template),
+                        onTap: () async {
+                          final updated = await editNumberVariableStringifier(context, s);
+                          if (updated != null) {
+                            setState(() {
+                              variable.stringifiers[idx] = updated;
+                            });
+                          }
+                        },
+                      );
+                    },
+                  ),
+                ] else if (variable is NamedVariable) ...[
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: variable.stringifiers.length,
+                    itemBuilder: (context, idx) {
+                      final s = variable.stringifiers[idx];
+                      return ListTile(
+                        title: Text('Value ID: \${s.valueId}'),
+                        subtitle: Text(s.template),
+                        onTap: () async {
+                          final namedValues = EditorState.namedValueType(variable.typeId)?.list ?? [];
+                          final updated = await editNamedVariableStringifier(context, s, namedValues);
+                          if (updated != null) {
+                            setState(() {
+                              variable.stringifiers[idx] = updated;
+                            });
+                          }
+                        },
+                      );
+                    },
+                  ),
+                ],
+                SizedBox(height: 8),
+                OutlinedButton.icon(
+                  icon: Icon(Icons.add),
+                  label: Text('Add Stringifier'),
+                  onPressed: () async {
+                    if (variable is NumberVariable) {
+                      final newStringifier = NumberVariableStringifier(
+                        rangeStart: Rational.zero,
+                        rangeEnd: Rational.zero,
+                        template: "{}",
+                      );
+                      final updated = await editNumberVariableStringifier(context, newStringifier);
+                      if (updated != null) {
+                        setState(() {
+                          variable.stringifiers.add(updated);
+                        });
+                      }
+                    } else if (variable is NamedVariable) {
+                      final namedValues = EditorState.namedValueType(variable.typeId)?.list ?? [];
+                      final newStringifier = NamedVariableStringifier(
+                        valueId: '',
+                        template: '',
+                      );
+                      final updated = await editNamedVariableStringifier(context, newStringifier, namedValues);
+                      if (updated != null) {
+                        setState(() {
+                          variable.stringifiers.add(updated);
+                        });
+                      }
+                    }
+                  },
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
