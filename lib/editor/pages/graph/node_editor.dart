@@ -69,19 +69,10 @@ class _NodeEditorState extends State<NodeEditor> {
     }
   }
 
-  String? _procedureName(String id) {
-    for (final struct in EditorState.structs) {
-      for (final proc in struct.procedures) {
-        if (proc.id == id) return proc.name;
-      }
-    }
-    return null;
-  }
-
   Widget _buildActionList() {
     final widgets = <Widget>[];
     for (final actionId in widget.node.procedureIds) {
-      final name = _procedureName(actionId) ?? actionId;
+      final name = EditorState.structProcedureName(actionId);
       widgets.add(
         ListTile(
           title: Text(name),

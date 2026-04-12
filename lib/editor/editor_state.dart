@@ -242,6 +242,15 @@ class EditorState {
     return "${struct.name} - ${variable.name}";
   }
 
+  static String structProcedureName(String id) {
+    for (final struct in EditorState.structs) {
+      for (final proc in struct.procedures) {
+        if (proc.id == id) return proc.name;
+      }
+    }
+    return "procedure";
+  }
+
   static NamedValue? namedValue(String valueId) {
     return namedVariableTypes.expand((t) => t.list).where((v) => v.id == valueId).firstOrNull;
   }

@@ -116,6 +116,7 @@ message AbstractActionProto {
     ActionRotateNamedValueProto rotateNamedValue = 12;
     ActionSetNamedValueProto setNamedValue = 13;
     ActionSetNumberValueProto setNumberValue = 14;
+    ActionRunProcedureProto runProcedure = 15;
   }
 }
 
@@ -140,6 +141,10 @@ message ActionSetNamedValueProto {
 message ActionSetNumberValueProto {
   string variableId = 1;
   NumberExpressionProto expression = 2;
+}
+
+message ActionRunProcedureProto {
+  string structProcedureId = 1;
 }
 
 message GenerateImageMetadataProto {
