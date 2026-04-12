@@ -1,28 +1,27 @@
-import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/material.dart';
 import 'package:graph_vn/editor/number_expression/constant_number_expression.dart';
 import 'package:graph_vn/editor/number_expression/number_variable_value.dart';
+import 'package:graph_vn/generated-proto/data.pb.dart';
 import 'package:rational/rational.dart';
 
-part 'package:graph_vn/generated/editor/number_expression/number_expression.mapper.dart';
-
-@MappableClass(
-  includeSubClasses: [
-    ConstantNumberExpression,
-    NumberVariableValue,
-  ]
-)
-abstract class NumberExpression with NumberExpressionMappable {
+abstract class NumberExpression {
 
   NumberExpression();
-
-  @MappableConstructor()
-  NumberExpression.mappableConstructor();
   
   Rational evaluate();
   String asText();
   bool isValid();
   Widget widgetEditor();
+
+  NumberExpressionProto toProto();
+
+  factory NumberExpression.fromProto(NumberExpressionProto proto) {
+    return switch(proto.whichType()) {
+      NumberExpressionProto_Type.constantNumberExpression => ConstantNumberExpression.fromProto(proto.constantNumberExpression),
+      NumberExpressionProto_Type.numberVariableValue => NumberVariableValue.fromProto(proto.numberVariableValue),
+      _ => throw UnimplementedError()
+    };
+  }
 }
 
 enum NumberExpressionType {

@@ -1,23 +1,15 @@
-import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/material.dart';
 import 'package:graph_vn/editor/number_expression/number_expression.dart';
 import 'package:graph_vn/common/rational_util.dart';
+import 'package:graph_vn/generated-proto/data.pb.dart';
 import 'package:rational/rational.dart';
 
-part 'package:graph_vn/generated/editor/number_expression/constant_number_expression.mapper.dart';
-
-@MappableClass()
-class ConstantNumberExpression extends NumberExpression with ConstantNumberExpressionMappable {
+class ConstantNumberExpression extends NumberExpression {
 
   Rational value = Rational.zero;
   bool _isValid = true;
 
   ConstantNumberExpression();
-
-  @MappableConstructor()
-  ConstantNumberExpression.mappableConstructor({
-    required this.value,
-  }) : super.mappableConstructor();
 
   @override
   Rational evaluate() {
@@ -37,6 +29,20 @@ class ConstantNumberExpression extends NumberExpression with ConstantNumberExpre
   @override
   Widget widgetEditor() {
     return ConstantNumberExpressionEditor(expression: this);
+  }
+
+  @override
+  NumberExpressionProto toProto() {
+    final result = ConstantNumberExpressionProto();
+    result.value = value.toString();
+    return NumberExpressionProto()
+      ..constantNumberExpression = result;
+  }
+
+  factory ConstantNumberExpression.fromProto(ConstantNumberExpressionProto proto) {
+    final result = ConstantNumberExpression();
+    result.value = Rational.parse(proto.value);
+    return result;
   }
 }
 

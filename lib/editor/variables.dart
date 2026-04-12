@@ -1,13 +1,10 @@
-import 'package:dart_mappable/dart_mappable.dart';
 import 'package:graph_vn/editor/actions/base.dart';
 import 'package:graph_vn/editor/editor_state.dart';
+import 'package:graph_vn/generated-proto/data.pb.dart';
 import 'package:rational/rational.dart';
 import 'package:uuid/uuid.dart';
 
-part 'variables.mapper.dart';
-
-@MappableClass()
-class Struct with StructMappable {
+class Struct {
   String id = Uuid().v4();
   String name = "";
   List<Variable> variables = List.empty(growable: true);
@@ -15,20 +12,30 @@ class Struct with StructMappable {
 
   Struct();
 
-  @MappableConstructor()
-  Struct.mappableConstructor({
-    required this.id,
-    required this.name,
-    required this.variables,
-    required this.procedures,
-  });
-
   Variable? variableById(String id) {
     return variables.where((v) => v.id == id).firstOrNull;
   }
 
   StructProcedure? procedureById(String id) {
     return procedures.where((x) => x.id == id).firstOrNull;
+  }
+
+  StructProto toProto() {
+    final result = StructProto();
+    result.id = id;
+    result.name = name;
+    result.variables.addAll(variables.map((x) => x.toProto()));
+    result.procedures.addAll(procedures.map((x) => x.toProto()));
+    return result;
+  }
+
+  factory Struct.fromProto(StructProto proto) {
+    final result = Struct();
+    result.id = proto.id;
+    result.name = proto.name;
+    result.variables.addAll(proto.variables.map((x) => Variable.fromProto(x)));
+    result.procedures.addAll(proto.procedures.map((x) => StructProcedure.fromProto(x)));
+    return result;
   }
 }
 
@@ -54,8 +61,7 @@ class NamedValuesType {
   List<NamedValue> list = List.empty();
 }
 
-@MappableClass()
-class NamedValue with NamedValueMappable {
+class NamedValue {
   String id;
   String name;
 
@@ -65,38 +71,31 @@ class NamedValue with NamedValueMappable {
   }) : id = id ?? Uuid().v4();
 }
 
-@MappableClass()
-abstract class Variable with VariableMappable {
+abstract class Variable {
   String id = Uuid().v4();
   String name = "";
 
   Variable();
 
-  @MappableConstructor()
-  Variable.mappableConstructor({
-    required this.id,
-    required this.name,
-  });
-
   void reset();
   String initialValueAsText();
   String currentValueAsText();
+
+  VariableProto toProto();
+  factory Variable.fromProto(VariableProto proto) {
+    return switch (proto.whichType()) {
+      VariableProto_Type.numberVariable => NumberVariable.fromProto(proto.numberVariable),
+      VariableProto_Type.namedVariable => NamedVariable.fromProto(proto.namedVariable),
+      _ => throw UnimplementedError()
+    };
+  }
 }
 
-@MappableClass()
-class NumberVariable extends Variable with NumberVariableMappable {
+class NumberVariable extends Variable {
   Rational initialValue = Rational.zero;
   Rational value = Rational.zero;
 
   NumberVariable();
-
-  @MappableConstructor()
-  NumberVariable.mappableConstructor({
-    required super.id,
-    required super.name,
-    required this.initialValue,
-    required this.value,
-  }) : super.mappableConstructor();
 
   @override
   void reset() {
@@ -112,10 +111,29 @@ class NumberVariable extends Variable with NumberVariableMappable {
   String currentValueAsText() {
     return value.toString();
   }
+
+  @override
+  VariableProto toProto() {
+    final result = NumberVariableProto();
+    result.id = id;
+    result.name = name;
+    result.initialValue = initialValue.toString();
+    result.value = value.toString();
+    return VariableProto()
+      ..numberVariable = result;
+  }
+
+  factory NumberVariable.fromProto(NumberVariableProto proto) {
+    final result = NumberVariable();
+    result.id = proto.id;
+    result.name = proto.name;
+    result.initialValue = Rational.parse(proto.initialValue);
+    result.value = Rational.parse(proto.value);
+    return result;
+  }
 }
 
-@MappableClass()
-class NamedVariable extends Variable with NamedVariableMappable {
+class NamedVariable extends Variable {
   String typeId;
   String initialValue = '';
   String value = '';
@@ -133,15 +151,6 @@ class NamedVariable extends Variable with NamedVariableMappable {
     }
   }
 
-  @MappableConstructor()
-  NamedVariable.mappableConstructor({
-    required super.id,
-    required super.name,
-    required this.typeId,
-    required this.initialValue,
-    required this.value,
-  }) : super.mappableConstructor();
-
   @override
   String initialValueAsText() {
     return EditorState.namedValue(initialValue)?.name ?? "?";
@@ -150,6 +159,27 @@ class NamedVariable extends Variable with NamedVariableMappable {
   @override
   String currentValueAsText() {
     return EditorState.namedValue(value)?.name ?? "?";
+  }
+
+  @override
+  VariableProto toProto() {
+    final result = NamedVariableProto();
+    result.id = id;
+    result.name = name;
+    result.typeId = typeId;
+    result.initialValue = initialValue;
+    result.value = value;
+    return VariableProto()
+        ..namedVariable = result;
+  }
+
+  factory NamedVariable.fromProto(NamedVariableProto proto) {
+    final result = NamedVariable(typeId: proto.typeId);
+    result.id = proto.id;
+    result.name = proto.name;
+    result.initialValue = proto.initialValue;
+    result.value = proto.value;
+    return result;
   }
 }
 
@@ -163,24 +193,32 @@ enum VariableType {
   final Type type;
 }
 
-@MappableClass()
-class StructProcedure with StructProcedureMappable {
+class StructProcedure {
   String id = Uuid().v4();
   String name = "Unnamed procedure";
   List<BaseAction> actions = List.empty(growable: true);
 
   StructProcedure();
 
-  @MappableConstructor()
-  StructProcedure.mappableConstructor({
-    required this.id,
-    required this.name,
-    required this.actions,
-  });
-
   void exec() {
     for (final action in actions) {
       action.exec();
     }
+  }
+
+  StructProcedureProto toProto() {
+    final result = StructProcedureProto();
+    result.id = id;
+    result.name = name;
+    result.actions.addAll(actions.map((x) => x.toProto()));
+    return result;
+  }
+
+  factory StructProcedure.fromProto(StructProcedureProto proto) {
+    final result = StructProcedure();
+    result.id = proto.id;
+    result.name = proto.name;
+    result.actions = [ for (var a in proto.actions) BaseAction.fromProto(a) ];
+    return result;
   }
 }

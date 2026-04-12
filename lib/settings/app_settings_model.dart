@@ -1,6 +1,6 @@
 import 'package:dart_mappable/dart_mappable.dart';
 
-part 'app_settings_model.mapper.dart';
+part './generated/app_settings_model.mapper.dart';
 
 @MappableClass()
 class AppSettingsModel with AppSettingsModelMappable {
@@ -9,7 +9,7 @@ class AppSettingsModel with AppSettingsModelMappable {
   AppSettingsModel();
 
   @MappableConstructor()
-  AppSettingsModel.mappableContructor({
+  AppSettingsModel.mappableConstructor({
     required this.lastOpenedProjectDir,
   });
 }

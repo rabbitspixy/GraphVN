@@ -1,4 +1,3 @@
-import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/material.dart';
 import 'package:graph_vn/editor/widgets/editor_rich_text.dart';
 import 'package:graph_vn/editor/modals/enum_selector.dart';
@@ -7,23 +6,14 @@ import 'package:graph_vn/editor/number_expression/constant_number_expression.dar
 import 'package:graph_vn/editor/number_expression/number_expression.dart';
 import 'package:graph_vn/editor/modals/number_expression_editor.dart';
 import 'package:graph_vn/editor/variables.dart';
+import 'package:graph_vn/generated-proto/data.pb.dart';
 
-part 'package:graph_vn/generated/editor/named_value_expression/compare_numbers_expression.mapper.dart';
-
-@MappableClass()
-class CompareNumbersExpression extends NamedValueExpression with CompareNumbersExpressionMappable {
+class CompareNumbersExpression extends NamedValueExpression {
   NumberExpression left = ConstantNumberExpression();
   BooleanOperator operator = BooleanOperator.equal;
   NumberExpression right = ConstantNumberExpression();
 
   CompareNumbersExpression();
-
-  @MappableConstructor()
-  CompareNumbersExpression.mappableConstructor({
-    required this.left,
-    required this.operator,
-    required this.right,
-  }) : super.mappableConstructor();
 
   @override
   String evaluate() {
@@ -59,9 +49,26 @@ class CompareNumbersExpression extends NamedValueExpression with CompareNumbersE
   Widget widgetEditor() {
     return BooleanNumberExpressionEditor(expression: this);
   }
+
+  @override
+  NamedValueExpressionProto toProto() {
+    final result = CompareNumbersExpressionProto();
+    result.left = left.toProto();
+    result.booleanOperator = operator.name;
+    result.right = right.toProto();
+    return NamedValueExpressionProto()
+        ..compareNumbersExpression = result;
+  }
+
+  factory CompareNumbersExpression.fromProto(CompareNumbersExpressionProto proto) {
+    final result = CompareNumbersExpression();
+    result.left = NumberExpression.fromProto(proto.left);
+    result.operator = BooleanOperator.values.byName(proto.booleanOperator);
+    result.right = NumberExpression.fromProto(proto.right);
+    return result;
+  }
 }
 
-@MappableEnum()
 enum BooleanOperator {
   equal('equal'),
   notEqual('not equal'),

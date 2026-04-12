@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:dart_mappable/dart_mappable.dart';
 
-part 'image_generator.mapper.dart';
+part './generated/image_generator.mapper.dart';
 
 class ImageGenerator {
 

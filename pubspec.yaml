@@ -40,6 +40,8 @@ dependencies:
   rational: ^2.2.3
   dart_mappable: ^4.6.1
   logger: ^2.6.2
+  protobuf: ^6.0.0
+  fixnum: ^1.1.1
 
 dev_dependencies:
   flutter_test:

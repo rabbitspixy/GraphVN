@@ -1,21 +1,13 @@
-import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/material.dart';
 import 'package:graph_vn/editor/editor_state.dart';
 import 'package:graph_vn/editor/named_value_expression/named_value_expression.dart';
 import 'package:graph_vn/editor/variables.dart';
+import 'package:graph_vn/generated-proto/data.pb.dart';
 
-part 'package:graph_vn/generated/editor/named_value_expression/constant_named_value_expression.mapper.dart';
-
-@MappableClass()
-class ConstantNamedValueExpression extends NamedValueExpression with ConstantNamedValueExpressionMappable {
+class ConstantNamedValueExpression extends NamedValueExpression {
   String valueId = "";
 
   ConstantNamedValueExpression();
-
-  @MappableConstructor()
-  ConstantNamedValueExpression.mappableConstructor({
-    required this.valueId,
-  }) : super.mappableConstructor();
 
   @override
   String evaluate() {
@@ -39,6 +31,20 @@ class ConstantNamedValueExpression extends NamedValueExpression with ConstantNam
 
   NamedValuesType? type() {
     return EditorState.namedValueType(valueId);
+  }
+
+  @override
+  NamedValueExpressionProto toProto() {
+    final result = ConstantNamedValueExpressionProto();
+    result.valueId = valueId;
+    return NamedValueExpressionProto()
+        ..constantNamedValueExpression = result;
+  }
+
+  factory ConstantNamedValueExpression.fromProto(ConstantNamedValueExpressionProto proto) {
+    final result = ConstantNamedValueExpression();
+    result.valueId = proto.valueId;
+    return result;
   }
 }
 

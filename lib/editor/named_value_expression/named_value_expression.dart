@@ -1,25 +1,12 @@
-import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/material.dart';
 import 'package:graph_vn/editor/named_value_expression/compare_named_value_expression.dart';
 import 'package:graph_vn/editor/named_value_expression/compare_numbers_expression.dart';
 import 'package:graph_vn/editor/named_value_expression/constant_named_value_expression.dart';
 import 'package:graph_vn/editor/named_value_expression/value_of_named_value_variable_expression.dart';
+import 'package:graph_vn/generated-proto/data.pb.dart';
 
-part 'package:graph_vn/generated/editor/named_value_expression/named_value_expression.mapper.dart';
-
-@MappableClass(
-  includeSubClasses: [
-    ConstantNamedValueExpression,
-    CompareNumbersExpression,
-    CompareNamedValueExpression,
-    ValueOfNamedValueVariableExpression,
-  ],
-)
-abstract class NamedValueExpression with NamedValueExpressionMappable {
+abstract class NamedValueExpression {
   NamedValueExpression();
-
-  @MappableConstructor()
-  NamedValueExpression.mappableConstructor();
 
   String evaluate();
 
@@ -28,6 +15,18 @@ abstract class NamedValueExpression with NamedValueExpressionMappable {
   bool isValid();
 
   Widget widgetEditor();
+
+  NamedValueExpressionProto toProto();
+
+  factory NamedValueExpression.fromProto(NamedValueExpressionProto proto) {
+    return switch(proto.whichType()) {
+      NamedValueExpressionProto_Type.constantNamedValueExpression => ConstantNamedValueExpression.fromProto(proto.constantNamedValueExpression),
+      NamedValueExpressionProto_Type.compareNumbersExpression => CompareNumbersExpression.fromProto(proto.compareNumbersExpression),
+      NamedValueExpressionProto_Type.compareNamedValueExpression => CompareNamedValueExpression.fromProto(proto.compareNamedValueExpression),
+      NamedValueExpressionProto_Type.valueOfNamedValueVariableExpression => ValueOfNamedValueVariableExpression.fromProto(proto.valueOfNamedValueVariableExpression),
+      _ => throw UnimplementedError()
+    };
+  }
 }
 
 enum NamedValueExpressionType {

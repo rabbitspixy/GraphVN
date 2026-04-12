@@ -1,35 +1,34 @@
-import 'package:dart_mappable/dart_mappable.dart';
 import 'package:graph_vn/editor/actions/do_nothing.dart';
 import 'package:graph_vn/editor/actions/increase_number_value.dart';
 import 'package:graph_vn/editor/actions/rotate_named_value.dart';
 import 'package:graph_vn/editor/actions/set_named_value.dart';
 import 'package:graph_vn/editor/actions/set_number_value.dart';
+import 'package:graph_vn/generated-proto/data.pb.dart';
 import 'package:uuid/uuid.dart';
 
-part 'package:graph_vn/generated/editor/actions/base.mapper.dart';
-
-@MappableClass(
-  includeSubClasses: [
-    DoNothing,
-    IncreaseNumberValue,
-    RotateNamedValue,
-    SetNamedValue,
-    SetNumberValue,
-  ]
-)
-abstract class BaseAction with BaseActionMappable {
+abstract class BaseAction {
   String id = Uuid().v4();
 
   BaseAction();
 
-  @MappableConstructor()
-  BaseAction.mappableConstructor({
-    required this.id,
-  });
-
   String actionText();
 
   void exec();
+
+  AbstractActionProto toProto();
+
+  factory BaseAction.fromProto(AbstractActionProto proto) {
+    final result = switch(proto.whichType()) {
+      AbstractActionProto_Type.doNothing => DoNothing.fromProto(proto.doNothing),
+      AbstractActionProto_Type.increaseNumberValue => IncreaseNumberValue.fromProto(proto.increaseNumberValue),
+      AbstractActionProto_Type.rotateNamedValue => RotateNamedValue.fromProto(proto.rotateNamedValue),
+      AbstractActionProto_Type.setNamedValue => SetNamedValue.fromProto(proto.setNamedValue),
+      AbstractActionProto_Type.setNumberValue => SetNumberValue.fromProto(proto.setNumberValue),
+      _ => throw UnimplementedError()
+    };
+    result.id = proto.id;
+    return result;
+  }
 }
 
 enum StructActionType {

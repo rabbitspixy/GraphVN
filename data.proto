@@ -1,0 +1,141 @@
+syntax = "proto3";
+
+message ProjectProto {
+  repeated EditorNodeProto nodes = 1;
+  repeated EditorTransitionProto transitions = 2;
+  repeated StructProto structs = 3;
+}
+
+message EditorTransitionProto {
+  string id = 1;
+  string text = 2;
+  string from = 3;
+  string to = 4;
+  int32 weight = 5;
+  repeated string procedureIds = 6;
+  repeated NamedValueExpressionProto conditions = 7;
+}
+
+message NumberExpressionProto {
+  oneof type {
+    ConstantNumberExpressionProto constantNumberExpression = 1;
+    NumberVariableValueProto numberVariableValue = 2;
+  }
+}
+
+message ConstantNumberExpressionProto {
+  string value = 1;
+}
+
+message NumberVariableValueProto {
+  string variableId = 1;
+}
+
+message NamedValueExpressionProto {
+  oneof type {
+    ConstantNamedValueExpressionProto constantNamedValueExpression = 1;
+    CompareNumbersExpressionProto compareNumbersExpression = 2;
+    CompareNamedValueExpressionProto compareNamedValueExpression = 3;
+    ValueOfNamedValueVariableExpressionProto valueOfNamedValueVariableExpression = 4;
+  }
+}
+
+message ConstantNamedValueExpressionProto {
+  string valueId = 1;
+}
+
+message CompareNumbersExpressionProto {
+  NumberExpressionProto left = 1;
+  string booleanOperator = 2;
+  NumberExpressionProto right = 3;
+}
+
+message CompareNamedValueExpressionProto {
+  NamedValueExpressionProto left = 1;
+  string operator = 2;
+  NamedValueExpressionProto right = 3;
+}
+
+message ValueOfNamedValueVariableExpressionProto {
+  string variableId = 1;
+}
+
+message EditorNodeProto {
+  string id = 1;
+  string text = 2;
+  string label = 3;
+  int64 x = 4;
+  int64 y = 5;
+  bool isStart = 6;
+  repeated string procedureIds = 7;
+  string imagePath = 8;
+}
+
+message StructProto {
+  string id = 1;
+  string name = 2;
+  repeated VariableProto variables = 3;
+  repeated StructProcedureProto procedures = 4;
+}
+
+message VariableProto {
+  oneof type {
+    NumberVariableProto numberVariable = 1;
+    NamedVariableProto namedVariable = 2;
+  }
+}
+
+message NumberVariableProto {
+  string id = 1;
+  string name = 2;
+  string initialValue = 3;
+  string value = 4;
+}
+
+message NamedVariableProto {
+  string id = 1;
+  string name = 2;
+  string typeId = 3;
+  string initialValue = 4;
+  string value = 5;
+}
+
+message StructProcedureProto {
+  string id = 1;
+  string name = 2;
+  repeated AbstractActionProto actions = 3;
+}
+
+message AbstractActionProto {
+  string id = 1;
+  oneof type {
+    ActionDoNothingProto doNothing = 10;
+    ActionIncreaseNumberValueProto increaseNumberValue = 11;
+    ActionRotateNamedValueProto rotateNamedValue = 12;
+    ActionSetNamedValueProto setNamedValue = 13;
+    ActionSetNumberValueProto setNumberValue = 14;
+  }
+}
+
+message ActionDoNothingProto {
+
+}
+
+message ActionIncreaseNumberValueProto {
+  string variableId = 1;
+  NumberExpressionProto expression = 2;
+}
+
+message ActionRotateNamedValueProto {
+  string variableId = 1;
+}
+
+message ActionSetNamedValueProto {
+  string variableId = 1;
+  NamedValueExpressionProto expression = 2;
+}
+
+message ActionSetNumberValueProto {
+  string variableId = 1;
+  NumberExpressionProto expression = 2;
+}

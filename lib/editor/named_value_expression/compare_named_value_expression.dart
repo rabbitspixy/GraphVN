@@ -1,4 +1,3 @@
-import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/material.dart';
 import 'package:graph_vn/editor/widgets/editor_rich_text.dart';
 import 'package:graph_vn/editor/modals/enum_selector.dart';
@@ -6,24 +5,15 @@ import 'package:graph_vn/editor/named_value_expression/constant_named_value_expr
 import 'package:graph_vn/editor/modals/named_number_expression_editor.dart';
 import 'package:graph_vn/editor/named_value_expression/named_value_expression.dart';
 import 'package:graph_vn/editor/variables.dart';
+import 'package:graph_vn/generated-proto/data.pb.dart';
 
-part 'package:graph_vn/generated/editor/named_value_expression/compare_named_value_expression.mapper.dart';
-
-@MappableClass()
-class CompareNamedValueExpression extends NamedValueExpression with CompareNamedValueExpressionMappable {
+class CompareNamedValueExpression extends NamedValueExpression {
   NamedValueExpression left = ConstantNamedValueExpression();
   CompareNamedValueOperator operator = CompareNamedValueOperator.equal;
   NamedValueExpression right = ConstantNamedValueExpression();
   
   
   CompareNamedValueExpression();
-
-  @MappableConstructor()
-  CompareNamedValueExpression.mappableConstructor({
-    required this.left,
-    required this.operator,
-    required this.right,
-  }) : super.mappableConstructor();
 
   @override
   String evaluate() {
@@ -55,9 +45,26 @@ class CompareNamedValueExpression extends NamedValueExpression with CompareNamed
   Widget widgetEditor() {
     return BooleanNamedValueExpressionEditor(expression: this);
   }
+
+  @override
+  NamedValueExpressionProto toProto() {
+    final result = CompareNamedValueExpressionProto();
+    result.left = left.toProto();
+    result.operator = operator.name;
+    result.right = right.toProto();
+    return NamedValueExpressionProto()
+      ..compareNamedValueExpression = result;
+  }
+
+  factory CompareNamedValueExpression.fromProto(CompareNamedValueExpressionProto proto) {
+    final result = CompareNamedValueExpression();
+    result.left = NamedValueExpression.fromProto(proto.left);
+    result.operator = CompareNamedValueOperator.values.byName(proto.operator);
+    result.right = NamedValueExpression.fromProto(proto.right);
+    return result;
+  }
 }
 
-@MappableEnum()
 enum CompareNamedValueOperator {
   equal('equal'),
   notEqual('not equal');

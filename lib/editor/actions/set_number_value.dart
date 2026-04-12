@@ -1,4 +1,3 @@
-import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/material.dart';
 import 'package:graph_vn/editor/widgets/editor_rich_text.dart';
 import 'package:graph_vn/editor/editor_state.dart';
@@ -8,22 +7,13 @@ import 'package:graph_vn/editor/modals/number_expression_editor.dart';
 import 'package:graph_vn/editor/actions/base.dart';
 import 'package:graph_vn/editor/modals/variable_selector.dart';
 import 'package:graph_vn/editor/variables.dart';
+import 'package:graph_vn/generated-proto/data.pb.dart';
 
-part 'package:graph_vn/generated/editor/actions/set_number_value.mapper.dart';
-
-@MappableClass()
-class SetNumberValue extends BaseAction with SetNumberValueMappable {
+class SetNumberValue extends BaseAction {
   String variableId = "";
   NumberExpression numberExpression = ConstantNumberExpression();
 
   SetNumberValue();
-
-  @MappableConstructor()
-  SetNumberValue.mappableConstructor({
-    required super.id,
-    required this.variableId,
-    required this.numberExpression,
-  }) : super.mappableConstructor();
 
   @override
   String actionText() {
@@ -36,6 +26,23 @@ class SetNumberValue extends BaseAction with SetNumberValueMappable {
     if (variable != null && variable is NumberVariable) {
       variable.value = numberExpression.evaluate();
     }
+  }
+
+  @override
+  AbstractActionProto toProto() {
+    final result = ActionSetNumberValueProto();
+    result.variableId = variableId;
+    result.expression = numberExpression.toProto();
+    return AbstractActionProto()
+        ..id = id
+        ..setNumberValue = result;
+  }
+
+  factory SetNumberValue.fromProto(ActionSetNumberValueProto proto) {
+    final result = SetNumberValue();
+    result.variableId = proto.variableId;
+    result.numberExpression = NumberExpression.fromProto(proto.expression);
+    return result;
   }
 }
 

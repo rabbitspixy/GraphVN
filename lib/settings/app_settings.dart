@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:graph_vn/app_settings_model.dart';
+import 'package:graph_vn/settings/app_settings_model.dart';
 import 'package:graph_vn/app_constants.dart';
 import 'package:graph_vn/main.dart';
 

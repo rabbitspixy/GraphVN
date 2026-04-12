@@ -1,14 +1,14 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 
-import 'package:graph_vn/app_settings.dart';
+import 'package:graph_vn/settings/app_settings.dart';
 import 'package:graph_vn/app_constants.dart';
 import 'package:graph_vn/editor/editor_node.dart';
 import 'package:graph_vn/editor/editor_transition.dart';
 import 'package:graph_vn/editor/project_data.dart';
 import 'package:graph_vn/editor/transition_position.dart';
 import 'package:graph_vn/editor/variables.dart';
+import 'package:graph_vn/generated-proto/data.pb.dart';
 import 'dart:ui';
 
 import 'package:graph_vn/main.dart';
@@ -65,7 +65,7 @@ class EditorState {
   static void _load(String projectDir) {
     closeProject();
 
-    final file = File("./${AppConstants.projectsDir}/$projectDir/main.json");
+    final file = File("./${AppConstants.projectsDir}/$projectDir/main.bin");
     if (!file.existsSync()) {
       EditorState.projectDir = projectDir;
       _stateUpdatedEventsController.add('');
@@ -73,7 +73,7 @@ class EditorState {
     }
     ProjectData projectData;
     try {
-      projectData = ProjectDataMapper.fromJson(file.readAsStringSync());
+      projectData = ProjectData.fromProto(ProjectProto.fromBuffer(file.readAsBytesSync()));
     } catch (e) {
       logger.e("Error loading project $projectDir", error: e);
       _stateUpdatedEventsController.add('');
@@ -120,14 +120,13 @@ class EditorState {
       transitions:  EditorState.transitions,
       structs: EditorState.structs,
     );
-    final file = File("./${AppConstants.projectsDir}/$projectDir/main.json");
+    final file = File("./${AppConstants.projectsDir}/$projectDir/main.bin");
     final dir = file.parent;
     if (!dir.existsSync()) {
       dir.createSync(recursive: true);
     }
-    final json = const JsonEncoder.withIndent('  ').convert(projectData.toMap());
-    ProjectDataMapper.fromJson(json); //deserialize check
-    file.writeAsStringSync(json);
+    var projectDataProto = projectData.toProto();
+    file.writeAsBytesSync(projectDataProto.writeToBuffer());
     logger.i('saving project done');
   }
 

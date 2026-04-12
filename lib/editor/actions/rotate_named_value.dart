@@ -1,24 +1,15 @@
-import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/material.dart';
 import 'package:graph_vn/editor/actions/base.dart';
 import 'package:graph_vn/editor/widgets/editor_rich_text.dart';
 import 'package:graph_vn/editor/editor_state.dart';
 import 'package:graph_vn/editor/modals/variable_selector.dart';
 import 'package:graph_vn/editor/variables.dart';
+import 'package:graph_vn/generated-proto/data.pb.dart';
 
-part 'package:graph_vn/generated/editor/actions/rotate_named_value.mapper.dart';
-
-@MappableClass()
-class RotateNamedValue extends BaseAction with RotateNamedValueMappable {
+class RotateNamedValue extends BaseAction {
   String variableId = "";
 
   RotateNamedValue();
-
-  @MappableConstructor()
-  RotateNamedValue.mappableConstructor({
-    required super.id,
-    required this.variableId,
-  }) : super.mappableConstructor();
 
   @override
   String actionText() {
@@ -35,6 +26,21 @@ class RotateNamedValue extends BaseAction with RotateNamedValueMappable {
       final nextValue = type.list[(index + 1) % type.list.length].id;
       variable.value = nextValue;
     }
+  }
+
+  @override
+  AbstractActionProto toProto() {
+    final result = ActionRotateNamedValueProto();
+    result.variableId = variableId;
+    return AbstractActionProto()
+        ..id = id
+        ..rotateNamedValue = result;
+  }
+
+  factory RotateNamedValue.fromProto(ActionRotateNamedValueProto proto) {
+    final result = RotateNamedValue();
+    result.variableId = proto.variableId;
+    return result;
   }
 }
 

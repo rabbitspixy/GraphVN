@@ -11,6 +11,9 @@
 .svn/
 .swiftpm/
 migrate_working_dir/
+
+lib/generated-proto
+lib/**/generated
 TASKS.md
 
 # IntelliJ related

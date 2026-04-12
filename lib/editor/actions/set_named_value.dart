@@ -1,4 +1,3 @@
-import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/material.dart';
 import 'package:graph_vn/editor/actions/base.dart';
 import 'package:graph_vn/editor/widgets/editor_rich_text.dart';
@@ -8,22 +7,13 @@ import 'package:graph_vn/editor/named_value_expression/constant_named_value_expr
 import 'package:graph_vn/editor/named_value_expression/named_value_expression.dart';
 import 'package:graph_vn/editor/modals/named_number_expression_editor.dart';
 import 'package:graph_vn/editor/variables.dart';
+import 'package:graph_vn/generated-proto/data.pb.dart';
 
-part 'package:graph_vn/generated/editor/actions/set_named_value.mapper.dart';
-
-@MappableClass()
-class SetNamedValue extends BaseAction with SetNamedValueMappable {
+class SetNamedValue extends BaseAction {
   String variableId = "";
   NamedValueExpression expression = ConstantNamedValueExpression();
 
   SetNamedValue();
-
-  @MappableConstructor()
-  SetNamedValue.mappableConstructor({
-    required super.id,
-    required this.variableId,
-    required this.expression,
-  }) : super.mappableConstructor();
 
   @override
   String actionText() {
@@ -36,6 +26,23 @@ class SetNamedValue extends BaseAction with SetNamedValueMappable {
     if (variable != null && variable is NamedVariable) {
       variable.value = expression.evaluate();
     }
+  }
+
+  @override
+  AbstractActionProto toProto() {
+    final result = ActionSetNamedValueProto();
+    result.variableId = variableId;
+    result.expression = expression.toProto();
+    return AbstractActionProto()
+        ..id = id
+        ..setNamedValue = result;
+  }
+
+  factory SetNamedValue.fromProto(ActionSetNamedValueProto proto) {
+    final result = SetNamedValue();
+    result.variableId = proto.variableId;
+    result.expression = NamedValueExpression.fromProto(proto.expression);
+    return result;
   }
 }
 

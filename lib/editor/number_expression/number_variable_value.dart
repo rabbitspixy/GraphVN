@@ -1,25 +1,16 @@
-
-import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/material.dart';
 import 'package:graph_vn/editor/widgets/editor_rich_text.dart';
 import 'package:graph_vn/editor/editor_state.dart';
 import 'package:graph_vn/editor/modals/variable_selector.dart';
 import 'package:graph_vn/editor/number_expression/number_expression.dart';
 import 'package:graph_vn/editor/variables.dart';
+import 'package:graph_vn/generated-proto/data.pb.dart';
 import 'package:rational/rational.dart';
 
-part 'package:graph_vn/generated/editor/number_expression/number_variable_value.mapper.dart';
-
-@MappableClass()
-class NumberVariableValue extends NumberExpression with NumberVariableValueMappable {
+class NumberVariableValue extends NumberExpression {
   String variableId = "";
 
   NumberVariableValue();
-
-  @MappableConstructor()
-  NumberVariableValue.mappableConstructor({
-    required this.variableId,
-  }) : super.mappableConstructor();
 
   @override
   String asText() {
@@ -44,6 +35,20 @@ class NumberVariableValue extends NumberExpression with NumberVariableValueMappa
   @override
   Widget widgetEditor() {
     return NumberVariableValueEditor(expression: this);
+  }
+
+  @override
+  NumberExpressionProto toProto() {
+    final result = NumberVariableValueProto();
+    result.variableId = variableId;
+    return NumberExpressionProto()
+        ..numberVariableValue = result;
+  }
+
+  factory NumberVariableValue.fromProto(NumberVariableValueProto proto) {
+    final result = NumberVariableValue();
+    result.variableId = proto.variableId;
+    return result;
   }
 }
 

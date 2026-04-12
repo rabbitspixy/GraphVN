@@ -1,13 +1,10 @@
-import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/services.dart';
 import 'package:graph_vn/editor/named_value_expression/named_value_expression.dart';
 import 'package:graph_vn/editor/transition_position.dart';
+import 'package:graph_vn/generated-proto/data.pb.dart';
 import 'package:uuid/uuid.dart';
 
-part 'editor_transition.mapper.dart';
-
-@MappableClass()
-class EditorTransition with EditorTransitionMappable {
+class EditorTransition {
   String id = Uuid().v4();
   String text = "";
   String from = "";
@@ -29,17 +26,27 @@ class EditorTransition with EditorTransitionMappable {
 
   EditorTransition();
 
-  @MappableConstructor()
-  EditorTransition.mappableConstructor({
-    required this.id,
-    required this.text,
-    required this.from,
-    required this.to,
-    this.weight = 1,
-    List<String>? procedureIds,
-    List<NamedValueExpression>? conditions,
-  }) {
-    this.procedureIds = procedureIds ?? [];
-    this.conditions = conditions ?? [];
+  EditorTransitionProto toProto() {
+    final result = EditorTransitionProto();
+    result.id = id;
+    result.text = text;
+    result.from = from;
+    result.to = to;
+    result.weight = weight;
+    result.procedureIds.addAll(procedureIds);
+    result.conditions.addAll(conditions.map((x) => x.toProto()));
+    return result;
+  }
+
+  factory EditorTransition.fromProto(EditorTransitionProto proto) {
+    final result = EditorTransition();
+    result.id = proto.id;
+    result.text = proto.text;
+    result.from = proto.from;
+    result.to = proto.to;
+    result.weight = proto.weight;
+    result.procedureIds.addAll(proto.procedureIds);
+    result.conditions.addAll(proto.conditions.map((x) => NamedValueExpression.fromProto(x)));
+    return result;
   }
 }

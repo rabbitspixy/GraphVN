@@ -2,7 +2,7 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_window_close/flutter_window_close.dart';
 import 'package:graph_vn/editor/widgets/project_selector.dart';
-import 'package:graph_vn/app_settings.dart';
+import 'package:graph_vn/settings/app_settings.dart';
 import 'package:graph_vn/common/rational_mapper.dart';
 import 'package:graph_vn/editor/editor_state.dart';
 import 'package:logger/logger.dart';

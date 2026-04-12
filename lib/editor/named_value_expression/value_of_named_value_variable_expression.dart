@@ -1,24 +1,15 @@
-
-import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/material.dart';
 import 'package:graph_vn/editor/widgets/editor_rich_text.dart';
 import 'package:graph_vn/editor/editor_state.dart';
 import 'package:graph_vn/editor/modals/variable_selector.dart';
 import 'package:graph_vn/editor/named_value_expression/named_value_expression.dart';
 import 'package:graph_vn/editor/variables.dart';
+import 'package:graph_vn/generated-proto/data.pb.dart';
 
-part 'package:graph_vn/generated/editor/named_value_expression/value_of_named_value_variable_expression.mapper.dart';
-
-@MappableClass()
-class ValueOfNamedValueVariableExpression extends NamedValueExpression with ValueOfNamedValueVariableExpressionMappable {
+class ValueOfNamedValueVariableExpression extends NamedValueExpression {
   String variableId = "";
 
   ValueOfNamedValueVariableExpression();
-
-  @MappableConstructor()
-  ValueOfNamedValueVariableExpression.mappableConstructor({
-    required this.variableId,
-  }) : super.mappableConstructor();
 
   @override
   String asText() {
@@ -43,6 +34,20 @@ class ValueOfNamedValueVariableExpression extends NamedValueExpression with Valu
   @override
   Widget widgetEditor() {
     return ValueOfNamedValueVariableExpressionEditor(expression: this);
+  }
+
+  @override
+  NamedValueExpressionProto toProto() {
+    final result = ValueOfNamedValueVariableExpressionProto();
+    result.variableId = variableId;
+    return NamedValueExpressionProto()
+        ..valueOfNamedValueVariableExpression = result;
+  }
+
+  factory ValueOfNamedValueVariableExpression.fromProto(ValueOfNamedValueVariableExpressionProto proto) {
+    final result = ValueOfNamedValueVariableExpression();
+    result.variableId = proto.variableId;
+    return result;
   }
 }
 

@@ -1,19 +1,11 @@
-import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/material.dart';
 import 'package:graph_vn/editor/widgets/editor_rich_text.dart';
 import 'package:graph_vn/editor/actions/base.dart';
+import 'package:graph_vn/generated-proto/data.pb.dart';
 
-part 'package:graph_vn/generated/editor/actions/do_nothing.mapper.dart';
-
-@MappableClass()
-class DoNothing extends BaseAction with DoNothingMappable {
+class DoNothing extends BaseAction {
 
   DoNothing();
-
-  @MappableConstructor()
-  DoNothing.mappableConstructor({
-    required super.id,
-  }) : super.mappableConstructor();
 
   @override
   String actionText() {
@@ -23,6 +15,19 @@ class DoNothing extends BaseAction with DoNothingMappable {
   @override
   void exec() {
     // do nothing
+  }
+
+  @override
+  AbstractActionProto toProto() {
+    final result = ActionDoNothingProto();
+    return AbstractActionProto()
+        ..id = id
+        ..doNothing = result;
+  }
+
+  factory DoNothing.fromProto(ActionDoNothingProto proto) {
+    final result = DoNothing();
+    return result;
   }
 }
 
