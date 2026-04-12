@@ -1,4 +1,5 @@
 import 'package:graph_vn/generated-proto/data.pb.dart';
+import 'package:graph_vn/image_generation/generate_image_metadata.dart';
 import 'package:uuid/uuid.dart';
 import 'package:fixnum/fixnum.dart';
 
@@ -11,6 +12,7 @@ class EditorNode {
   bool isStart = false;
   List<String> procedureIds = [];
   String imagePath = "";
+  List<GenerateImageMetadata> generateImageMetadata = [];
 
   bool get isEmpty => text.isEmpty;
 
@@ -26,6 +28,7 @@ class EditorNode {
     result.isStart = isStart;
     result.procedureIds.addAll(procedureIds);
     result.imagePath = imagePath;
+    result.generatedImages.addAll(generateImageMetadata.map((x) => x.toProto()));
     return result;
   }
 
@@ -39,6 +42,7 @@ class EditorNode {
     result.isStart = proto.isStart;
     result.procedureIds.addAll(proto.procedureIds);
     result.imagePath = proto.imagePath;
+    result.generateImageMetadata.addAll(proto.generatedImages.map((x) => GenerateImageMetadata.fromProto(x)));
     return result;
   }
 }

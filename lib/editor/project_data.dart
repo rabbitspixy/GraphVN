@@ -28,7 +28,7 @@ class ProjectData {
     return ProjectData(
         nodes: { for (var node in proto.nodes) node.id: EditorNode.fromProto(node) },
         transitions: [ for (var t in proto.transitions) EditorTransition.fromProto(t) ],
-        structs: [ for (var s in proto.structs) Struct.fromProto(s) ]
+        structs: [ for (var s in proto.structs) Struct.fromProto(s) ],
     );
   }
 }

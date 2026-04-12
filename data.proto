@@ -14,6 +14,7 @@ message EditorTransitionProto {
   int32 weight = 5;
   repeated string procedureIds = 6;
   repeated NamedValueExpressionProto conditions = 7;
+  repeated GenerateImageMetadataProto generatedImages = 8;
 }
 
 message NumberExpressionProto {
@@ -69,6 +70,7 @@ message EditorNodeProto {
   bool isStart = 6;
   repeated string procedureIds = 7;
   string imagePath = 8;
+  repeated GenerateImageMetadataProto generatedImages = 9;
 }
 
 message StructProto {
@@ -138,4 +140,11 @@ message ActionSetNamedValueProto {
 message ActionSetNumberValueProto {
   string variableId = 1;
   NumberExpressionProto expression = 2;
+}
+
+message GenerateImageMetadataProto {
+  string id = 1;
+  string style = 2;
+  string description = 3;
+  string llmGeneratedPrompt = 4;
 }
