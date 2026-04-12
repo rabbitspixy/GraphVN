@@ -21,6 +21,7 @@ class StructVariables extends StatefulWidget {
 }
 
 class _StructVariablesState extends State<StructVariables> {
+  int? _selectedIndex;
   @override
   Widget build(BuildContext context) {
     return Column(
