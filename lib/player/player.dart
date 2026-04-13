@@ -122,7 +122,9 @@ class Player {
       for (final variable in struct.variables) {
         var currentValueAsTextForPlayer = variable.currentValueAsTextForPlayer();
         if (currentValueAsTextForPlayer != null) {
-          st.writeln(currentValueAsTextForPlayer);
+          if (currentValueAsTextForPlayer.isNotEmpty) {
+            st.writeln(currentValueAsTextForPlayer);
+          }
         } else {
           st.writeln("${struct.name}-${variable.name}: ${variable.currentValueAsText()}");
         }

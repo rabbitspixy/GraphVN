@@ -174,7 +174,7 @@ class _StructVariablesState extends State<StructVariables> {
           ),
           SizedBox(height: 8),
           InputDecorator(
-            decoration: InputDecoration(labelText: 'Stringifiers'),
+            decoration: InputDecoration(labelText: 'Display as'),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -186,7 +186,7 @@ class _StructVariablesState extends State<StructVariables> {
                     itemBuilder: (context, idx) {
                       final s = variable.stringifiers[idx];
                       return ListTile(
-                        title: Text('Range: \${s.rangeStart} - \${s.rangeEnd}'),
+                        title: Text('${s.rangeStart} - ${s.rangeEnd}'),
                         subtitle: Text(s.template),
                         onTap: () async {
                           final updated = await editNumberVariableStringifier(context, s);
@@ -207,10 +207,10 @@ class _StructVariablesState extends State<StructVariables> {
                     itemBuilder: (context, idx) {
                       final s = variable.stringifiers[idx];
                       return ListTile(
-                        title: Text('Value ID: \${s.valueId}'),
+                        title: Text(EditorState.namedValue(s.valueId)?.name ?? "Unknown"),
                         subtitle: Text(s.template),
                         onTap: () async {
-                          final namedValues = EditorState.namedValueType(variable.typeId)?.list ?? [];
+                          final namedValues = EditorState.namedValuesType(variable.typeId)?.list ?? [];
                           final updated = await editNamedVariableStringifier(context, s, namedValues);
                           if (updated != null) {
                             setState(() {
@@ -225,7 +225,7 @@ class _StructVariablesState extends State<StructVariables> {
                 SizedBox(height: 8),
                 OutlinedButton.icon(
                   icon: Icon(Icons.add),
-                  label: Text('Add Stringifier'),
+                  label: Text('Add'),
                   onPressed: () async {
                     if (variable is NumberVariable) {
                       final newStringifier = NumberVariableStringifier(
@@ -240,7 +240,7 @@ class _StructVariablesState extends State<StructVariables> {
                         });
                       }
                     } else if (variable is NamedVariable) {
-                      final namedValues = EditorState.namedValueType(variable.typeId)?.list ?? [];
+                      final namedValues = EditorState.namedValuesType(variable.typeId)?.list ?? [];
                       final newStringifier = NamedVariableStringifier(
                         valueId: '',
                         template: '',

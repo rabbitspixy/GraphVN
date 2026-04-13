@@ -262,7 +262,11 @@ class EditorState {
     return namedVariableTypes.expand((t) => t.list).where((v) => v.id == valueId).firstOrNull;
   }
 
-  static NamedValuesType? namedValueType(String valueId) {
+  static NamedValuesType? namedValuesType(String typeId) {
+    return namedVariableTypes.where((t) => t.id == typeId).firstOrNull;
+  }
+
+  static NamedValuesType? namedValueTypeByValueId(String valueId) {
     return namedVariableTypes.where((t) => t.list.where((v) => v.id == valueId).isNotEmpty).firstOrNull;
   }
 

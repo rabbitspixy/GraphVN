@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:graph_vn/editor/named_variable_stringifier.dart';
 import 'package:graph_vn/editor/variables.dart';
+import 'package:graph_vn/main.dart';
 
 /// Opens a modal dialog to edit a [NamedVariableStringifier].
 /// The dialog shows a text field for the template and a vertical list of
@@ -42,13 +43,7 @@ Future<NamedVariableStringifier?> editNamedVariableStringifier(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  TextField(
-                    decoration: const InputDecoration(labelText: 'Template'),
-                    controller: TextEditingController(text: template),
-                    onChanged: (val) => template = val,
-                  ),
-                  const SizedBox(height: 16),
-                  const Text('Select Value ID:'),
+                  const Text('Select Value:'),
                   const SizedBox(height: 8),
                   Expanded(
                     child: ListView.builder(
@@ -75,6 +70,12 @@ Future<NamedVariableStringifier?> editNamedVariableStringifier(
                         );
                       },
                     ),
+                  ),
+                  const SizedBox(height: 16),
+                  TextField(
+                    decoration: const InputDecoration(labelText: 'Template'),
+                    controller: TextEditingController(text: template),
+                    onChanged: (val) => template = val,
                   ),
                 ],
               ),

@@ -30,7 +30,7 @@ class ConstantNamedValueExpression extends NamedValueExpression {
   }
 
   NamedValuesType? type() {
-    return EditorState.namedValueType(valueId);
+    return EditorState.namedValueTypeByValueId(valueId);
   }
 
   @override
