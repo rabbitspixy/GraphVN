@@ -1,11 +1,11 @@
 import 'package:flutter/services.dart';
-import 'package:graph_vn/editor/named_value_expression/named_value_expression.dart';
 import 'package:graph_vn/editor/transition_position.dart';
 import 'package:graph_vn/generated-proto/data.pb.dart';
 import 'package:graph_vn/image_generation/generate_image_metadata.dart';
 import 'package:uuid/uuid.dart';
 
 import 'actions/base.dart';
+import 'first_match_condition_item.dart';
 
 class EditorTransition {
   String id = Uuid().v4();
@@ -14,7 +14,7 @@ class EditorTransition {
   String to = "";
   //must be greater than 0
   int weight = 1;
-  List<NamedValueExpression> conditions = [];
+  List<FirstMatchConditionItem> conditions = [];
   List<GenerateImageMetadata> generateImageMetadata = [];
   List<BaseAction> actions = [];
 
@@ -37,7 +37,7 @@ class EditorTransition {
     result.from = from;
     result.to = to;
     result.weight = weight;
-    result.conditions.addAll(conditions.map((x) => x.toProto()));
+    // result.conditions.addAll(conditions.map((x) => x.toProto()));
     result.generatedImages.addAll(generateImageMetadata.map((x) => x.toProto()));
     result.actions.addAll(actions.map((x) => x.toProto()));
     return result;
@@ -50,7 +50,7 @@ class EditorTransition {
     result.from = proto.from;
     result.to = proto.to;
     result.weight = proto.weight;
-    result.conditions.addAll(proto.conditions.map((x) => NamedValueExpression.fromProto(x)));
+    // result.conditions.addAll(proto.conditions.map((x) => NamedValueExpression.fromProto(x)));
     result.generateImageMetadata.addAll(proto.generatedImages.map((x) => GenerateImageMetadata.fromProto(x)));
     result.actions.addAll(proto.actions.map((x) => BaseAction.fromProto(x)));
     return result;

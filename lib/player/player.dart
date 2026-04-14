@@ -5,6 +5,7 @@ import 'package:graph_vn/common/random_util.dart';
 import 'package:graph_vn/editor/actions/base.dart';
 import 'package:graph_vn/editor/editor_node.dart';
 import 'package:graph_vn/editor/editor_transition.dart';
+import 'package:graph_vn/editor/first_match_condition_item.dart';
 import 'package:graph_vn/editor/variables.dart';
 import 'package:graph_vn/player/components.dart';
 import 'package:graph_vn/editor/editor_state.dart';
@@ -93,7 +94,7 @@ class Player {
   static List<EditorTransition> allowedTransitionsForCurrentState() {
     return EditorState.transitions
       .where((t) => t.from == EditorState.currentNode)
-      .where((t) => t.conditions.every((c) => c.evaluate() == PredefinedNamedTypes.booleanTrue.id))
+      .where((t) => t.conditions.where((c) => c.expression.evaluate() == PredefinedNamedTypes.booleanTrue.id).firstOrNull?.action == FirstMatchResult.pass)
       .toList();
   }
 

@@ -29,7 +29,7 @@ Future<FirstMatchConditionItem?> editFirstMatchConditionItem(
   final editedExpression = await editNamedValueExpression(
     context,
     item.expression,
-    allowChangeType: false,
+    allowChangeType: true,
   );
   if (editedExpression == null) {
     return null; // user cancelled expression editing

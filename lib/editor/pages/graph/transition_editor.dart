@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:graph_vn/common/number_util.dart';
 import 'package:graph_vn/editor/editor_state.dart';
 import 'package:graph_vn/editor/editor_transition.dart';
+import 'package:graph_vn/editor/first_match_condition_item.dart';
+import 'package:graph_vn/editor/modals/first_match_condition_item_editor.dart';
 import 'package:graph_vn/editor/named_value_expression/constant_named_value_expression.dart';
 
 import '../../actions/do_nothing.dart';
@@ -66,15 +68,6 @@ class _TransitionEditorState extends State<TransitionEditor> {
     }
   }
 
-  String? _procedureName(String id) {
-    for (final struct in EditorState.structs) {
-      for (final proc in struct.procedures) {
-        if (proc.id == id) return proc.name;
-      }
-    }
-    return null;
-  }
-
   Widget _buildActionList() {
     final widgets = <Widget>[];
     for (final action in widget.transition.actions) {
@@ -108,19 +101,19 @@ class _TransitionEditorState extends State<TransitionEditor> {
   }
 
   Future<void> _addCondition() async {
-    final newCond = await editNamedValueExpression(context, ConstantNamedValueExpression());
-    if (newCond == null) {
+    final newCondition = await editFirstMatchConditionItem(context, FirstMatchConditionItem(expression: ConstantNamedValueExpression(), action: FirstMatchResult.pass));
+    if (newCondition == null) {
       return;
     }
     setState(() {
-      widget.transition.conditions.add(newCond);
+      widget.transition.conditions.add(newCondition);
       widget.onChange();
     });
   }
 
   Future<void> _editCondition(int index) async {
-    final cond = widget.transition.conditions[index];
-    final newCondition = await editNamedValueExpression(context, cond);
+    final condition = widget.transition.conditions[index];
+    final newCondition = await editFirstMatchConditionItem(context, condition);
     if (newCondition == null) {
       return;
     }
