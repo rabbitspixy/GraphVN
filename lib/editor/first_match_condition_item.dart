@@ -3,9 +3,9 @@ import 'package:graph_vn/editor/named_value_expression/named_value_expression.da
 
 class FirstMatchConditionItem {
   NamedValueExpression expression = ConstantNamedValueExpression();
-  FirstMatchAction action = FirstMatchAction.pass;
+  FirstMatchResult action = FirstMatchResult.pass;
 }
 
-enum FirstMatchAction {
-  pass, reject;
+enum FirstMatchResult {
+  pass, fail;
 }
