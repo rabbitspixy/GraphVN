@@ -37,8 +37,10 @@ class PlayerRootWidget extends StatelessWidget {
               },
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 16.0, bottom: 80.0),
+          Positioned(
+            bottom: 96.0,
+            left: 16.0,
+            right: 16.0,
             child: ValueListenableBuilder<List<ChoiseButton>>(
               valueListenable: Player.buttons,
               builder: (context, transitionList, child) {
