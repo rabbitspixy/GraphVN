@@ -8,10 +8,10 @@ List<DropdownMenuItem<NamedValueExpressionType>> _dropdownItems() {
 
 Future<NamedValueExpression?> editNamedValueExpression(
   BuildContext context,
-  NamedValueExpression namedNumberExpression, {
+  NamedValueExpression namedValueExpression, {
   bool allowChangeType = true,
 }) async {
-  NamedValueExpression current = namedNumberExpression;
+  NamedValueExpression current = namedValueExpression;
   NamedValueExpressionType currentType = NamedValueExpressionType.of(current);
 
   final result = await showDialog<NamedValueExpression>(

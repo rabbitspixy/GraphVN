@@ -7,7 +7,7 @@ import 'package:graph_vn/editor/modals/first_match_condition_item_editor.dart';
 import 'package:graph_vn/editor/named_value_expression/constant_named_value_expression.dart';
 
 import '../../actions/do_nothing.dart';
-import '../../modals/named_number_expression_editor.dart';
+import '../../modals/named_value_expression_editor.dart';
 import '../../modals/struct_action_editor.dart';
 
 class TransitionEditor extends StatefulWidget {
@@ -101,7 +101,7 @@ class _TransitionEditorState extends State<TransitionEditor> {
   }
 
   Future<void> _addCondition() async {
-    final newCondition = await editFirstMatchConditionItem(context, FirstMatchConditionItem(expression: ConstantNamedValueExpression(), action: FirstMatchResult.pass));
+    final newCondition = await editFirstMatchConditionItem(context, FirstMatchConditionItem(expression: ConstantNamedValueExpression(), result: FirstMatchResult.pass));
     if (newCondition == null) {
       return;
     }

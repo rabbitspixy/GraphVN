@@ -37,7 +37,7 @@ class CompareNumbersExpression extends NamedValueExpression {
 
   @override
   String asText() {
-    return "Is ${left.asText()} ${operator.str} ${right.asText()}?";
+    return "${left.asText()} ${operator.str} ${right.asText()}";
   }
 
   @override

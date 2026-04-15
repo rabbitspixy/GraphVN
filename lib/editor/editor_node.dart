@@ -14,6 +14,7 @@ class EditorNode {
   String imagePath = "";
   List<GenerateImageMetadata> generateImageMetadata = [];
   List<BaseAction> actions = [];
+  String speaker = "";
 
   bool get isEmpty => text.isEmpty;
 
@@ -30,6 +31,7 @@ class EditorNode {
     result.imagePath = imagePath;
     result.generatedImages.addAll(generateImageMetadata.map((x) => x.toProto()));
     result.actions.addAll(actions.map((x) => x.toProto()));
+    result.speaker = speaker;
     return result;
   }
 
@@ -44,6 +46,7 @@ class EditorNode {
     result.imagePath = proto.imagePath;
     result.generateImageMetadata.addAll(proto.generatedImages.map((x) => GenerateImageMetadata.fromProto(x)));
     result.actions.addAll(proto.actions.map((x) => BaseAction.fromProto(x)));
+    result.speaker = proto.speaker;
     return result;
   }
 }

@@ -66,7 +66,7 @@ class _ValueOfNamedValueVariableExpressionEditorState extends State<ValueOfNamed
       ETextSpan(
         text: EditorState.variableName(widget.expression.variableId), 
         tap: () async { 
-          final selectedVariable = await showVariableSelector(context, VariableType.namedNumber);
+          final selectedVariable = await showVariableSelector(context, VariableType.namedValue);
           if (selectedVariable != null) {
             widget.expression.variableId = selectedVariable.id;
             setState(() {});

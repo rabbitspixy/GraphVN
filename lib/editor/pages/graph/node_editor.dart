@@ -19,6 +19,7 @@ class NodeEditor extends StatefulWidget {
 
 class _NodeEditorState extends State<NodeEditor> {
   late TextEditingController _nodeTextController;
+  late TextEditingController _speakerTextController;
   late TextEditingController _labelTextController;
   late TextEditingController _imagePathController;
   bool _isStart = false;
@@ -27,12 +28,20 @@ class _NodeEditorState extends State<NodeEditor> {
   void initState() {
     super.initState();
     _nodeTextController = TextEditingController(text: widget.node.text);
+    _speakerTextController = TextEditingController(text: widget.node.speaker);
     _labelTextController = TextEditingController(text: widget.node.label);
     _imagePathController = TextEditingController(text: widget.node.imagePath);
     _isStart = widget.node.isStart;
     _nodeTextController.addListener(() {
       if (_nodeTextController.text != widget.node.text) {
         widget.node.text = _nodeTextController.text;
+        widget.onChange();
+        setState(() {});
+      }
+    });
+    _speakerTextController.addListener(() {
+      if (_speakerTextController.text != widget.node.speaker) {
+        widget.node.speaker = _speakerTextController.text;
         widget.onChange();
         setState(() {});
       }
@@ -107,6 +116,18 @@ class _NodeEditorState extends State<NodeEditor> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        const Text('Speaker:', style: TextStyle(fontWeight: FontWeight.bold)),
+        TextField(
+          controller: _speakerTextController,
+          maxLines: null,
+          decoration: const InputDecoration(border: OutlineInputBorder()),
+        ),
+        const Text('Text:', style: TextStyle(fontWeight: FontWeight.bold)),
+        TextField(
+          controller: _nodeTextController,
+          maxLines: null,
+          decoration: const InputDecoration(border: OutlineInputBorder()),
+        ),
         const Text('Label:', style: TextStyle(fontWeight: FontWeight.bold)),
         TextField(
           controller: _labelTextController,
@@ -116,12 +137,6 @@ class _NodeEditorState extends State<NodeEditor> {
         const Text('Image Path:', style: TextStyle(fontWeight: FontWeight.bold)),
         TextField(
           controller: _imagePathController,
-          maxLines: null,
-          decoration: const InputDecoration(border: OutlineInputBorder()),
-        ),
-        const Text('Text:', style: TextStyle(fontWeight: FontWeight.bold)),
-        TextField(
-          controller: _nodeTextController,
           maxLines: null,
           decoration: const InputDecoration(border: OutlineInputBorder()),
         ),

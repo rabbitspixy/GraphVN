@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:graph_vn/editor/first_match_condition_item.dart';
-import 'package:graph_vn/editor/modals/named_number_expression_editor.dart';
+import 'package:graph_vn/editor/modals/named_value_expression_editor.dart';
 import 'package:graph_vn/editor/named_value_expression/named_value_expression.dart';
 
 Future<FirstMatchConditionItem?> editFirstMatchConditionItem(
@@ -8,7 +8,7 @@ Future<FirstMatchConditionItem?> editFirstMatchConditionItem(
   FirstMatchConditionItem item,
 ) async {
   NamedValueExpression expression = item.expression;
-  FirstMatchResult result = item.action;
+  FirstMatchResult result = item.result;
 
   final updated = await showDialog<FirstMatchConditionItem>(
     context: context,
@@ -31,15 +31,13 @@ Future<FirstMatchConditionItem?> editFirstMatchConditionItem(
                       });
                     }
                   },
-                  child: const Text('Edit Expression'),
+                  child: Text(expression.asText()),
                 ),
               ],
             ),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('Expression: ${expression.asText()}'),
-                const SizedBox(height: 16),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -76,7 +74,7 @@ Future<FirstMatchConditionItem?> editFirstMatchConditionItem(
                   Navigator.of(context).pop(
                     FirstMatchConditionItem(
                       expression: expression,
-                      action: result,
+                      result: result,
                     ),
                   );
                 },

@@ -5,7 +5,7 @@ import 'package:graph_vn/editor/editor_state.dart';
 import 'package:graph_vn/editor/modals/variable_selector.dart';
 import 'package:graph_vn/editor/named_value_expression/constant_named_value_expression.dart';
 import 'package:graph_vn/editor/named_value_expression/named_value_expression.dart';
-import 'package:graph_vn/editor/modals/named_number_expression_editor.dart';
+import 'package:graph_vn/editor/modals/named_value_expression_editor.dart';
 import 'package:graph_vn/editor/variables.dart';
 import 'package:graph_vn/generated-proto/data.pb.dart';
 
@@ -62,7 +62,7 @@ class _SetNamedValueEditorState extends State<SetNamedValueEditor> {
       ETextSpan(
         text: EditorState.variableName(widget.action.variableId), 
         tap: () async { 
-          widget.action.variableId = (await showVariableSelector(context, VariableType.namedNumber))?.id ?? "";
+          widget.action.variableId = (await showVariableSelector(context, VariableType.namedValue))?.id ?? "";
           setState(() {});
         }
       ),

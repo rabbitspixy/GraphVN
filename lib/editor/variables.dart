@@ -176,7 +176,7 @@ class NamedVariable extends Variable {
 
 enum VariableType {
   number(type: NumberVariable),
-  namedNumber(type: NamedVariable)
+  namedValue(type: NamedVariable)
   ;
 
   const VariableType({required this.type});

@@ -37,7 +37,7 @@ class EditorTransition {
     result.from = from;
     result.to = to;
     result.weight = weight;
-    // result.conditions.addAll(conditions.map((x) => x.toProto()));
+    result.conditions.addAll(conditions.map((x) => x.toProto()));
     result.generatedImages.addAll(generateImageMetadata.map((x) => x.toProto()));
     result.actions.addAll(actions.map((x) => x.toProto()));
     return result;
@@ -50,7 +50,7 @@ class EditorTransition {
     result.from = proto.from;
     result.to = proto.to;
     result.weight = proto.weight;
-    // result.conditions.addAll(proto.conditions.map((x) => NamedValueExpression.fromProto(x)));
+    result.conditions.addAll(proto.conditions.map((x) => FirstMatchConditionItem.fromProto(x)));
     result.generateImageMetadata.addAll(proto.generatedImages.map((x) => GenerateImageMetadata.fromProto(x)));
     result.actions.addAll(proto.actions.map((x) => BaseAction.fromProto(x)));
     return result;

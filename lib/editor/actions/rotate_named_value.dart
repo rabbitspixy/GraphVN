@@ -60,7 +60,7 @@ class _RotateNamedValueEditorState extends State<RotateNamedValueEditor> {
       ETextSpan(
         text: EditorState.variableName(widget.action.variableId), 
         tap: () async { 
-          widget.action.variableId = (await showVariableSelector(context, VariableType.namedNumber))?.id ?? "";
+          widget.action.variableId = (await showVariableSelector(context, VariableType.namedValue))?.id ?? "";
           setState(() {});
         }
       ),

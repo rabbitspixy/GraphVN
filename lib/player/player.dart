@@ -94,8 +94,19 @@ class Player {
   static List<EditorTransition> allowedTransitionsForCurrentState() {
     return EditorState.transitions
       .where((t) => t.from == EditorState.currentNode)
-      .where((t) => t.conditions.where((c) => c.expression.evaluate() == PredefinedNamedTypes.booleanTrue.id).firstOrNull?.action == FirstMatchResult.pass)
+      .where((t) => _resolveTransitionConditions(t.conditions))
       .toList();
+  }
+
+  static bool _resolveTransitionConditions(List<FirstMatchConditionItem> conditions) {
+    if (conditions.isEmpty) {
+      return true;
+    }
+    final firstPassedCondition = conditions.where((c) => c.expression.evaluate() == PredefinedNamedTypes.booleanTrue.id).firstOrNull;
+    if (firstPassedCondition == null) {
+      return false;
+    }
+    return firstPassedCondition.result == FirstMatchResult.pass;
   }
 
   static void _updateStill() {
