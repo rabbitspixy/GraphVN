@@ -75,14 +75,23 @@ class _TransitionEditorState extends State<TransitionEditor> {
       widgets.add(
         ListTile(
           title: Text(actionText),
-          trailing: IconButton(
-            icon: const Icon(Icons.delete),
-            onPressed: () {
-              setState(() {
-                widget.transition.actions.remove(action);
-                widget.onChange();
-              });
-            },
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.edit),
+                onPressed: () => _editAction(action),
+              ),
+              IconButton(
+                icon: const Icon(Icons.delete),
+                onPressed: () {
+                  setState(() {
+                    widget.transition.actions.remove(action);
+                    widget.onChange();
+                  });
+                },
+              ),
+            ],
           ),
         ),
       );
