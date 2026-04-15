@@ -54,7 +54,7 @@ class PlayerRootWidget extends StatelessWidget {
             left: 0,
             right: 0,
             child: Align(
-              alignment: Alignment.bottomCenter,
+              alignment: Alignment.bottomLeft,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
