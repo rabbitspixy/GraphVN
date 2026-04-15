@@ -12,7 +12,7 @@ import 'package:graph_vn/editor/editor_state.dart';
 
 class Player {
   static final ValueNotifier<PlayerImageInfo> imageInfoNotifier = ValueNotifier<PlayerImageInfo>(PlayerImageInfo(path: ''));
-  static final ValueNotifier<String> speakerName = ValueNotifier<String>('Katya');
+  static final ValueNotifier<String> speakerName = ValueNotifier<String>('');
   static final ValueNotifier<String> narrativeText = ValueNotifier<String>('');
   static final ValueNotifier<String> statusText = ValueNotifier('');
   static final ValueNotifier<List<ChoiseButton>> buttons = ValueNotifier<List<ChoiseButton>>([]);
@@ -128,6 +128,7 @@ class Player {
         nt = nt.replaceAll("[${struct.name}->${variable.name}]", variable.currentValueAsText());
       }
     }
+    speakerName.value = node.speaker;
     narrativeText.value = nt;
 
     final st = StringBuffer();
@@ -174,6 +175,7 @@ class Player {
 
   static void clearState() {
     imageInfoNotifier.value = PlayerImageInfo();
+    speakerName.value = "";
     narrativeText.value = "";
     statusText.value = "";
     buttons.value = [];
