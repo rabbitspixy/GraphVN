@@ -61,18 +61,24 @@ class PlayerRootWidget extends StatelessWidget {
                   ValueListenableBuilder<String>(
                     valueListenable: Player.speakerName,
                     builder: (context, name, child) {
-                      return Text(
-                        name,
-                        style: const TextStyle(
-                          color: Color.fromARGB(255, 255, 255, 200),
-                          fontWeight: FontWeight.bold,
+                      return Padding(
+                        padding: const EdgeInsets.only(left: 16.0),
+                        child: Text(
+                          name,
+                          style: const TextStyle(
+                            color: Color.fromARGB(255, 255, 255, 200),
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.left,
                         ),
-                        textAlign: TextAlign.center,
                       );
                     },
                   ),
                   const SizedBox(height: 4.0),
-                  AnimatedNarrativeText(),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 24.0),
+                    child: AnimatedNarrativeText(),
+                  ),
                 ],
               ),
             ),
