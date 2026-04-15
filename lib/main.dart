@@ -9,7 +9,7 @@ import 'package:logger/logger.dart';
 import 'player/player.dart';
 import 'package:flutter/services.dart';
 import 'editor/widgets/editor.dart';
-import 'player/widgets/game_player.dart';
+import 'player/widgets/player_root_widget.dart';
 
 final logger = Logger();
 
@@ -117,12 +117,12 @@ class _RootWidgetState extends State<RootWidget> {
                     Visibility(
                       visible: _showEditor,
                       maintainState: true,
-                      child: const Editor(),
+                      child: const EditorRootWidget(),
                     ),
                     Visibility(
                       visible: !_showEditor,
                       maintainState: true,
-                      child: const GamePlayer(),
+                      child: const PlayerRootWidget(),
                     ),
                   ],
                 )

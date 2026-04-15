@@ -4,14 +4,14 @@ import 'package:graph_vn/editor/pages/project/editor_project_page.dart';
 import 'package:graph_vn/editor/pages/settings/editor_settings_page.dart';
 import 'package:graph_vn/editor/pages/variables/editor_variables_page.dart';
 
-class Editor extends StatefulWidget {
-  const Editor({super.key});
+class EditorRootWidget extends StatefulWidget {
+  const EditorRootWidget({super.key});
 
   @override
-  State<Editor> createState() => _EditorState();
+  State<EditorRootWidget> createState() => _EditorRootWidgetState();
 }
 
-class _EditorState extends State<Editor> {
+class _EditorRootWidgetState extends State<EditorRootWidget> {
   EditorPage _page = EditorPage.graph;
 
   Widget buildPageButton(EditorPage page, IconData iconData) {

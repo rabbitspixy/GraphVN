@@ -4,8 +4,8 @@ import 'background_image.dart';
 import 'transition_buttons.dart';
 import '../player.dart';
 
-class GamePlayer extends StatelessWidget {
-  const GamePlayer({super.key});
+class PlayerRootWidget extends StatelessWidget {
+  const PlayerRootWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
