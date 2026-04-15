@@ -17,6 +17,7 @@ class _AnimatedNarrativeTextState extends State<AnimatedNarrativeText> {
   @override
   void initState() {
     super.initState();
+    Player.narrativeText.addListener(_onNarrativeTextChanged);
     _startAnimation();
   }
 
@@ -37,18 +38,16 @@ class _AnimatedNarrativeTextState extends State<AnimatedNarrativeText> {
     });
   }
 
-  @override
-  void didUpdateWidget(covariant AnimatedNarrativeText oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (Player.narrativeText.value != _displayedText) {
-      _startAnimation();
-    }
-  }
 
   @override
   void dispose() {
+    Player.narrativeText.removeListener(_onNarrativeTextChanged);
     _timer?.cancel();
     super.dispose();
+  }
+
+  void _onNarrativeTextChanged() {
+    _startAnimation();
   }
 
   @override
