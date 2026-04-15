@@ -70,18 +70,21 @@ class _TransitionButtonsState extends State<TransitionButtons> {
       mainAxisSize: MainAxisSize.min,
       children: List.generate(_transitions.length, (index) {
         final transition = _transitions[index];
-        return AnimatedOpacity(
-          opacity: _opacity,
-          duration: const Duration(milliseconds: 500),
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color.fromARGB(183, 21, 19, 43),
-              foregroundColor: Colors.white,
-              side: const BorderSide(color: Color.fromARGB(223, 206, 206, 206)),
-              elevation: 0,
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 8.0),
+          child: AnimatedOpacity(
+            opacity: _opacity,
+            duration: const Duration(milliseconds: 500),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color.fromARGB(183, 21, 19, 43),
+                foregroundColor: Colors.white,
+                side: const BorderSide(color: Color.fromARGB(223, 206, 206, 206)),
+                elevation: 0,
+              ),
+              onPressed: () => Player.updateState(useTransition: transition.transitionId),
+              child: Text(transition.text),
             ),
-            onPressed: () => Player.updateState(useTransition: transition.transitionId),
-            child: Text(transition.text),
           ),
         );
       }),
