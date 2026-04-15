@@ -21,7 +21,15 @@ message NumberExpressionProto {
   oneof type {
     ConstantNumberExpressionProto constantNumberExpression = 1;
     NumberVariableValueProto numberVariableValue = 2;
+    RandomNumberExpressionProto randomNumberExpression = 3;
   }
+}
+
+message RandomNumberExpressionProto {
+  NumberExpressionProto from = 1;
+  NumberExpressionProto to = 2;
+  NumberExpressionProto diceCount = 3;
+  NumberExpressionProto stepBy = 4;
 }
 
 message ConstantNumberExpressionProto {

@@ -2,6 +2,11 @@ import 'dart:math';
 
 import 'package:graph_vn/editor/editor_transition.dart';
 
+int randomInt(int fromInclusive, int toInclusive) {
+  var diff = toInclusive - fromInclusive;
+  return Random().nextInt(diff + 1) + fromInclusive;
+}
+
 double random(double from, double to) {
   return from + Random().nextDouble() * (to - from);
 }

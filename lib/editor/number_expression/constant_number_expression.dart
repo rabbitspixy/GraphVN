@@ -11,6 +11,12 @@ class ConstantNumberExpression extends NumberExpression {
 
   ConstantNumberExpression();
 
+  factory ConstantNumberExpression.withInitialValue(Rational initialValue) {
+    final result = ConstantNumberExpression();
+    result.value = initialValue;
+    return result;
+  }
+
   @override
   Rational evaluate() {
     return value;
