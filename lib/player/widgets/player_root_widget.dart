@@ -3,7 +3,7 @@ import 'package:graph_vn/player/components.dart';
 import 'background_image.dart';
 import 'transition_buttons.dart';
 import '../player.dart';
-import 'animated_narrative_text.dart';
+import 'speaker_narrative_block.dart';
 
 class PlayerRootWidget extends StatelessWidget {
   const PlayerRootWidget({super.key});
@@ -37,50 +37,22 @@ class PlayerRootWidget extends StatelessWidget {
               },
             ),
           ),
-          Align(
-            alignment: Alignment.bottomLeft,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 16.0, bottom: 16.0),
-              child: ValueListenableBuilder<List<ChoiseButton>>(
-                valueListenable: Player.buttons,
-                builder: (context, transitionList, child) {
-                  return TransitionButtons(transitions: transitionList);
-                },
-              ),
+          Padding(
+            padding: const EdgeInsets.only(left: 16.0, bottom: 80.0),
+            child: ValueListenableBuilder<List<ChoiseButton>>(
+              valueListenable: Player.buttons,
+              builder: (context, transitionList, child) {
+                return TransitionButtons(transitions: transitionList);
+              },
             ),
           ),
           Positioned(
-            bottom: 60,
+            bottom: 0,
             left: 0,
             right: 0,
-            child: Align(
-              alignment: Alignment.bottomLeft,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ValueListenableBuilder<String>(
-                    valueListenable: Player.speakerName,
-                    builder: (context, name, child) {
-                      return Padding(
-                        padding: const EdgeInsets.only(left: 16.0),
-                        child: Text(
-                          name,
-                          style: const TextStyle(
-                            color: Color.fromARGB(255, 255, 255, 200),
-                            fontWeight: FontWeight.bold,
-                          ),
-                          textAlign: TextAlign.left,
-                        ),
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 4.0),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 24.0),
-                    child: AnimatedNarrativeText(),
-                  ),
-                ],
-              ),
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 16.0),
+              child: const SpeakerNarrativeBlock(),
             ),
           ),
         ],
