@@ -11,7 +11,7 @@ class PlayerRootWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: Player.useRandomTransitionIfAllowed,
+      onTap: Player.onScreenClick,
       child: Stack(
         children: [
           const BackgroundImageWidget(),

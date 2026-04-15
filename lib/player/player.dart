@@ -17,6 +17,10 @@ class Player {
   static final ValueNotifier<String> statusText = ValueNotifier('');
   static final ValueNotifier<List<ChoiseButton>> buttons = ValueNotifier<List<ChoiseButton>>([]);
 
+  static void onScreenClick() {
+    useRandomTransitionIfAllowed();
+  }
+
   static void useRandomTransitionIfAllowed() {
     final allowedTransitions = allowedTransitionsForCurrentState();
     if (allowedTransitions.any((x) => x.isButton)) {
