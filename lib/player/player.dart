@@ -12,6 +12,7 @@ import 'package:graph_vn/editor/editor_state.dart';
 
 class Player {
   static final ValueNotifier<PlayerImageInfo> imageInfoNotifier = ValueNotifier<PlayerImageInfo>(PlayerImageInfo(path: ''));
+  static final ValueNotifier<String> speakerName = ValueNotifier<String>('Katya');
   static final ValueNotifier<String> narrativeText = ValueNotifier<String>('');
   static final ValueNotifier<String> statusText = ValueNotifier('');
   static final ValueNotifier<List<ChoiseButton>> buttons = ValueNotifier<List<ChoiseButton>>([]);
