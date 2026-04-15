@@ -55,7 +55,7 @@ class _AnimatedNarrativeTextState extends State<AnimatedNarrativeText> {
     return Text(
       _displayedText,
       style: const TextStyle(color: Colors.white),
-      textAlign: TextAlign.center,
+      textAlign: TextAlign.left,
       softWrap: true,
     );
   }
