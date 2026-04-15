@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:graph_vn/common/number_util.dart';
+import 'package:graph_vn/editor/actions/base.dart';
 import 'package:graph_vn/editor/editor_state.dart';
 import 'package:graph_vn/editor/editor_transition.dart';
 import 'package:graph_vn/editor/first_match_condition_item.dart';
@@ -7,7 +8,6 @@ import 'package:graph_vn/editor/modals/first_match_condition_item_editor.dart';
 import 'package:graph_vn/editor/named_value_expression/constant_named_value_expression.dart';
 
 import '../../actions/do_nothing.dart';
-import '../../modals/named_value_expression_editor.dart';
 import '../../modals/struct_action_editor.dart';
 
 class TransitionEditor extends StatefulWidget {
@@ -63,6 +63,17 @@ class _TransitionEditorState extends State<TransitionEditor> {
     if (action != null) {
       setState(() {
         widget.transition.actions.add(action);
+        widget.onChange();
+      });
+    }
+  }
+
+  Future<void> _editAction(BaseAction action) async {
+    final newAction = await editStructAction(context, action);
+    if (newAction != null) {
+      setState(() {
+        final index = widget.transition.actions.indexOf(action);
+        widget.transition.actions.replaceRange(index, index + 1, [action]);
         widget.onChange();
       });
     }

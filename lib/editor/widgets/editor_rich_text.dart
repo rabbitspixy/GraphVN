@@ -27,7 +27,7 @@ class EditorRichText extends StatelessWidget {
         style: TextStyle(color: Colors.black),
         children: [
           ...spans,
-          TextSpan(text: tooltip ?? "", style: TextStyle(color: Colors.grey))
+          TextSpan(text: "\n\n\n${tooltip ?? ""}", style: TextStyle(color: Colors.grey, fontStyle: FontStyle.italic))
         ],
       ),
     );

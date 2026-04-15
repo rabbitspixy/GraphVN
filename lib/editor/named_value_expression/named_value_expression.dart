@@ -35,6 +35,11 @@ enum NamedValueExpressionType {
     create: ConstantNamedValueExpression.new,
     title: 'Constant',
   ),
+  variableValue(
+    type: ValueOfNamedValueVariableExpression,
+    create: ValueOfNamedValueVariableExpression.new,
+    title: 'Value of variable',
+  ),
   compareNumbers(
     type: CompareNumbersExpression,
     create: CompareNumbersExpression.new,
@@ -45,11 +50,7 @@ enum NamedValueExpressionType {
     create: CompareNamedValueExpression.new,
     title: 'Compare named values',
   ),
-  variableValue(
-    type: ValueOfNamedValueVariableExpression,
-    create: ValueOfNamedValueVariableExpression.new,
-    title: 'Value of variable',
-  );
+  ;
 
   final Type type;
   final NamedValueExpression Function() create;

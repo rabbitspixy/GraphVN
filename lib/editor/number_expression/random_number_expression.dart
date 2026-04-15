@@ -6,13 +6,14 @@ import 'package:graph_vn/editor/number_expression/constant_number_expression.dar
 import 'package:graph_vn/editor/number_expression/number_expression.dart';
 import 'package:graph_vn/editor/widgets/editor_rich_text.dart';
 import 'package:graph_vn/generated-proto/data.pb.dart';
+import 'package:indent/indent.dart';
 import 'package:rational/rational.dart';
 
 class RandomNumberExpression extends NumberExpression {
-  NumberExpression from = ConstantNumberExpression();
-  NumberExpression to = ConstantNumberExpression();
+  NumberExpression from = ConstantNumberExpression.withInitialValue(Rational.fromInt(1));
+  NumberExpression to = ConstantNumberExpression.withInitialValue(Rational.fromInt(20));
   NumberExpression diceCount = ConstantNumberExpression.withInitialValue(Rational.one);
-  NumberExpression stepBy = ConstantNumberExpression();
+  NumberExpression stepBy = ConstantNumberExpression.withInitialValue(Rational.one);
 
   RandomNumberExpression();
 
@@ -40,7 +41,7 @@ class RandomNumberExpression extends NumberExpression {
 
   @override
   bool isValid() {
-    return true;
+    return diceCount.evaluate() >= Rational.one && stepBy.evaluate() > Rational.zero;
   }
 
   @override
@@ -134,7 +135,7 @@ class _RandomNumberExpressionEditorState extends State<RandomNumberExpressionEdi
       from 0 to 1 step by 1 possible values - 0, 1
       from 0 to 1 step by 0.25 possible values - 0, 0.25, 0.5, 0.75, 1
       from 1 to 6 step by 2 possible values - 1, 3, 5
-    """,
+    """.unindent(),
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:graph_vn/editor/actions/base.dart';
 import 'package:graph_vn/editor/actions/do_nothing.dart';
 import 'package:graph_vn/editor/editor_node.dart';
 import 'package:graph_vn/editor/editor_state.dart';
@@ -74,6 +75,17 @@ class _NodeEditorState extends State<NodeEditor> {
     if (action != null) {
       setState(() {
         widget.node.actions.add(action);
+        widget.onChange();
+      });
+    }
+  }
+
+  Future<void> _editAction(BaseAction action) async {
+    final newAction = await editStructAction(context, action);
+    if (newAction != null) {
+      setState(() {
+        final index = widget.node.actions.indexOf(action);
+        widget.node.actions.replaceRange(index, index + 1, [action]);
         widget.onChange();
       });
     }
