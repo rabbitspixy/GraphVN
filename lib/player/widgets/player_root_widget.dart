@@ -38,23 +38,24 @@ class PlayerRootWidget extends StatelessWidget {
             ),
           ),
           Positioned(
-            bottom: 96.0,
-            left: 16.0,
-            right: 16.0,
-            child: ValueListenableBuilder<List<ChoiseButton>>(
-              valueListenable: Player.buttons,
-              builder: (context, transitionList, child) {
-                return TransitionButtons(transitions: transitionList);
-              },
-            ),
-          ),
-          Positioned(
             bottom: 0,
             left: 0,
             right: 0,
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 16.0),
-              child: const SpeakerNarrativeBlock(),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ValueListenableBuilder<List<ChoiseButton>>(
+                  valueListenable: Player.buttons,
+                  builder: (context, transitionList, child) {
+                    return TransitionButtons(transitions: transitionList);
+                  },
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 16.0),
+                  child: SizedBox.expand(child: const SpeakerNarrativeBlock()),
+                ),
+              ],
             ),
           ),
         ],
