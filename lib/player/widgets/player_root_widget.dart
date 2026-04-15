@@ -3,6 +3,7 @@ import 'package:graph_vn/player/components.dart';
 import 'background_image.dart';
 import 'transition_buttons.dart';
 import '../player.dart';
+import 'animated_narrative_text.dart';
 
 class PlayerRootWidget extends StatelessWidget {
   const PlayerRootWidget({super.key});
@@ -54,24 +55,25 @@ class PlayerRootWidget extends StatelessWidget {
             right: 0,
             child: Align(
               alignment: Alignment.bottomCenter,
-              child: ValueListenableBuilder<String>(
-                valueListenable: Player.narrativeText,
-                builder: (context, text, child) {
-                  return Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 16.0),
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(120, 0, 0, 0),
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    child: Text(
-                      text,
-                      style: const TextStyle(color: Colors.white),
-                      textAlign: TextAlign.center,
-                      softWrap: true,
-                    ),
-                  );
-                },
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ValueListenableBuilder<String>(
+                    valueListenable: Player.speakerName,
+                    builder: (context, name, child) {
+                      return Text(
+                        name,
+                        style: const TextStyle(
+                          color: Color.fromARGB(255, 255, 255, 200),
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 4.0),
+                  AnimatedNarrativeText(),
+                ],
               ),
             ),
           ),
