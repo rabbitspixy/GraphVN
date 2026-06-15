@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:graph_vn/editor/struct.dart';
-import 'package:graph_vn/editor/struct_procedure.dart';
 import 'package:graph_vn/settings/app_settings.dart';
 import 'package:graph_vn/app_constants.dart';
 import 'package:graph_vn/editor/editor_node.dart';
@@ -224,17 +223,9 @@ class EditorState {
   static Struct? structByVariableId(String variableId) {
     return EditorState.structs.where((s) => s.variables.any((v) => v.id == variableId)).firstOrNull;
   }
-
-  static Struct? structByProcedureId(String procedureId) {
-    return EditorState.structs.where((s) => s.procedures.any((x) => x.id == procedureId)).firstOrNull;
-  }
   
   static Variable? variableById(String variableId) {
     return EditorState.structByVariableId(variableId)?.variableById(variableId);
-  }
-
-  static StructProcedure? procedureById(String procedureId) {
-    return EditorState.structByProcedureId(procedureId)?.procedureById(procedureId);
   }
 
   static String variableName(String variableId) {
@@ -247,15 +238,6 @@ class EditorState {
       return "variable";
     }
     return "${struct.name} - ${variable.name}";
-  }
-
-  static String structProcedureName(String id) {
-    for (final struct in EditorState.structs) {
-      for (final proc in struct.procedures) {
-        if (proc.id == id) return proc.name;
-      }
-    }
-    return "procedure";
   }
 
   static NamedValue? namedValue(String valueId) {

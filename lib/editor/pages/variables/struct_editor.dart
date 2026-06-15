@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:graph_vn/editor/pages/variables/struct_procedures.dart';
 import 'package:graph_vn/editor/pages/variables/struct_variables.dart';
 import 'package:graph_vn/editor/struct.dart';
 
@@ -43,7 +42,6 @@ class _StructEditorState extends State<StructEditor> with TickerProviderStateMix
             controller: _tabController,
             children: [
               StructVariables(struct: widget.struct),
-              StructProcedures(struct: widget.struct),
             ],
           ),
         ),

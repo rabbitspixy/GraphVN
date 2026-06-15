@@ -1,4 +1,3 @@
-import 'package:graph_vn/editor/actions/base.dart';
 import 'package:graph_vn/generated-proto/data.pb.dart';
 import 'package:graph_vn/image_generation/generate_image_metadata.dart';
 import 'package:uuid/uuid.dart';
@@ -13,8 +12,8 @@ class EditorNode {
   bool isStart = false;
   String imagePath = "";
   List<GenerateImageMetadata> generateImageMetadata = [];
-  List<BaseAction> actions = [];
   String speaker = "";
+  String jsAction = "";
 
   bool get isEmpty => text.isEmpty;
 
@@ -30,8 +29,8 @@ class EditorNode {
     result.isStart = isStart;
     result.imagePath = imagePath;
     result.generatedImages.addAll(generateImageMetadata.map((x) => x.toProto()));
-    result.actions.addAll(actions.map((x) => x.toProto()));
     result.speaker = speaker;
+    result.jsAction = jsAction;
     return result;
   }
 
@@ -45,8 +44,8 @@ class EditorNode {
     result.isStart = proto.isStart;
     result.imagePath = proto.imagePath;
     result.generateImageMetadata.addAll(proto.generatedImages.map((x) => GenerateImageMetadata.fromProto(x)));
-    result.actions.addAll(proto.actions.map((x) => BaseAction.fromProto(x)));
     result.speaker = proto.speaker;
+    result.jsAction = proto.jsAction;
     return result;
   }
 }

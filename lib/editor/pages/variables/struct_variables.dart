@@ -1,8 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:graph_vn/editor/named_value_expression/constant_named_value_expression.dart';
-import 'package:graph_vn/editor/modals/named_value_expression_editor.dart';
-import 'package:graph_vn/editor/number_expression/constant_number_expression.dart';
-import 'package:graph_vn/editor/modals/number_expression_editor.dart';
 import 'package:graph_vn/editor/modals/add_variable_dialog.dart';
 import 'package:graph_vn/editor/modals/rename_dialog.dart';
 import 'package:graph_vn/editor/variables.dart';
@@ -119,19 +115,7 @@ class _StructVariablesState extends State<StructVariables> {
             decoration: InputDecoration(labelText: 'Current value'),
             child: GestureDetector(
               onTap: () async {
-                if (variable is NumberVariable) {
-                  final fake = ConstantNumberExpression()..value = variable.value;
-                  final number = (await editNumberExpression(context, fake, allowChangeType: false))?.evaluate();
-                  if (number != null) {
-                    variable.value = number;
-                  }
-                } else if (variable is NamedVariable) {
-                  final fake = ConstantNamedValueExpression()..valueId = variable.value;
-                  final newVal = (await editNamedValueExpression(context, fake, allowChangeType: false))?.evaluate();
-                  if (newVal != null) {
-                    variable.value = newVal;
-                  }
-                }
+                // TODO: variable.value = value from modal dialog
                 setState(() {});
               },
               child: MouseRegion(
@@ -148,19 +132,7 @@ class _StructVariablesState extends State<StructVariables> {
             decoration: InputDecoration(labelText: 'Initial value'),
             child: GestureDetector(
               onTap: () async {
-                if (variable is NumberVariable) {
-                  final fake = ConstantNumberExpression()..value = variable.initialValue;
-                  final number = (await editNumberExpression(context, fake, allowChangeType: false))?.evaluate();
-                  if (number != null) {
-                    variable.initialValue = number;
-                  }
-                } else if (variable is NamedVariable) {
-                  final fake = ConstantNamedValueExpression()..valueId = variable.initialValue;
-                  final newVal = (await editNamedValueExpression(context, fake, allowChangeType: false))?.evaluate();
-                  if (newVal != null) {
-                    variable.initialValue = newVal;
-                  }
-                }
+                // TODO: variable.initialValue = value from modal dialog
                 setState(() {});
               },
               child: MouseRegion(

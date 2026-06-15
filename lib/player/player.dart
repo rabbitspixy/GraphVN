@@ -2,11 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:graph_vn/common/random_util.dart';
-import 'package:graph_vn/editor/actions/base.dart';
 import 'package:graph_vn/editor/editor_node.dart';
 import 'package:graph_vn/editor/editor_transition.dart';
-import 'package:graph_vn/editor/first_match_condition_item.dart';
-import 'package:graph_vn/editor/variables.dart';
 import 'package:graph_vn/player/components.dart';
 import 'package:graph_vn/editor/editor_state.dart';
 
@@ -59,12 +56,12 @@ class Player {
     int maxIterations = 10000;
     while (transition != null || node != null) {
       if (transition != null) {
-        _runActions(transition.actions);
+        _runActions(transition.jsAction);
         node = EditorState.nodes[transition.to];
         transition = null;
       }
       if (node != null) {
-        _runActions(node.actions);
+        _runActions(node.jsAction);
         EditorState.currentNode = node.id;
         if (node.isEmpty) {
           final allowedTransitions = Player.allowedTransitionsForCurrentState();
@@ -84,34 +81,19 @@ class Player {
     _updateStill();
   }
 
-  static void _runProcedures(List<String> ids) {
-    for (final actionId in ids) {
-      EditorState.procedureById(actionId)?.exec();
-    }
-  }
+  static void _runActions(String jsAction) {
 
-  static void _runActions(List<BaseAction> actions) {
-    for (final action in actions) {
-      action.exec();
-    }
   }
 
   static List<EditorTransition> allowedTransitionsForCurrentState() {
     return EditorState.transitions
       .where((t) => t.from == EditorState.currentNode)
-      .where((t) => _resolveTransitionConditions(t.conditions))
+      .where((t) => _resolveTransitionConditions(t.jsCondition))
       .toList();
   }
 
-  static bool _resolveTransitionConditions(List<FirstMatchConditionItem> conditions) {
-    if (conditions.isEmpty) {
-      return true;
-    }
-    final firstPassedCondition = conditions.where((c) => c.expression.evaluate() == PredefinedNamedTypes.booleanTrue.id).firstOrNull;
-    if (firstPassedCondition == null) {
-      return false;
-    }
-    return firstPassedCondition.result == FirstMatchResult.pass;
+  static bool _resolveTransitionConditions(String jsCondition) {
+    return true;
   }
 
   static void _updateStill() {

@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:graph_vn/editor/actions/base.dart';
-import 'package:graph_vn/editor/actions/do_nothing.dart';
 import 'package:graph_vn/editor/editor_node.dart';
 import 'package:graph_vn/editor/editor_state.dart';
-import 'package:graph_vn/editor/modals/struct_action_editor.dart';
 
 class NodeEditor extends StatefulWidget {
   final EditorNode node;
@@ -70,68 +67,6 @@ class _NodeEditorState extends State<NodeEditor> {
     super.dispose();
   }
 
-  Future<void> _addAction() async {
-    final action = await editStructAction(context, DoNothing());
-    if (action != null) {
-      setState(() {
-        widget.node.actions.add(action);
-        widget.onChange();
-      });
-    }
-  }
-
-  Future<void> _editAction(BaseAction action) async {
-    final newAction = await editStructAction(context, action);
-    if (newAction != null) {
-      setState(() {
-        final index = widget.node.actions.indexOf(action);
-        widget.node.actions.replaceRange(index, index + 1, [action]);
-        widget.onChange();
-      });
-    }
-  }
-
-  Widget _buildActionList() {
-    final widgets = <Widget>[];
-    for (final action in widget.node.actions) {
-      final actionText = action.actionText();
-      widgets.add(
-        ListTile(
-          title: Text(actionText),
-          trailing: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              IconButton(
-                icon: const Icon(Icons.edit),
-                onPressed: () => _editAction(action),
-              ),
-              IconButton(
-                icon: const Icon(Icons.delete),
-                onPressed: () {
-                  setState(() {
-                    widget.node.actions.remove(action);
-                    widget.onChange();
-                  });
-                },
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-    widgets.add(
-      SizedBox(
-        width: double.infinity,
-        child: ElevatedButton.icon(
-          onPressed: _addAction,
-          icon: const Icon(Icons.add),
-          label: const Text('Add Action'),
-        ),
-      ),
-    );
-    return Column(children: widgets);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -176,9 +111,6 @@ class _NodeEditorState extends State<NodeEditor> {
             const Text('Start Node'),
           ],
         ),
-        const SizedBox(height: 8),
-        const Text('Actions:', style: TextStyle(fontWeight: FontWeight.bold)),
-        _buildActionList(),
         const SizedBox(height: 8),
         SizedBox(
           width: double.infinity,

@@ -1,14 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:graph_vn/common/number_util.dart';
-import 'package:graph_vn/editor/actions/base.dart';
 import 'package:graph_vn/editor/editor_state.dart';
 import 'package:graph_vn/editor/editor_transition.dart';
-import 'package:graph_vn/editor/first_match_condition_item.dart';
-import 'package:graph_vn/editor/modals/first_match_condition_item_editor.dart';
-import 'package:graph_vn/editor/named_value_expression/constant_named_value_expression.dart';
-
-import '../../actions/do_nothing.dart';
-import '../../modals/struct_action_editor.dart';
 
 class TransitionEditor extends StatefulWidget {
   final EditorTransition transition;
@@ -58,133 +51,6 @@ class _TransitionEditorState extends State<TransitionEditor> {
     super.dispose();
   }
 
-  Future<void> _addAction() async {
-    final action = await editStructAction(context, DoNothing());
-    if (action != null) {
-      setState(() {
-        widget.transition.actions.add(action);
-        widget.onChange();
-      });
-    }
-  }
-
-  Future<void> _editAction(BaseAction action) async {
-    final newAction = await editStructAction(context, action);
-    if (newAction != null) {
-      setState(() {
-        final index = widget.transition.actions.indexOf(action);
-        widget.transition.actions.replaceRange(index, index + 1, [action]);
-        widget.onChange();
-      });
-    }
-  }
-
-  Widget _buildActionList() {
-    final widgets = <Widget>[];
-    for (final action in widget.transition.actions) {
-      final actionText = action.actionText();
-      widgets.add(
-        ListTile(
-          title: Text(actionText),
-          trailing: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              IconButton(
-                icon: const Icon(Icons.edit),
-                onPressed: () => _editAction(action),
-              ),
-              IconButton(
-                icon: const Icon(Icons.delete),
-                onPressed: () {
-                  setState(() {
-                    widget.transition.actions.remove(action);
-                    widget.onChange();
-                  });
-                },
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-    widgets.add(
-      SizedBox(
-        width: double.infinity,
-        child: ElevatedButton.icon(
-          onPressed: _addAction,
-          icon: const Icon(Icons.add),
-          label: const Text('Add action'),
-        ),
-      ),
-    );
-    return Column(children: widgets);
-  }
-
-  Future<void> _addCondition() async {
-    final newCondition = await editFirstMatchConditionItem(context, FirstMatchConditionItem(expression: ConstantNamedValueExpression(), result: FirstMatchResult.pass));
-    if (newCondition == null) {
-      return;
-    }
-    setState(() {
-      widget.transition.conditions.add(newCondition);
-      widget.onChange();
-    });
-  }
-
-  Future<void> _editCondition(int index) async {
-    final condition = widget.transition.conditions[index];
-    final newCondition = await editFirstMatchConditionItem(context, condition);
-    if (newCondition == null) {
-      return;
-    }
-    widget.transition.conditions[index] = newCondition;
-    widget.onChange();
-    setState(() {
-
-    });
-  }
-
-  Widget _buildConditionList() {
-    final widgets = <Widget>[];
-    for (int i = 0; i < widget.transition.conditions.length; i++) {
-      final cond = widget.transition.conditions[i];
-      widgets.add(
-        ListTile(
-          title: Text(cond.asText()),
-          trailing: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              IconButton(
-                icon: const Icon(Icons.edit),
-                onPressed: () => _editCondition(i),
-              ),
-              IconButton(
-                icon: const Icon(Icons.delete),
-                onPressed: () {
-                  setState(() {
-                    widget.transition.conditions.removeAt(i);
-                    widget.onChange();
-                  });
-                },
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-    widgets.add(
-      SizedBox(
-        width: double.infinity,
-        child: ElevatedButton.icon(
-          onPressed: _addCondition,
-          icon: const Icon(Icons.add),
-          label: const Text('Conditions'),
-        ),
-      ),
-    );
-    return Column(children: widgets);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -205,12 +71,6 @@ class _TransitionEditorState extends State<TransitionEditor> {
             border: const OutlineInputBorder(),
           ),
         ),
-        const SizedBox(height: 8),
-        const Text('Condition:', style: TextStyle(fontWeight: FontWeight.bold)),
-        _buildConditionList(),
-        const SizedBox(height: 8),
-        const Text('Actions:', style: TextStyle(fontWeight: FontWeight.bold)),
-        _buildActionList(),
         const SizedBox(height: 8),
         SizedBox(
           width: double.infinity,

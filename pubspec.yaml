@@ -43,6 +43,7 @@ dependencies:
   protobuf: ^6.0.0
   fixnum: ^1.1.1
   indent: ^2.0.0
+  flutter_js: ^0.8.7
 
 dev_dependencies:
   flutter_test:
