@@ -17,7 +17,7 @@ class _StructEditorState extends State<StructEditor> with TickerProviderStateMix
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 1, vsync: this);
   }
 
   @override
@@ -34,7 +34,6 @@ class _StructEditorState extends State<StructEditor> with TickerProviderStateMix
           controller: _tabController,
           tabs: [
             Tab(text: 'Variables'),
-            Tab(text: 'Procedures'),
           ],
         ),
         Expanded(

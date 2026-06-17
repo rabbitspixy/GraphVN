@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:graph_vn/editor/modals/add_variable_dialog.dart';
 import 'package:graph_vn/editor/modals/rename_dialog.dart';
+import 'package:graph_vn/editor/modals/text_edit_dialog.dart';
 import 'package:graph_vn/editor/variables.dart';
 import 'package:graph_vn/editor/number_variable_stringifier.dart';
 import 'package:graph_vn/editor/named_variable_stringifier.dart';
@@ -65,7 +66,7 @@ class _StructVariablesState extends State<StructVariables> {
                     if (newVariable != null) {
                       setState(() {
                         widget.struct.variables.add(newVariable);
-                        if (_selectedIndex == null) _selectedIndex = 0;
+                        _selectedIndex ??= 0;
                       });
                     }
                   },
@@ -105,6 +106,26 @@ class _StructVariablesState extends State<StructVariables> {
                 cursor: SystemMouseCursors.click,
                 child: Text(
                   variable.name,
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: 8),
+          InputDecorator(
+            decoration: InputDecoration(labelText: 'Description'),
+            child: GestureDetector(
+              onTap: () async {
+                showTextEditDialog(context, 'Edit Variable Description', variable.description, (newDescription) {
+                  setState(() {
+                    variable.description = newDescription;
+                  });
+                });
+              },
+              child: MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: Text(
+                  variable.description,
                   style: TextStyle(fontSize: 16),
                 ),
               ),

@@ -44,6 +44,7 @@ dependencies:
   fixnum: ^1.1.1
   indent: ^2.0.0
   flutter_js: ^0.8.7
+  google_fonts: ^8.1.0
 
 dev_dependencies:
   flutter_test:

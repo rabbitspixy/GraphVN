@@ -25,7 +25,7 @@ class TransitionTooltip extends StatelessWidget {
             borderRadius: BorderRadius.circular(4),
           ),
           child: Text(
-            transition.text,
+            text(),
             style: const TextStyle(color: Colors.white, fontSize: 12),
             softWrap: true,
             overflow: TextOverflow.visible,
@@ -33,5 +33,23 @@ class TransitionTooltip extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String text() {
+    final result = StringBuffer();
+    if (transition.naturalLanguageCondition.isNotEmpty) {
+      result.writeln("--- Условие ---");
+      result.writeln(transition.naturalLanguageCondition);
+      result.writeln();
+    }
+    result.writeln("--- Текст ---");
+    result.writeln(transition.text);
+    result.writeln();
+    if (transition.naturalLanguageAction.isNotEmpty) {
+      result.writeln("--- Действия ---");
+      result.writeln(transition.naturalLanguageAction);
+      result.writeln();
+    }
+    return result.toString();
   }
 }

@@ -12,7 +12,9 @@ class EditorTransition {
   //must be greater than 0
   int weight = 1;
   List<GenerateImageMetadata> generateImageMetadata = [];
+  String naturalLanguageCondition = "";
   String jsCondition = "";
+  String naturalLanguageAction = "";
   String jsAction = "";
 
   bool get isButton => text.isNotEmpty;
@@ -35,7 +37,9 @@ class EditorTransition {
     result.to = to;
     result.weight = weight;
     result.generatedImages.addAll(generateImageMetadata.map((x) => x.toProto()));
+    result.naturalLanguageCondition = naturalLanguageCondition;
     result.jsCondition = jsCondition;
+    result.naturalLanguageAction = naturalLanguageAction;
     result.jsAction = jsAction;
     return result;
   }
@@ -48,7 +52,9 @@ class EditorTransition {
     result.to = proto.to;
     result.weight = proto.weight;
     result.generateImageMetadata.addAll(proto.generatedImages.map((x) => GenerateImageMetadata.fromProto(x)));
+    result.naturalLanguageCondition = proto.naturalLanguageCondition;
     result.jsCondition = proto.jsCondition;
+    result.naturalLanguageAction = proto.naturalLanguageAction;
     result.jsAction = proto.jsAction;
     return result;
   }

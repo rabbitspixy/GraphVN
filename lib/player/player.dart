@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:graph_vn/common/random_util.dart';
 import 'package:graph_vn/editor/editor_node.dart';
 import 'package:graph_vn/editor/editor_transition.dart';
+import 'package:graph_vn/main.dart';
 import 'package:graph_vn/player/components.dart';
 import 'package:graph_vn/editor/editor_state.dart';
 
@@ -82,7 +83,11 @@ class Player {
   }
 
   static void _runActions(String jsAction) {
-
+    final emptyFunc = "function doActions() {}";
+    final result = EditorState.jsRuntime.evaluate("$emptyFunc\n$jsAction\ndoActions();");
+    if (result.isError) {
+      logger.w("Javascript error:\n$jsAction\n\n${result.rawResult}");
+    }
   }
 
   static List<EditorTransition> allowedTransitionsForCurrentState() {
@@ -93,7 +98,19 @@ class Player {
   }
 
   static bool _resolveTransitionConditions(String jsCondition) {
-    return true;
+    final emptyFunc = "function testConditions() { return true; }";
+    final result = EditorState.jsRuntime.evaluate("$emptyFunc\n$jsCondition\ntestConditions();");
+    if (result.isError) {
+      logger.w("Javascript error:\n$jsCondition\n\n${result.rawResult}");
+      return true;
+    }
+    if (result.rawResult == true && result.rawResult.runtimeType == bool) {
+      return true;
+    }
+    if (result.rawResult == false && result.rawResult.runtimeType == bool) {
+      return false;
+    }
+    throw Exception("JS condition invalid:\n$jsCondition\n\nrawResult=(${result.rawResult.runtimeType})${result.rawResult}");
   }
 
   static void _updateStill() {

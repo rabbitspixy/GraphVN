@@ -15,6 +15,8 @@ message EditorTransitionProto {
   string jsCondition = 6;
   string jsAction = 7;
   repeated GenerateImageMetadataProto generatedImages = 8;
+  string naturalLanguageCondition = 9;
+  string naturalLanguageAction = 10;
 }
 
 message EditorNodeProto {
@@ -28,6 +30,7 @@ message EditorNodeProto {
   string imagePath = 8;
   repeated GenerateImageMetadataProto generatedImages = 9;
   string speaker = 11;
+  string naturalLanguageAction = 12;
 }
 
 message StructProto {
@@ -48,6 +51,7 @@ message NumberVariableProto {
   string name = 2;
   string initialValue = 3;
   string value = 4;
+  string description = 5;
 }
 
 message NamedVariableProto {
@@ -56,6 +60,7 @@ message NamedVariableProto {
   string typeId = 3;
   string initialValue = 4;
   string value = 5;
+  string description = 6;
 }
 
 message GenerateImageMetadataProto {

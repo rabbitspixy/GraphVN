@@ -1,31 +1,92 @@
-import 'package:llm_dart/llm_dart.dart';
+import 'package:graph_vn/common/find_block_util.dart';
+import 'package:graph_vn/editor/editor_state.dart';
+import 'package:graph_vn/llm/llm_gateway.dart';
 
 class TextGenerator {
-  //llama-server -hf ggml-org/gpt-oss-20b-GGUF  --ctx-size 32768 --jinja -ub 2048 -b 2048 --n-cpu-moe 10 --temp 0.0 --top-p 1.0 --top-k 0 --chat-template-kwargs "{""reasoning_effort"": ""medium""}"
-  static final llamaCpp = ai()
-      .openai()
-      .baseUrl('http://127.0.0.1:8080/v1')
-      .apiKey('sk-no-key-required')
-      .model('ggml-org/gpt-oss-20b-GGUF')
-      .temperature(0.1)
-      .build();
-  
-  static final ollama = ai()
-    .ollama()
-    .baseUrl('http://localhost:11434')
-    .model('gpt-oss:20b')
-    .reasoning(true)
-    .build();
 
-  static void test(Future<ChatCapability> provider) async {
-    final p = await provider;
-    final messages = [ChatMessage.user('Tell me a joke about programming')];
-    final response = await p.chat(messages);
-    print(response.text);
+  static Future<String?> writeAction(String naturalLanguageAction) async {
+    final prompt = """Инструкция:
+В блоке <init></init> указана часть кода на языке javascript. Там происходит заполнение структуры variables, с документацией к каждому ключу
+В блоке <task></task> указана задача на изменение значений в структуре variables.
+Тебе требуется написать функцию doActions() на языке Javascript без комментирования кода, которая выполняет указанную задачу
+Сначала опиши шаги решения задачи на английском языке, а потом приступи к написанию кода
+Попробуй по описанию каждого ключа в variables, и по указаной задаче понять, значения каких ключей требуется изменить
+В ответе не должно быть начального кода из блока <init>
+Если задача непонятна или невыполнима, напиши причину поместив её в блок <error></error>
+Код помести в блок ```javascript```
 
-    // Access thinking process (for supported models)
-    if (response.thinking != null) {
-      print('Model thinking: ${response.thinking}');
+
+<init>
+${_buildInit()}
+</init>
+<task>
+$naturalLanguageAction
+</task>
+    """;
+
+    final responseText = await LLMGateway.request(prompt);
+    if (responseText == null) {
+      return null;
     }
+    var errorBlock = findBlockInXmlTag(responseText, "error");
+    if (errorBlock != null && errorBlock.isNotEmpty) {
+      return null;
+    }
+    final code = findJavaScriptBlock(responseText);
+    if (code == null) {
+      return writeAction(naturalLanguageAction);
+    }
+    return code;
+  }
+
+  static Future<String?> writeCondition(String naturalLanguageCondition) async {
+    final prompt = """Инструкция:
+В блоке <init></init> указана часть кода на языке javascript. Там происходит заполнение структуры variables, с документацией к каждому ключу
+В блоке <task></task> указана задача на проверку значений в variables
+Тебе требуется написать функцию testConditions() на языке Javascript без комментирования кода, которая выполняет указанную задачу и всегда возвращает boolean значение true или false
+Сначала опиши шаги решения задачи на английском языке, а потом приступи к написанию кода
+Попробуй по описанию каждого ключа в variables, и по указаной задаче понять, значения каких ключей требуется использовать
+В ответе не должно быть начального кода из блока <init>
+Если задача непонятна или невыполнима, напиши причину поместив её в блок <error></error>
+Код помести в блок ```javascript```
+
+
+<init>
+${_buildInit()}
+</init>
+<task>
+$naturalLanguageCondition
+</task>
+    """;
+
+    final responseText = await LLMGateway.request(prompt);
+    if (responseText == null) {
+      return null;
+    }
+    var errorBlock = findBlockInXmlTag(responseText, "error");
+    if (errorBlock != null && errorBlock.isNotEmpty) {
+      return null;
+    }
+    final code = findJavaScriptBlock(responseText);
+    if (code == null) {
+      return writeCondition(naturalLanguageCondition);
+    }
+    return code;
+  }
+
+  static String _buildInit() {
+    final init = StringBuffer();
+    init.writeln("variables = {};");
+
+    for (final struct in EditorState.structs) {
+      for (final variable in struct.variables) {
+        final key = "${struct.name}->${variable.name}";
+        init.writeln("");
+        init.writeln("//Название: $key");
+        init.writeln("//Описание: ${variable.description}");
+        init.writeln("variables[\"$key\"] = ${variable.initialValueAsText()}"); //TODO: initialValueAsJS, escape key for js string
+      }
+    }
+    return init.toString();
   }
 }

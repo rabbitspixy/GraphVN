@@ -40,10 +40,10 @@ class NamedValue {
 abstract class Variable {
   String id = Uuid().v4();
   String name = "";
+  String description = "";
 
   Variable();
 
-  void reset();
   String initialValueAsText();
   String currentValueAsText();
   String? currentValueAsTextForPlayer();
@@ -60,15 +60,9 @@ abstract class Variable {
 
 class NumberVariable extends Variable {
   Rational initialValue = Rational.zero;
-  Rational value = Rational.zero;
   List<NumberVariableStringifier> stringifiers = [];
 
   NumberVariable();
-
-  @override
-  void reset() {
-    value = initialValue;
-  }
 
   @override
   String initialValueAsText() {
@@ -77,13 +71,13 @@ class NumberVariable extends Variable {
 
   @override
   String currentValueAsText() {
-    return value.toString();
+    return EditorState.valueOfVariable(this);
   }
 
   @override
   String? currentValueAsTextForPlayer() {
     for (final stringifier in stringifiers) {
-      final result = stringifier.evaluate(value);
+      final result = stringifier.evaluate(Rational.parse(currentValueAsText()));
       if (result != null) {
         return result;
       }
@@ -97,7 +91,7 @@ class NumberVariable extends Variable {
     result.id = id;
     result.name = name;
     result.initialValue = initialValue.toString();
-    result.value = value.toString();
+    result.description = description;
     return VariableProto()
       ..numberVariable = result;
   }
@@ -107,7 +101,7 @@ class NumberVariable extends Variable {
     result.id = proto.id;
     result.name = proto.name;
     result.initialValue = Rational.parse(proto.initialValue);
-    result.value = Rational.parse(proto.value);
+    result.description = proto.description;
     return result;
   }
 }
@@ -115,19 +109,12 @@ class NumberVariable extends Variable {
 class NamedVariable extends Variable {
   String typeId;
   String initialValue = '';
-  String value = '';
   List<NamedVariableStringifier> stringifiers = [];
-
-  @override
-  void reset() {
-    value = initialValue;
-  }
 
   NamedVariable({required this.typeId}) {
     final type = namedVariableTypes.where((v) => v.id == typeId).firstOrNull;
     if (type != null) {
       initialValue = type.list.first.id;
-      value = initialValue;
     }
   }
 
@@ -138,17 +125,18 @@ class NamedVariable extends Variable {
 
   @override
   String currentValueAsText() {
-    return EditorState.namedValue(value)?.name ?? "?";
+    return EditorState.valueOfVariable(this);
   }
 
   @override
   String? currentValueAsTextForPlayer() {
-    for (final stringifier in stringifiers) {
-      final result = stringifier.evaluate(value);
-      if (result != null) {
-        return result;
-      }
-    }
+    // TODO: implement
+    // for (final stringifier in stringifiers) {
+    //   final result = stringifier.evaluate(value);
+    //   if (result != null) {
+    //     return result;
+    //   }
+    // }
     return null;
   }
 
@@ -159,7 +147,7 @@ class NamedVariable extends Variable {
     result.name = name;
     result.typeId = typeId;
     result.initialValue = initialValue;
-    result.value = value;
+    result.description = description;
     return VariableProto()
         ..namedVariable = result;
   }
@@ -169,7 +157,7 @@ class NamedVariable extends Variable {
     result.id = proto.id;
     result.name = proto.name;
     result.initialValue = proto.initialValue;
-    result.value = proto.value;
+    result.description = proto.description;
     return result;
   }
 }

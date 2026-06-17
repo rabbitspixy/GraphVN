@@ -25,7 +25,7 @@ class NodeTooltip extends StatelessWidget {
             borderRadius: BorderRadius.circular(4),
           ),
           child: Text(
-            node.text,
+            text(),
             style: const TextStyle(color: Colors.white, fontSize: 12),
             softWrap: true,
             overflow: TextOverflow.visible,
@@ -33,5 +33,18 @@ class NodeTooltip extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String text() {
+    final result = StringBuffer();
+    result.writeln("--- Текст ---");
+    result.writeln(node.text);
+    result.writeln();
+    if (node.naturalLanguageAction.isNotEmpty) {
+      result.writeln("--- Действия ---");
+      result.writeln(node.naturalLanguageAction);
+      result.writeln();
+    }
+    return result.toString();
   }
 }

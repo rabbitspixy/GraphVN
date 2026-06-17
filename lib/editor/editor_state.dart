@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter_js/flutter_js.dart';
 import 'package:graph_vn/editor/struct.dart';
 import 'package:graph_vn/settings/app_settings.dart';
 import 'package:graph_vn/app_constants.dart';
@@ -24,6 +25,7 @@ class EditorState {
   static final List<Struct> structs = List.empty(growable: true);
   static Offset? storedOffset;
   static String currentNode = "";
+  static JavascriptRuntime jsRuntime = getJavascriptRuntime();
 
   static List<String> getProjectFolders() {
     final dir = Directory("./${AppConstants.projectsDir}");
@@ -146,11 +148,28 @@ class EditorState {
   static void restart() {
     logger.i('restart game');
     currentNode = "";
+    jsRuntime.dispose();
+    jsRuntime = getJavascriptRuntime();
+    jsRuntime.evaluate("let variables = {}");
     for (final struct in structs) {
       for (final variable in struct.variables) {
-        variable.reset();
+        if (variable is NumberVariable) {
+          jsRuntime.evaluate("variables[${toJsString("${struct.name}->${variable.name}")}] = ${variable.initialValue.toDouble()}");
+        }
+        // TODO: implement named variable type
       }
     }
+  }
+
+  static String valueOfVariable(Variable variable) {
+    final struct = structByVariableId(variable.id);
+    if (struct == null) return "JS_ERROR_1";
+    final result = jsRuntime.evaluate("variables[${toJsString("${struct.name}->${variable.name}")}];");
+    return result.stringResult;
+  }
+
+  static String toJsString(String str) {
+    return "\"$str\""; // TODO: implement escaping
   }
 
   static bool isProjectLoaded() {
