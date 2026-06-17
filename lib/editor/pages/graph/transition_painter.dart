@@ -8,7 +8,8 @@ class TransitionPainter extends CustomPainter {
   final Offset offset;
   final int transitionCount;
   final EditorTransition? selectedTransition;
-  TransitionPainter({required this.offset, required this.selectedTransition}) : transitionCount = EditorState.transitions.length;
+  final EditorTransition? hoveredTransition;
+  TransitionPainter({required this.offset, required this.selectedTransition, required this.hoveredTransition}) : transitionCount = EditorState.transitions.length;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -43,6 +44,10 @@ class TransitionPainter extends CustomPainter {
       canvas.drawPath(arrow, centerPaint);
       if (transition.id == selectedTransition?.id) {
         final pointPaint = Paint()..color = Colors.black..style = PaintingStyle.stroke;
+        canvas.drawCircle(center, 7, pointPaint);
+      }
+      if (transition.id == hoveredTransition?.id && transition.id != selectedTransition?.id) {
+        final pointPaint = Paint()..color = Colors.black.withAlpha(60)..style = PaintingStyle.stroke;
         canvas.drawCircle(center, 7, pointPaint);
       }
     }
@@ -81,5 +86,5 @@ class TransitionPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant TransitionPainter oldDelegate) =>
-      oldDelegate.offset != offset || oldDelegate.transitionCount != transitionCount || oldDelegate.selectedTransition != selectedTransition;
+      oldDelegate.offset != offset || oldDelegate.transitionCount != transitionCount || oldDelegate.selectedTransition != selectedTransition || oldDelegate.hoveredTransition != hoveredTransition;
 }

@@ -6,27 +6,43 @@ class NodePainter extends CustomPainter {
   final Offset offset;
   final int nodesCount;
   final EditorNode? selectedNode;
+  final EditorNode? hoveredNode;
   final int forcedRepaint;
-  NodePainter({required this.offset, required this.selectedNode, required this.forcedRepaint}) : nodesCount = EditorState.nodes.length;
+  NodePainter({required this.offset, required this.selectedNode, required this.hoveredNode, required this.forcedRepaint}) : nodesCount = EditorState.nodes.length;
 
   @override
   void paint(Canvas canvas, Size size) {
     for (final node in EditorState.nodes.values) {
       final center = Offset(node.x.toDouble(), node.y.toDouble()) + offset;
+      final nodeSize = _sizeOf(node);
 
       final pointPaint = Paint();
       pointPaint.color = _colorOf(node);
       pointPaint.style = PaintingStyle.fill;
-      canvas.drawCircle(center, 5, pointPaint);
+      canvas.drawCircle(center, nodeSize, pointPaint);
       if (node.label.isNotEmpty) {
         _paintText(canvas, center, node.label);
       }
 
       if (node.id == selectedNode?.id) {
         final pointPaint = Paint()..color = Colors.black..style = PaintingStyle.stroke;
-        canvas.drawCircle(center, 7, pointPaint);
+        canvas.drawCircle(center, nodeSize + 1, pointPaint);
+      }
+      if (node.id == hoveredNode?.id && node.id != selectedNode?.id) {
+        final pointPaint = Paint()..color = Colors.black.withAlpha(60)..style = PaintingStyle.stroke;
+        canvas.drawCircle(center, nodeSize + 1, pointPaint);
       }
     }
+  }
+
+  double _sizeOf(EditorNode node) {
+    if (node.isStart) {
+      return 7;
+    }
+    if (node.isEmpty) {
+      return 3;
+    }
+    return 5;
   }
 
   Color _colorOf(EditorNode node) {
@@ -63,5 +79,5 @@ class NodePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant NodePainter oldDelegate) =>
-      oldDelegate.forcedRepaint != forcedRepaint || oldDelegate.offset != offset || oldDelegate.nodesCount != nodesCount || oldDelegate.selectedNode != selectedNode;
+      oldDelegate.forcedRepaint != forcedRepaint || oldDelegate.offset != offset || oldDelegate.nodesCount != nodesCount || oldDelegate.selectedNode != selectedNode || oldDelegate.hoveredNode != hoveredNode;
 }

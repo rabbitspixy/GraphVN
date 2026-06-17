@@ -153,54 +153,74 @@ class _EditorCanvasState extends State<EditorCanvas> {
   }
 
   void _updateHover(Offset globalPosition) {
-    EditorTransition? nearestTransition = _getTransitionAtPosition(globalPosition);
-    EditorNode? nearestNode = _getNodeAtPosition(globalPosition);
+    final nearestItem = _getNearestItemAtPosition(globalPosition);
+    
     setState(() {
-      if (nearestTransition != null) {
-        _hoveredTransition = nearestTransition;
+      if (nearestItem != null && nearestItem is EditorTransition) {
+        _hoveredTransition = nearestItem;
         _hoverPosition = globalPosition;
+        _hoveredNode = null;
+        _hoverNodePosition = null;
+      } else if (nearestItem != null && nearestItem is EditorNode) {
+        _hoveredNode = nearestItem;
+        _hoverNodePosition = globalPosition;
+        _hoveredTransition = null;
+        _hoverPosition = null;
       } else {
         _hoveredTransition = null;
         _hoverPosition = null;
-      }
-      if (nearestNode != null) {
-        _hoveredNode = nearestNode;
-        _hoverNodePosition = globalPosition;
-      } else {
         _hoveredNode = null;
         _hoverNodePosition = null;
       }
     });
   }
 
+  dynamic _getNearestItemAtPosition(Offset pos) {
+    const double threshold = 12.0;
+    
+    EditorNode? nearestNode;
+    double nearestNodeDist = double.infinity;
+    
+    for (final node in EditorState.nodes.values) {
+      final center = Offset(node.x.toDouble(), node.y.toDouble()) + _offset;
+      final dist = (pos - center).distance;
+      if (dist < nearestNodeDist && dist <= threshold) {
+        nearestNodeDist = dist;
+        nearestNode = node;
+      }
+    }
+    
+    EditorTransition? nearestTransition;
+    double nearestTransitionDist = double.infinity;
+    
+    for (final transition in EditorState.transitions) {
+      final dist = (pos - (transition.pos.center + _offset)).distance;
+      if (dist < nearestTransitionDist && dist <= threshold) {
+        nearestTransitionDist = dist;
+        nearestTransition = transition;
+      }
+    }
+    
+    if (nearestNode == null && nearestTransition == null) {
+      return null;
+    }
+    
+    if (nearestNode == null) {
+      return nearestTransition;
+    }
+    
+    if (nearestTransition == null) {
+      return nearestNode;
+    }
+    
+    return nearestNodeDist <= nearestTransitionDist ? nearestNode : nearestTransition;
+  }
+
   void _onHover(PointerHoverEvent event) {
     _updateHover(event.localPosition);
   }
 
-  EditorNode? _getNodeAtPosition(Offset pos) {
-    for (final node in EditorState.nodes.values) {
-      final center = Offset(node.x.toDouble(), node.y.toDouble()) + _offset;
-      if ((pos - center).distance <= 5.0) {
-        return node;
-      }
-    }
-    return null;
-  }
 
-  EditorTransition? _getTransitionAtPosition(Offset pos) {
-    const double threshold = 5.0;
-    EditorTransition? nearest;
-    double nearestDist = double.infinity;
-
-    for (final transition in EditorState.transitions) {
-      final dist = (pos - (transition.pos.center + _offset)).distance;
-      if (dist < nearestDist && dist <= threshold) {
-        nearestDist = dist;
-        nearest = transition;
-      }
-    }
-    return nearest;
-  }
 
   @override
   void initState() {
@@ -248,10 +268,10 @@ class _EditorCanvasState extends State<EditorCanvas> {
           child: Stack(
             children: [
               CustomPaint(
-                painter: TransitionPainter(offset: _offset, selectedTransition: widget.selectedTransition),
+                painter: TransitionPainter(offset: _offset, selectedTransition: widget.selectedTransition, hoveredTransition: _hoveredTransition),
               ),
               CustomPaint(
-                painter: NodePainter(offset: _offset, selectedNode: widget.selectedNode, forcedRepaint: _forcedRepaint),
+                painter: NodePainter(offset: _offset, selectedNode: widget.selectedNode, hoveredNode: _hoveredNode, forcedRepaint: _forcedRepaint),
               ),
               if (_hoveredNode != null && _hoverNodePosition != null && !_nodeDragging)
                 NodeTooltip(
