@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:graph_vn/editor/pages/ai_agent/editor_ai_agent_page.dart';
 import 'package:graph_vn/editor/pages/graph/editor_graph_page.dart';
 import 'package:graph_vn/editor/pages/project/editor_project_page.dart';
 import 'package:graph_vn/editor/pages/settings/editor_settings_page.dart';
@@ -48,6 +49,7 @@ class _EditorRootWidgetState extends State<EditorRootWidget> {
               buildPageButton(EditorPage.project, Icons.folder_open),
               buildPageButton(EditorPage.graph, Icons.hub),
               buildPageButton(EditorPage.variables, Icons.data_object),
+              buildPageButton(EditorPage.aiAgent, Icons.auto_awesome),
               buildPageButton(EditorPage.settings, Icons.settings),
             ],
           ),
@@ -71,6 +73,11 @@ class _EditorRootWidgetState extends State<EditorRootWidget> {
                 child: const EditorVariablesPage(),
               ),
               Visibility(
+                visible: _page == EditorPage.aiAgent,
+                maintainState: true,
+                child: const EditorAiAgentPage(),
+              ),
+              Visibility(
                 visible: _page == EditorPage.settings,
                 maintainState: true,
                 child: const EditorSettingsPage(),
@@ -88,5 +95,6 @@ enum EditorPage {
   project,
   graph,
   variables,
+  aiAgent,
   settings,
 }

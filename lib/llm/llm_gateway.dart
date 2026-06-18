@@ -22,10 +22,11 @@ class LLMGateway {
 
   static Future<String?> request(String prompt) async {
     final ai = await llamaCpp;
-    logger.d("AI request\n$prompt");
     final messages = [ChatMessage.user(prompt)];
+    logger.d("request");
     final response = await ai.chat(messages);
     final responseText = response.text;
+    logger.d("AI request\n$prompt");
     logger.d("AI response\n$responseText");
     if (responseText == null) {
       return null;
