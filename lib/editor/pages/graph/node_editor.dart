@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:graph_vn/editor/editor_node.dart';
 import 'package:graph_vn/editor/editor_state.dart';
-import 'package:graph_vn/editor/modals/view_js_action_dialog.dart';
+import 'package:graph_vn/editor/modals/view_js_dialog.dart';
 import 'package:graph_vn/llm/text_generator.dart';
 import 'package:graph_vn/main.dart';
 
