@@ -1,8 +1,6 @@
-import 'package:rational/rational.dart';
-
 class NumberVariableStringifier {
-  Rational rangeStart = Rational.fromInt(0);
-  Rational rangeEnd = Rational.fromInt(0);
+  int rangeStart = 0;
+  int rangeEnd = 0;
   String template = "{}";
 
   NumberVariableStringifier({
@@ -11,7 +9,7 @@ class NumberVariableStringifier {
     required this.template,
   });
 
-  String? evaluate(Rational value) {
+  String? evaluate(int value) {
     if (value <= rangeEnd && value >= rangeStart) {
       return template.replaceAll("{}", value.toDouble().toString());
     }

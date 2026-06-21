@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:rational/rational.dart';
 import 'package:graph_vn/editor/number_variable_stringifier.dart';
 
 /// Opens a modal dialog to edit a [NumberVariableStringifier].
@@ -72,8 +71,8 @@ Future<NumberVariableStringifier?> editNumberVariableStringifier(
               ElevatedButton(
                 onPressed: () {
                   try {
-                    final newStart = Rational.parse(startController.text);
-                    final newEnd = Rational.parse(endController.text);
+                    final newStart = int.parse(startController.text);
+                    final newEnd = int.parse(endController.text);
                     final newTemplate = templateController.text;
                     Navigator.of(context).pop(
                       NumberVariableStringifier(

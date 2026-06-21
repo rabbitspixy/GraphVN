@@ -19,3 +19,9 @@ String? findJavaScriptBlock(String text) {
 
   return matches[0].group(1)?.trim();
 }
+
+List<String> findBlockDoubleCurlyBraces(String text) {
+  final pattern = RegExp(r'\{\{.*?\}\}', dotAll: true);
+  final matches = pattern.allMatches(text).toList();
+  return matches.map((match) => match.group(0)!).toList();
+}

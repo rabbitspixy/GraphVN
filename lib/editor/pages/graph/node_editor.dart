@@ -86,28 +86,28 @@ class _NodeEditorState extends State<NodeEditor> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Speaker:', style: TextStyle(fontWeight: FontWeight.bold)),
+        const Text('Speaker', style: TextStyle(fontWeight: FontWeight.bold)),
         TextField(
           controller: _speakerTextController,
           maxLines: null,
           decoration: const InputDecoration(border: OutlineInputBorder()),
         ),
         const SizedBox(height: 8),
-        const Text('Text:', style: TextStyle(fontWeight: FontWeight.bold)),
+        const Text('Text', style: TextStyle(fontWeight: FontWeight.bold)),
         TextField(
           controller: _nodeTextController,
           maxLines: null,
           decoration: const InputDecoration(border: OutlineInputBorder()),
         ),
         const SizedBox(height: 8),
-        const Text('Label:', style: TextStyle(fontWeight: FontWeight.bold)),
+        const Text('Label', style: TextStyle(fontWeight: FontWeight.bold)),
         TextField(
           controller: _labelTextController,
           maxLines: null,
           decoration: const InputDecoration(border: OutlineInputBorder()),
         ),
         const SizedBox(height: 8),
-        const Text('Image Path:', style: TextStyle(fontWeight: FontWeight.bold)),
+        const Text('Image Path', style: TextStyle(fontWeight: FontWeight.bold)),
         TextField(
           controller: _imagePathController,
           maxLines: null,
@@ -117,7 +117,7 @@ class _NodeEditorState extends State<NodeEditor> {
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Natural Language Action:', style: TextStyle(fontWeight: FontWeight.bold)),
+            const Text('Natural Language Action', style: TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(width: 8),
             Tooltip(
               message: 'Просмотр JS Action',

@@ -113,6 +113,19 @@ class Player {
     throw Exception("JS condition invalid:\n$jsCondition\n\nrawResult=(${result.rawResult.runtimeType})${result.rawResult}");
   }
 
+  static String _resolveGetTextValue(String js) {
+    final emptyFunc = "function getText() { return \"\"; }";
+    final result = EditorState.jsRuntime.evaluate("$emptyFunc\n$js\ngetText();");
+    if (result.isError) {
+      logger.w("Javascript error:\n$js\n\n${result.rawResult}");
+      return "JS_ERROR_2";
+    }
+    if (result.rawResult.runtimeType == String) {
+      return result.rawResult;
+    }
+    throw Exception("JS getText() invalid:\n$js\n\nrawResult=(${result.rawResult.runtimeType})${result.rawResult}");
+  }
+
   static void _updateStill() {
     buttons.value.clear();
     if (EditorState.currentNode == "") {
@@ -129,6 +142,10 @@ class Player {
     for (final struct in EditorState.structs) {
       for (final variable in struct.variables) {
         nt = nt.replaceAll("[${struct.name}->${variable.name}]", variable.currentValueAsText());
+        for (final replaceable in node.jsReplace.keys) {
+          final getTextCode = node.jsReplace[replaceable]!;
+          nt = nt.replaceAll(replaceable, _resolveGetTextValue(getTextCode));
+        }
       }
     }
     speakerName.value = node.speaker;

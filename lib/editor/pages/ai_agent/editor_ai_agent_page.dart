@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:graph_vn/common/collection_util.dart';
+import 'package:graph_vn/common/find_block_util.dart';
+import 'package:graph_vn/common/parallel_util.dart';
 import 'package:graph_vn/editor/editor_node.dart';
 import 'package:graph_vn/editor/editor_state.dart';
 import 'package:graph_vn/editor/editor_transition.dart';
@@ -13,23 +16,14 @@ class EditorAiAgentPage extends StatefulWidget {
 }
 
 class _EditorAiAgentPageState extends State<EditorAiAgentPage> {
-  late int _totalTasks;
-  late int _completedTasks;
+  int _totalTasks = 0;
+  int _completedTasks = 0;
   late BuildContext _dialogContext;
   late StateSetter _dialogSetState;
 
   void _runAiAgent() async {
-    _totalTasks = _nodesWithDirtyActions().length +
-        _transitionsWithDirtyConditions().length +
-        _transitionsWithDirtyActions().length;
-
-    if (_totalTasks == 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Нет задач для обработки AI агентом')),
-      );
-      return;
-    }
-
+    //TODO: обработать ошибки LLM, например нет подключения
+    _totalTasks = 0;
     _completedTasks = 0;
 
     showDialog(
@@ -45,35 +39,39 @@ class _EditorAiAgentPageState extends State<EditorAiAgentPage> {
     );
 
     final stopwatch = Stopwatch()..start();
-    await _processAllTasks();
-    stopwatch.stop();
+    try {
+      await _processAllTasks();
+      stopwatch.stop();
 
-    if (mounted) {
-      Navigator.pop(_dialogContext);
-      final duration = stopwatch.elapsed;
-      final message = 'AI агент завершил работу. Обработано: $_totalTasks задач за ${duration.toString()}';
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+      if (mounted) {
+        Navigator.pop(_dialogContext);
+        final duration = stopwatch.elapsed;
+        final message = 'AI агент завершил работу. Обработано: $_totalTasks задач за ${duration.toString()}';
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+      }
+    } catch (e) {
+      logger.e("AI agent request error", error: e);
+      if (mounted) {
+        Navigator.pop(_dialogContext);
+        final errorMessage = 'Ошибка: $e';
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(errorMessage)));
+      }
     }
   }
 
   Future<void> _processAllTasks() async {
     _processEmptyFields();
+    _refindReplaceableInTexts();
     
     final nodeActionLambdas = _processNodeActions();
     final transitionConditionLambdas = _processTransitionConditions();
     final transitionActionLambdas = _processTransitionActions();
+    final replaceableTasks = _processNodeReplaceable();
     
-    final allLambdas = [...nodeActionLambdas, ...transitionConditionLambdas, ...transitionActionLambdas];
+    final allLambdas = [...nodeActionLambdas, ...transitionConditionLambdas, ...transitionActionLambdas, ...replaceableTasks];
+    _totalTasks = allLambdas.length;
     
-    // Разбиваем на чанки по 4 элемента и выполняем каждый чанк параллельно
-    const chunkSize = 4;
-    for (int i = 0; i < allLambdas.length; i += chunkSize) {
-      final chunk = allLambdas.sublist(
-        i,
-        i + chunkSize > allLambdas.length ? allLambdas.length : i + chunkSize,
-      );
-      await Future.wait(chunk.map((lambda) => lambda()));
-    }
+    await runInParallel(allLambdas, 4);
   }
 
   void _processEmptyFields() {
@@ -90,6 +88,16 @@ class _EditorAiAgentPageState extends State<EditorAiAgentPage> {
         transition.jsAction = "";
       }
     }
+  }
+
+  void _refindReplaceableInTexts() {
+    for (final node in EditorState.nodes.values) {
+      node.jsReplace = filterMapByKeys(
+          node.jsReplace,
+          findBlockDoubleCurlyBraces(node.text)
+      );
+    }
+    //TODO: сделать тоже самое для transitions
   }
 
   List<Future<void> Function()> _processNodeActions() {
@@ -144,6 +152,26 @@ class _EditorAiAgentPageState extends State<EditorAiAgentPage> {
       });
     }
     return lambdas;
+  }
+
+  List<Future<void> Function()> _processNodeReplaceable() {
+    final tasks = <Future<void> Function()>[];
+    for (final node in EditorState.nodes.values) {
+      for (final replaceable in node.jsReplace.keys) {
+        tasks.add(() async {
+          final code = await TextGenerator.writeReplaceable(replaceable.replaceAll("{{", "").replaceAll("}}", ""));
+          if (code != null) {
+            node.jsReplace[replaceable] = code;
+          } else {
+            logger.w("No code generated for replaceable $replaceable of node ${node.id}");
+          }
+          _completedTasks++;
+          _dialogSetState(() {});
+          await Future.delayed(Duration.zero);
+        });
+      }
+    }
+    return tasks;
   }
 
   Widget _buildProgressDialog() {

@@ -2,7 +2,6 @@ import 'package:graph_vn/editor/editor_state.dart';
 import 'package:graph_vn/editor/named_variable_stringifier.dart';
 import 'package:graph_vn/editor/number_variable_stringifier.dart';
 import 'package:graph_vn/generated-proto/data.pb.dart';
-import 'package:rational/rational.dart';
 import 'package:uuid/uuid.dart';
 
 class PredefinedNamedTypes {
@@ -59,7 +58,7 @@ abstract class Variable {
 }
 
 class NumberVariable extends Variable {
-  Rational initialValue = Rational.zero;
+  int initialValue = 0;
   List<NumberVariableStringifier> stringifiers = [];
 
   NumberVariable();
@@ -77,7 +76,7 @@ class NumberVariable extends Variable {
   @override
   String? currentValueAsTextForPlayer() {
     for (final stringifier in stringifiers) {
-      final result = stringifier.evaluate(Rational.parse(currentValueAsText()));
+      final result = stringifier.evaluate(int.parse(currentValueAsText()));
       if (result != null) {
         return result;
       }
@@ -100,7 +99,7 @@ class NumberVariable extends Variable {
     final result = NumberVariable();
     result.id = proto.id;
     result.name = proto.name;
-    result.initialValue = Rational.parse(proto.initialValue);
+    result.initialValue = int.parse(proto.initialValue);
     result.description = proto.description;
     return result;
   }

@@ -1,9 +1,11 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_js/flutter_js.dart';
 import 'package:graph_vn/main.dart';
 
 void jsTest() async {
+  WidgetsFlutterBinding.ensureInitialized();
   final jsRuntime = getJavascriptRuntime();
 
   jsRuntime.evaluate("var myState = 10;");

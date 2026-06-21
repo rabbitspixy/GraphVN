@@ -170,7 +170,7 @@ packages:
     source: hosted
     version: "1.0.8"
   dart_mappable:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: dart_mappable
       sha256: "0e219930c9f7b9e0f14ae7c1de931c401875110fd5c67975b6b9492a6d3a531b"
@@ -584,14 +584,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.5.0"
-  rational:
-    dependency: "direct main"
-    description:
-      name: rational
-      sha256: cb808fb6f1a839e6fc5f7d8cb3b0a10e1db48b3be102de73938c627f0b636336
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.2.3"
   record_use:
     dependency: transitive
     description:

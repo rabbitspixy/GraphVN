@@ -15,6 +15,7 @@ class EditorNode {
   String speaker = "";
   String naturalLanguageAction = "";
   String jsAction = "";
+  Map<String, String> jsReplace = Map.identity();
 
   bool get isEmpty => text.isEmpty;
 

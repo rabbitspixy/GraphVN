@@ -80,14 +80,14 @@ class _TransitionEditorState extends State<TransitionEditor> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Transition Text:', style: TextStyle(fontWeight: FontWeight.bold)),
+        const Text('Transition Text', style: TextStyle(fontWeight: FontWeight.bold)),
         TextField(
           controller: _controller,
           maxLines: null,
           decoration: const InputDecoration(border: OutlineInputBorder()),
         ),
         const SizedBox(height: 8),
-        const Text('Weight:', style: TextStyle(fontWeight: FontWeight.bold)),
+        const Text('Weight', style: TextStyle(fontWeight: FontWeight.bold)),
         TextField(
           controller: _weightController,
           keyboardType: TextInputType.number,
@@ -99,7 +99,7 @@ class _TransitionEditorState extends State<TransitionEditor> {
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Natural Language Condition:', style: TextStyle(fontWeight: FontWeight.bold)),
+            const Text('Natural Language Condition', style: TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(width: 8),
             Tooltip(
               message: 'Просмотр JS Condition',
@@ -126,7 +126,7 @@ class _TransitionEditorState extends State<TransitionEditor> {
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Natural Language Action:', style: TextStyle(fontWeight: FontWeight.bold)),
+            const Text('Natural Language Action', style: TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(width: 8),
             Tooltip(
               message: 'Просмотр JS Action',

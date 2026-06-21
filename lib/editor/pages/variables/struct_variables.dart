@@ -8,7 +8,6 @@ import 'package:graph_vn/editor/named_variable_stringifier.dart';
 import 'package:graph_vn/editor/modals/number_variable_stringifier_editor.dart';
 import 'package:graph_vn/editor/modals/named_variable_stringifier_editor.dart';
 import 'package:graph_vn/editor/editor_state.dart';
-import 'package:rational/rational.dart';
 
 import '../../struct.dart';
 
@@ -222,8 +221,8 @@ class _StructVariablesState extends State<StructVariables> {
                   onPressed: () async {
                     if (variable is NumberVariable) {
                       final newStringifier = NumberVariableStringifier(
-                        rangeStart: Rational.zero,
-                        rangeEnd: Rational.zero,
+                        rangeStart: 0,
+                        rangeEnd: 0,
                         template: "{}",
                       );
                       final updated = await editNumberVariableStringifier(context, newStringifier);
