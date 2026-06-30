@@ -14,6 +14,7 @@ class EditorRootWidget extends StatefulWidget {
 
 class _EditorRootWidgetState extends State<EditorRootWidget> {
   EditorPage _page = EditorPage.graph;
+  final GlobalKey _graphPageKey = GlobalKey();
 
   Widget buildPageButton(EditorPage page, IconData iconData) {
     return SizedBox(
@@ -63,6 +64,7 @@ class _EditorRootWidgetState extends State<EditorRootWidget> {
                 child: const EditorProjectPage(),
               ),
               Visibility(
+                key: _graphPageKey,
                 visible: _page == EditorPage.graph,
                 maintainState: true,
                 child: const EditorGraphPage(),

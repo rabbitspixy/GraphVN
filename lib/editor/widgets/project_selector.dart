@@ -3,10 +3,10 @@ import 'package:graph_vn/editor/editor_state.dart';
 import 'package:graph_vn/editor/modals/rename_dialog.dart';
 
 class ProjectSelector extends StatefulWidget {
-  const ProjectSelector({Key? key}) : super(key: key);
+  const ProjectSelector({super.key});
 
   @override
-  _ProjectSelectorState createState() => _ProjectSelectorState();
+  State<ProjectSelector> createState() => _ProjectSelectorState();
 }
 
 class _ProjectSelectorState extends State<ProjectSelector> {

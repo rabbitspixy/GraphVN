@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:graph_vn/player/components.dart';
 import 'package:graph_vn/player/player.dart';
 import 'animated_narrative_text.dart';
 

@@ -16,6 +16,7 @@ class EditorNode {
   String naturalLanguageAction = "";
   String jsAction = "";
   Map<String, String> jsReplace = Map.identity();
+  String gotoLabel = "";
 
   bool get isEmpty => text.isEmpty;
 
@@ -34,6 +35,7 @@ class EditorNode {
     result.speaker = speaker;
     result.naturalLanguageAction = naturalLanguageAction;
     result.jsAction = jsAction;
+    result.gotoLabel = gotoLabel;
     return result;
   }
 
@@ -50,6 +52,7 @@ class EditorNode {
     result.speaker = proto.speaker;
     result.naturalLanguageAction = proto.naturalLanguageAction;
     result.jsAction = proto.jsAction;
+    result.gotoLabel = proto.gotoLabel;
     return result;
   }
 }

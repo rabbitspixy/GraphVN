@@ -53,7 +53,7 @@ class PlayerRootWidget extends StatelessWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 16.0),
-                  child: Container(
+                  child: SizedBox(
                     width: double.infinity,
                     child: const SpeakerNarrativeBlock(),
                   ),

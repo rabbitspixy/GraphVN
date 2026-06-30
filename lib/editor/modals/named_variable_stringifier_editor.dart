@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:graph_vn/editor/named_variable_stringifier.dart';
 import 'package:graph_vn/editor/variables.dart';
-import 'package:graph_vn/main.dart';
 
 /// Opens a modal dialog to edit a [NamedVariableStringifier].
 /// The dialog shows a text field for the template and a vertical list of

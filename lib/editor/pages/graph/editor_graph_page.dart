@@ -10,10 +10,12 @@ class EditorGraphPage extends StatefulWidget {
   const EditorGraphPage({super.key});
 
   @override
-  State<EditorGraphPage> createState() => _EditorGraphPageState();
+  State<EditorGraphPage> createState() => EditorGraphPageState();
 }
 
-class _EditorGraphPageState extends State<EditorGraphPage> {
+class EditorGraphPageState extends State<EditorGraphPage> {
+  final GlobalKey<EditorCanvasState> _canvasKey = GlobalKey();
+  static EditorGraphPageState? instance;
 
   void _onSelectHandler(dynamic selectedObject) {
     EditorState.selectedNode = null;
@@ -33,23 +35,40 @@ class _EditorGraphPageState extends State<EditorGraphPage> {
     setState(() {});
   }
 
+  void resetOffset(Size size) {
+    _canvasKey.currentState?.resetOffset(size);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    instance = this;
+  }
+
+  @override
+  void dispose() {
+    instance = null;
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Stack(
       children: [
         EditorCanvas(
+          key: _canvasKey,
           selectedNode: EditorState.selectedNode,
           selectedTransition: EditorState.selectedTransition,
           onSelect: _onSelectHandler,
         ),
         Positioned(
-          left: size.width * 0.7,
+          left: size.width * 0.5,
           top: 0,
           bottom: 0,
           child: Container(
-            width: size.width * 0.3 - 50,
-            color: Colors.black.withAlpha(20),
+            width: size.width * 0.5 - 50,
+            color: Color.fromARGB(255, 230, 230, 230),
             padding: const EdgeInsets.all(8.0),
             child: EditorState.selectedNode != null
                 ? NodeEditor(node: EditorState.selectedNode!, onChange: _onNodeEdited,)

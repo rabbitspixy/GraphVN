@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:graph_vn/editor/editor_node.dart';
 import 'package:graph_vn/editor/editor_state.dart';
 import 'package:graph_vn/editor/modals/view_js_dialog.dart';
-import 'package:graph_vn/llm/text_generator.dart';
-import 'package:graph_vn/main.dart';
 
 class NodeEditor extends StatefulWidget {
   final EditorNode node;
@@ -25,6 +22,7 @@ class _NodeEditorState extends State<NodeEditor> {
   late TextEditingController _labelTextController;
   late TextEditingController _imagePathController;
   late TextEditingController _naturalLanguageActionController;
+  late TextEditingController _gotoLabelTextController;
   bool _isStart = false;
 
   @override
@@ -35,6 +33,7 @@ class _NodeEditorState extends State<NodeEditor> {
     _labelTextController = TextEditingController(text: widget.node.label);
     _imagePathController = TextEditingController(text: widget.node.imagePath);
     _naturalLanguageActionController = TextEditingController(text: widget.node.naturalLanguageAction);
+    _gotoLabelTextController = TextEditingController(text: widget.node.gotoLabel);
     _isStart = widget.node.isStart;
     _nodeTextController.addListener(() {
       if (_nodeTextController.text != widget.node.text) {
@@ -71,13 +70,23 @@ class _NodeEditorState extends State<NodeEditor> {
         setState(() {});
       }
     });
+    _gotoLabelTextController.addListener(() {
+      if (_gotoLabelTextController.text != widget.node.gotoLabel) {
+        widget.node.gotoLabel = _gotoLabelTextController.text;
+        widget.onChange();
+        setState(() {});
+      }
+    });
   }
 
   @override
   void dispose() {
     _nodeTextController.dispose();
+    _speakerTextController.dispose();
+    _labelTextController.dispose();
     _imagePathController.dispose();
     _naturalLanguageActionController.dispose();
+    _gotoLabelTextController.dispose();
     super.dispose();
   }
 
@@ -86,6 +95,13 @@ class _NodeEditorState extends State<NodeEditor> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        const Text('Label', style: TextStyle(fontWeight: FontWeight.bold)),
+        TextField(
+          controller: _labelTextController,
+          maxLines: null,
+          decoration: const InputDecoration(border: OutlineInputBorder()),
+        ),
+        const SizedBox(height: 8),
         const Text('Speaker', style: TextStyle(fontWeight: FontWeight.bold)),
         TextField(
           controller: _speakerTextController,
@@ -96,13 +112,6 @@ class _NodeEditorState extends State<NodeEditor> {
         const Text('Text', style: TextStyle(fontWeight: FontWeight.bold)),
         TextField(
           controller: _nodeTextController,
-          maxLines: null,
-          decoration: const InputDecoration(border: OutlineInputBorder()),
-        ),
-        const SizedBox(height: 8),
-        const Text('Label', style: TextStyle(fontWeight: FontWeight.bold)),
-        TextField(
-          controller: _labelTextController,
           maxLines: null,
           decoration: const InputDecoration(border: OutlineInputBorder()),
         ),
@@ -140,6 +149,14 @@ class _NodeEditorState extends State<NodeEditor> {
           maxLines: null,
           decoration: const InputDecoration(border: OutlineInputBorder()),
         ),
+        const SizedBox(height: 8),
+        const Text('Go to Label', style: TextStyle(fontWeight: FontWeight.bold)),
+        TextField(
+          controller: _gotoLabelTextController,
+          maxLines: null,
+          decoration: const InputDecoration(border: OutlineInputBorder()),
+        ),
+        const SizedBox(height: 8),
         Row(
           children: [
             Checkbox(

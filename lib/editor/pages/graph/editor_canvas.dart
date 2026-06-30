@@ -24,10 +24,10 @@ class EditorCanvas extends StatefulWidget {
   });
 
   @override
-  State<EditorCanvas> createState() => _EditorCanvasState();
+  State<EditorCanvas> createState() => EditorCanvasState();
 }
 
-class _EditorCanvasState extends State<EditorCanvas> {
+class EditorCanvasState extends State<EditorCanvas> {
   Offset _offset = Offset.zero;
   Offset? _dragStart;
   Offset? _offsetStart;
@@ -175,6 +175,12 @@ class _EditorCanvasState extends State<EditorCanvas> {
     });
   }
 
+  void resetOffset(Size size) {
+    setState(() {
+      _offset = Offset(size.width / 2, size.height / 2);
+    });
+  }
+
   dynamic _getNearestItemAtPosition(Offset pos) {
     const double threshold = 12.0;
     
@@ -232,7 +238,6 @@ class _EditorCanvasState extends State<EditorCanvas> {
 
   @override
   void dispose() {
-    EditorState.storedOffset = _offset;
     _stateUpdatedEventsSubscription?.cancel();
     super.dispose();
   }
@@ -241,9 +246,7 @@ class _EditorCanvasState extends State<EditorCanvas> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     if (!_sizeInitialized) {
-      // use the stored offset if we have one, otherwise centre
-      _offset = EditorState.storedOffset ??
-          Offset(size.width / 2, size.height / 2);
+      _offset = Offset(size.width / 2, size.height / 2);
       _sizeInitialized = true;
       _lastSize = size;
     } else if (_lastSize != null && (_lastSize!.width != size.width || _lastSize!.height != size.height)) {

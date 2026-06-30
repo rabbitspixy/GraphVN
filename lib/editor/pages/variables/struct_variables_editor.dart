@@ -11,18 +11,18 @@ import 'package:graph_vn/editor/editor_state.dart';
 
 import '../../struct.dart';
 
-class StructVariables extends StatefulWidget {
+class StructVariablesEditor extends StatefulWidget {
   final Struct struct;
   
-  StructVariables({
+  StructVariablesEditor({
     required this.struct
   }) : super(key: ValueKey(struct.id));
 
   @override
-  State<StructVariables> createState() => _StructVariablesState();
+  State<StructVariablesEditor> createState() => _StructVariablesEditorState();
 }
 
-class _StructVariablesState extends State<StructVariables> {
+class _StructVariablesEditorState extends State<StructVariablesEditor> {
   int? _selectedIndex;
   @override
   Widget build(BuildContext context) {

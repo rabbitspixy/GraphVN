@@ -23,7 +23,6 @@ class EditorState {
   static EditorNode? selectedNode;
   static EditorTransition? selectedTransition;
   static final List<Struct> structs = List.empty(growable: true);
-  static Offset? storedOffset;
   static String currentNode = "";
   static JavascriptRuntime jsRuntime = getJavascriptRuntime();
 
@@ -49,7 +48,6 @@ class EditorState {
     selectedNode = null;
     selectedTransition = null;
     structs.clear();
-    storedOffset = null;
     currentNode = "";
 
     if (appSettings.lastOpenedProjectDir != EditorState.projectDir) {
@@ -269,6 +267,10 @@ class EditorState {
 
   static NamedValuesType? namedValueTypeByValueId(String valueId) {
     return namedVariableTypes.where((t) => t.list.where((v) => v.id == valueId).isNotEmpty).firstOrNull;
+  }
+
+  static EditorNode? findNodeByLabel(String label) {
+    return nodes.values.where((x) => x.label == label).firstOrNull;
   }
 
   static void updateAllTransitionPositions() {

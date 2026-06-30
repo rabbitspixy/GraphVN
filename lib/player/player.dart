@@ -70,7 +70,11 @@ class Player {
             transition = selectRandomTransition(allowedTransitions);
           }
         }
-        node = null;
+        if (node.gotoLabel.isNotEmpty) {
+          node = EditorState.findNodeByLabel(node.gotoLabel);
+        } else {
+          node = null;
+        }
       }
 
       iterations++;

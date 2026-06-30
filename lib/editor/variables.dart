@@ -4,20 +4,7 @@ import 'package:graph_vn/editor/number_variable_stringifier.dart';
 import 'package:graph_vn/generated-proto/data.pb.dart';
 import 'package:uuid/uuid.dart';
 
-class PredefinedNamedTypes {
-  static const booleanTypeId = 'a16100bc-5afb-4e8c-b2c1-eb14e523e0d0';
-  static final booleanFalse = NamedValue(id: '8e3cc0d8-dd9d-4062-951c-158c62b32e35', name: 'False');
-  static final booleanTrue = NamedValue(id: '12bb0e0d-674f-4ce8-b03c-38cfe66f3040', name: 'True');
-}
-
-final namedVariableTypes = [
-  NamedValuesType()
-    ..id = PredefinedNamedTypes.booleanTypeId
-    ..name = 'Boolean'
-    ..list = [
-      PredefinedNamedTypes.booleanFalse,
-      PredefinedNamedTypes.booleanTrue,
-    ]
+final List<NamedValuesType> namedVariableTypes = [
 ];
 
 class NamedValuesType {

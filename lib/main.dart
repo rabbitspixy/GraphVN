@@ -8,6 +8,7 @@ import 'package:logger/logger.dart';
 import 'player/player.dart';
 import 'package:flutter/services.dart';
 import 'editor/widgets/editor.dart';
+import 'editor/pages/graph/editor_graph_page.dart';
 import 'player/widgets/player_root_widget.dart';
 
 final logger = Logger();
@@ -84,6 +85,14 @@ class _RootWidgetState extends State<RootWidget> {
       if (transition != null) {
         EditorState.deleteTransition(transition.id);
       }
+      return true;
+    }
+    if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.home) {
+      if (_showEditor) {
+        final size = MediaQuery.of(context).size;
+        EditorGraphPageState.instance?.resetOffset(size);
+      }
+      return true;
     }
     return false;
   }
