@@ -41,8 +41,10 @@ class EditorCanvasState extends State<EditorCanvas> {
   Size? _lastSize;
   bool _sizeInitialized = false;
   GameTransition? _hoveredTransition;
+  GameTransition? _selectedTransition;
   Offset? _hoverPosition;
   GameNode? _hoveredNode;
+  GameNode? _selectedNode;
   Offset? _hoverNodePosition;
   int _forcedRepaint = 0;
 
@@ -52,10 +54,16 @@ class EditorCanvasState extends State<EditorCanvas> {
   void _onPointerDown(PointerDownEvent event) {
     if (event.buttons & kPrimaryMouseButton != 0) {
       if (_hoveredNode != null) {
-        widget.onSelect(_hoveredNode!);
+        _selectedNode = _hoveredNode;
+        _selectedTransition = null;
+        widget.onSelect(_selectedNode!);
       } else if (_hoveredTransition != null) {
-        widget.onSelect(_hoveredTransition!);
+        _selectedNode = null;
+        _selectedTransition = _hoveredTransition;
+        widget.onSelect(_selectedTransition!);
       } else {
+        _selectedNode = null;
+        _selectedTransition = null;
         widget.onSelect(null);
       }
       if (event.timeStamp - _lastClickTime < const Duration(milliseconds: 300)) {
@@ -70,27 +78,17 @@ class EditorCanvasState extends State<EditorCanvas> {
     if (event.buttons & kPrimaryMouseButton != 0) {
       // If Ctrl is pressed, start linking
       if (HardwareKeyboard.instance.isControlPressed) {
-        for (final node in GameState.nodes.values) {
-          final left = node.x.toDouble() - 5 + _offset.dx;
-          final top = node.y.toDouble() - 5 + _offset.dy;
-          final rect = Rect.fromLTWH(left, top, 10, 10);
-          if (rect.contains(event.localPosition)) {
-            _linkingNodeId = node.id;
-            return;
-          }
+        if (_selectedNode != null) {
+          _linkingNodeId = _selectedNode?.id;
+          return;
         }
       } else {
-        for (final node in GameState.nodes.values) {
-          final left = node.x.toDouble() - 5 + _offset.dx;
-          final top = node.y.toDouble() - 5 + _offset.dy;
-          final rect = Rect.fromLTWH(left, top, 10, 10);
-          if (rect.contains(event.localPosition)) {
-            _draggingNodeId = node.id;
-            _nodeDragStart = event.localPosition;
-            _nodeOffsetStart = Offset(node.x.toDouble(), node.y.toDouble());
-            _nodeDragging = true;
-            return;
-          }
+        if (_selectedNode != null) {
+          _draggingNodeId = _selectedNode?.id;
+          _nodeDragStart = event.localPosition;
+          _nodeOffsetStart = Offset(_selectedNode!.x.toDouble(), _selectedNode!.y.toDouble());
+          _nodeDragging = true;
+          return;
         }
       }
     }
