@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:graph_vn/editor/editor_state.dart';
+import 'package:graph_vn/game/game_state.dart';
 import 'package:graph_vn/editor/modals/rename_dialog.dart';
 
 class ProjectSelector extends StatefulWidget {
@@ -19,13 +19,13 @@ class _ProjectSelectorState extends State<ProjectSelector> {
   }
 
   void _loadProjects() {
-    _projects = EditorState.getProjectFolders();
+    _projects = GameState.getProjectFolders();
   }
 
   Future<void> _createNewProject() async {
     final name = await showRenameDialog(context, 'New Project', '');
     if (name != null && name.isNotEmpty) {
-      EditorState.createAndLoadNewProject(name);
+      GameState.createAndLoadNewProject(name);
       setState(() {
         _loadProjects();
       });
@@ -37,7 +37,7 @@ class _ProjectSelectorState extends State<ProjectSelector> {
     return Column(
       children: [
         ..._projects.map((p) => ElevatedButton(
-              onPressed: () => EditorState.load(p),
+              onPressed: () => GameState.load(p),
               child: Text(p),
             )),
         ElevatedButton(

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:graph_vn/editor/variables.dart';
+import 'package:graph_vn/game/variables.dart';
 
 Future<Variable?> showAddVariableDialog(BuildContext context) async {
   String selectedType = 'Number';

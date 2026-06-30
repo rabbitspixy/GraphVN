@@ -3,7 +3,7 @@ import 'package:graph_vn/image_generation/generate_image_metadata.dart';
 import 'package:uuid/uuid.dart';
 import 'package:fixnum/fixnum.dart';
 
-class EditorNode {
+class GameNode {
   String id = Uuid().v4();
   String text = '';
   String label = '';
@@ -20,10 +20,10 @@ class EditorNode {
 
   bool get isEmpty => text.isEmpty;
 
-  EditorNode();
+  GameNode();
 
-  EditorNodeProto toProto() {
-    final result = EditorNodeProto();
+  GameNodeProto toProto() {
+    final result = GameNodeProto();
     result.id = id;
     result.text = text;
     result.label = label;
@@ -39,8 +39,8 @@ class EditorNode {
     return result;
   }
 
-  factory EditorNode.fromProto(EditorNodeProto proto) {
-    final result = EditorNode();
+  factory GameNode.fromProto(GameNodeProto proto) {
+    final result = GameNode();
     result.id = proto.id;
     result.text = proto.text;
     result.label = proto.label;

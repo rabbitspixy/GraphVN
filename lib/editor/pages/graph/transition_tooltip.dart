@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:graph_vn/editor/editor_transition.dart';
+import 'package:graph_vn/game/game_transition.dart';
 import 'package:graph_vn/editor/pages/graph/tooltip_positioned.dart';
 
 class TransitionTooltip extends StatelessWidget {
   final Offset position;
-  final EditorTransition transition;
+  final GameTransition transition;
   const TransitionTooltip({
     super.key,
     required this.position,

@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:graph_vn/editor/editor_state.dart';
+import 'package:graph_vn/game/game_state.dart';
 import 'dart:math';
 
-import 'package:graph_vn/editor/editor_transition.dart';
+import 'package:graph_vn/game/game_transition.dart';
 
 class TransitionPainter extends CustomPainter {
   final Offset offset;
   final int transitionCount;
-  final EditorTransition? selectedTransition;
-  final EditorTransition? hoveredTransition;
-  TransitionPainter({required this.offset, required this.selectedTransition, required this.hoveredTransition}) : transitionCount = EditorState.transitions.length;
+  final GameTransition? selectedTransition;
+  final GameTransition? hoveredTransition;
+  TransitionPainter({required this.offset, required this.selectedTransition, required this.hoveredTransition}) : transitionCount = GameState.transitions.length;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -18,7 +18,7 @@ class TransitionPainter extends CustomPainter {
       ..strokeWidth = 2
       ..style = PaintingStyle.stroke;
 
-    for (final transition in EditorState.transitions) {
+    for (final transition in GameState.transitions) {
       final start = transition.pos.start + offset;
       final end = transition.pos.end + offset;
       final control = transition.pos.control + offset;
@@ -68,7 +68,7 @@ class TransitionPainter extends CustomPainter {
   static final transitionButtonColors = [Colors.black.withAlpha(25), Colors.black.withAlpha(150), Colors.black.withAlpha(200)];
   static final emptyTransitionColors = [Colors.black.withAlpha(25), Colors.black.withAlpha(40), Colors.black.withAlpha(75)];
 
-  List<Color> _colorsOf(EditorTransition transition) {
+  List<Color> _colorsOf(GameTransition transition) {
     if (transition.isButton) {
       return transitionButtonColors;
     } else {
@@ -76,7 +76,7 @@ class TransitionPainter extends CustomPainter {
     }
   }
 
-  Color _arrowColorOf(EditorTransition transition) {
+  Color _arrowColorOf(GameTransition transition) {
     if (transition.isButton) {
       return Colors.black.withAlpha(255);
     } else {

@@ -3,17 +3,17 @@ import 'dart:async';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:graph_vn/editor/editor_node.dart';
-import 'package:graph_vn/editor/editor_state.dart';
-import 'package:graph_vn/editor/editor_transition.dart';
+import 'package:graph_vn/game/game_node.dart';
+import 'package:graph_vn/game/game_state.dart';
+import 'package:graph_vn/game/game_transition.dart';
 import 'package:graph_vn/editor/pages/graph/node_painter.dart';
 import 'package:graph_vn/editor/pages/graph/node_tooltip.dart';
 import 'package:graph_vn/editor/pages/graph/transition_painter.dart';
 import 'package:graph_vn/editor/pages/graph/transition_tooltip.dart';
 
 class EditorCanvas extends StatefulWidget {
-  final EditorNode? selectedNode;
-  final EditorTransition? selectedTransition;
+  final GameNode? selectedNode;
+  final GameTransition? selectedTransition;
   final Function(dynamic) onSelect;
 
   const EditorCanvas({
@@ -40,9 +40,9 @@ class EditorCanvasState extends State<EditorCanvas> {
   Duration _lastClickTime = Duration.zero;
   Size? _lastSize;
   bool _sizeInitialized = false;
-  EditorTransition? _hoveredTransition;
+  GameTransition? _hoveredTransition;
   Offset? _hoverPosition;
-  EditorNode? _hoveredNode;
+  GameNode? _hoveredNode;
   Offset? _hoverNodePosition;
   int _forcedRepaint = 0;
 
@@ -70,7 +70,7 @@ class EditorCanvasState extends State<EditorCanvas> {
     if (event.buttons & kPrimaryMouseButton != 0) {
       // If Ctrl is pressed, start linking
       if (HardwareKeyboard.instance.isControlPressed) {
-        for (final node in EditorState.nodes.values) {
+        for (final node in GameState.nodes.values) {
           final left = node.x.toDouble() - 5 + _offset.dx;
           final top = node.y.toDouble() - 5 + _offset.dy;
           final rect = Rect.fromLTWH(left, top, 10, 10);
@@ -80,7 +80,7 @@ class EditorCanvasState extends State<EditorCanvas> {
           }
         }
       } else {
-        for (final node in EditorState.nodes.values) {
+        for (final node in GameState.nodes.values) {
           final left = node.x.toDouble() - 5 + _offset.dx;
           final top = node.y.toDouble() - 5 + _offset.dy;
           final rect = Rect.fromLTWH(left, top, 10, 10);
@@ -103,9 +103,9 @@ class EditorCanvasState extends State<EditorCanvas> {
   }
 
   void _createNewNodeAt(Offset localPos) {
-    final newNode = EditorNode();
-    if (EditorState.trySetNodePosition(newNode, localPos.dx.round(), localPos.dy.round())) {
-      EditorState.addNode(newNode);
+    final newNode = GameNode();
+    if (GameState.trySetNodePosition(newNode, localPos.dx.round(), localPos.dy.round())) {
+      GameState.addNode(newNode);
     }
   }
 
@@ -113,7 +113,7 @@ class EditorCanvasState extends State<EditorCanvas> {
     if (_linkingNodeId == null && _nodeDragging && _draggingNodeId != null && _nodeDragStart != null && _nodeOffsetStart != null) {
       final delta = event.localPosition - _nodeDragStart!;
       setState(() {
-        EditorState.trySetNodePositionById(_draggingNodeId!, (_nodeOffsetStart!.dx + delta.dx).round(), (_nodeOffsetStart!.dy + delta.dy).round());
+        GameState.trySetNodePositionById(_draggingNodeId!, (_nodeOffsetStart!.dx + delta.dx).round(), (_nodeOffsetStart!.dy + delta.dy).round());
         _forcedRepaint++;
       });
     } else if (_dragging && _dragStart != null && _offsetStart != null) {
@@ -127,13 +127,13 @@ class EditorCanvasState extends State<EditorCanvas> {
   void _onPointerUp(PointerUpEvent event) {
     if (_linkingNodeId != null) {
       // Find target node under pointer
-      for (final node in EditorState.nodes.values) {
+      for (final node in GameState.nodes.values) {
         final left = node.x.toDouble() - 5 + _offset.dx;
         final top = node.y.toDouble() - 5 + _offset.dy;
         final rect = Rect.fromLTWH(left, top, 10, 10);
         if (rect.contains(event.localPosition) && node.id != _linkingNodeId) {
           // Create transition
-          EditorState.addTransition(EditorTransition()
+          GameState.addTransition(GameTransition()
             ..from = _linkingNodeId!
             ..to = node.id);
           break;
@@ -156,12 +156,12 @@ class EditorCanvasState extends State<EditorCanvas> {
     final nearestItem = _getNearestItemAtPosition(globalPosition);
     
     setState(() {
-      if (nearestItem != null && nearestItem is EditorTransition) {
+      if (nearestItem != null && nearestItem is GameTransition) {
         _hoveredTransition = nearestItem;
         _hoverPosition = globalPosition;
         _hoveredNode = null;
         _hoverNodePosition = null;
-      } else if (nearestItem != null && nearestItem is EditorNode) {
+      } else if (nearestItem != null && nearestItem is GameNode) {
         _hoveredNode = nearestItem;
         _hoverNodePosition = globalPosition;
         _hoveredTransition = null;
@@ -184,10 +184,10 @@ class EditorCanvasState extends State<EditorCanvas> {
   dynamic _getNearestItemAtPosition(Offset pos) {
     const double threshold = 12.0;
     
-    EditorNode? nearestNode;
+    GameNode? nearestNode;
     double nearestNodeDist = double.infinity;
     
-    for (final node in EditorState.nodes.values) {
+    for (final node in GameState.nodes.values) {
       final center = Offset(node.x.toDouble(), node.y.toDouble()) + _offset;
       final dist = (pos - center).distance;
       if (dist < nearestNodeDist && dist <= threshold) {
@@ -196,10 +196,10 @@ class EditorCanvasState extends State<EditorCanvas> {
       }
     }
     
-    EditorTransition? nearestTransition;
+    GameTransition? nearestTransition;
     double nearestTransitionDist = double.infinity;
     
-    for (final transition in EditorState.transitions) {
+    for (final transition in GameState.transitions) {
       final dist = (pos - (transition.pos.center + _offset)).distance;
       if (dist < nearestTransitionDist && dist <= threshold) {
         nearestTransitionDist = dist;
@@ -230,7 +230,7 @@ class EditorCanvasState extends State<EditorCanvas> {
 
   @override
   void initState() {
-    _stateUpdatedEventsSubscription = EditorState.stateUpdatedEvents.listen((e) { 
+    _stateUpdatedEventsSubscription = GameState.stateUpdatedEvents.listen((e) {
       setState(() {});
     });
     super.initState();

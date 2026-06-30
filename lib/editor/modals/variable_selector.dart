@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:graph_vn/editor/struct.dart';
-import 'package:graph_vn/editor/variables.dart';
-import 'package:graph_vn/editor/editor_state.dart';
+import 'package:graph_vn/game/game_state.dart';
+import 'package:graph_vn/game/struct.dart';
+import 'package:graph_vn/game/variables.dart';
 
 /// Shows a modal dialog that lists all [Variable]s in [struct] and
 /// returns the selected one. If the user cancels, returns null.
@@ -28,9 +28,9 @@ Future<Variable?> showVariableSelector(BuildContext? context, VariableType varia
           height: 500,
           child: ListView.builder(
             shrinkWrap: true,
-            itemCount: EditorState.structs.length,
+            itemCount: GameState.structs.length,
             itemBuilder: (BuildContext ctx, int index) {
-              final s = EditorState.structs[index];
+              final s = GameState.structs[index];
               return ListTile(
                 title: Text(s.name),
                 onTap: () => Navigator.of(ctx).pop(s),

@@ -1,4 +1,4 @@
-import 'package:graph_vn/editor/variables.dart';
+import 'package:graph_vn/game/variables.dart';
 import 'package:graph_vn/generated-proto/data.pb.dart';
 import 'package:uuid/uuid.dart';
 

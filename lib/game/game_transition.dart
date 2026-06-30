@@ -1,10 +1,10 @@
-import 'package:flutter/services.dart';
-import 'package:graph_vn/editor/transition_position.dart';
+import 'package:flutter/services.dart' as game_transition;
+import 'package:graph_vn/game/transition_position.dart';
 import 'package:graph_vn/generated-proto/data.pb.dart';
 import 'package:graph_vn/image_generation/generate_image_metadata.dart';
 import 'package:uuid/uuid.dart';
 
-class EditorTransition {
+class GameTransition {
   String id = Uuid().v4();
   String text = "";
   String from = "";
@@ -20,17 +20,17 @@ class EditorTransition {
   bool get isButton => text.isNotEmpty;
 
   TransitionPosition pos = TransitionPosition(
-    start: Offset(0, 0),
-    end: Offset(0, 0),
-    control: Offset(0, 0),
-    center: Offset(0, 0),
+    start: game_transition.Offset(0, 0),
+    end: game_transition.Offset(0, 0),
+    control: game_transition.Offset(0, 0),
+    center: game_transition.Offset(0, 0),
     direction: 0,
   );
 
-  EditorTransition();
+  GameTransition();
 
-  EditorTransitionProto toProto() {
-    final result = EditorTransitionProto();
+  GameTransitionProto toProto() {
+    final result = GameTransitionProto();
     result.id = id;
     result.text = text;
     result.from = from;
@@ -44,8 +44,8 @@ class EditorTransition {
     return result;
   }
 
-  factory EditorTransition.fromProto(EditorTransitionProto proto) {
-    final result = EditorTransition();
+  factory GameTransition.fromProto(GameTransitionProto proto) {
+    final result = GameTransition();
     result.id = proto.id;
     result.text = proto.text;
     result.from = proto.from;

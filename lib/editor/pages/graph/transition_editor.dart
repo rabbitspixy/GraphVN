@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:graph_vn/common/number_util.dart';
-import 'package:graph_vn/editor/editor_state.dart';
-import 'package:graph_vn/editor/editor_transition.dart';
+import 'package:graph_vn/game/game_state.dart';
+import 'package:graph_vn/game/game_transition.dart';
 import 'package:graph_vn/editor/modals/view_js_dialog.dart';
 
 class TransitionEditor extends StatefulWidget {
-  final EditorTransition transition;
+  final GameTransition transition;
   final VoidCallback onChange;
 
   TransitionEditor({
@@ -151,7 +151,7 @@ class _TransitionEditorState extends State<TransitionEditor> {
           width: double.infinity,
           child: ElevatedButton(
             onPressed: () {
-              EditorState.deleteTransition(widget.transition.id);
+              GameState.deleteTransition(widget.transition.id);
               widget.onChange();
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),

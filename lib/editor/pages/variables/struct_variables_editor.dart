@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:graph_vn/editor/modals/add_variable_dialog.dart';
 import 'package:graph_vn/editor/modals/rename_dialog.dart';
 import 'package:graph_vn/editor/modals/text_edit_dialog.dart';
-import 'package:graph_vn/editor/variables.dart';
-import 'package:graph_vn/editor/number_variable_stringifier.dart';
-import 'package:graph_vn/editor/named_variable_stringifier.dart';
+import 'package:graph_vn/game/variables.dart';
+import 'package:graph_vn/game/number_variable_stringifier.dart';
+import 'package:graph_vn/game/named_variable_stringifier.dart';
 import 'package:graph_vn/editor/modals/number_variable_stringifier_editor.dart';
 import 'package:graph_vn/editor/modals/named_variable_stringifier_editor.dart';
-import 'package:graph_vn/editor/editor_state.dart';
+import 'package:graph_vn/game/game_state.dart';
 
-import '../../struct.dart';
+import '../../../game/struct.dart';
 
 class StructVariablesEditor extends StatefulWidget {
   final Struct struct;
@@ -199,10 +199,10 @@ class _StructVariablesEditorState extends State<StructVariablesEditor> {
                     itemBuilder: (context, idx) {
                       final s = variable.stringifiers[idx];
                       return ListTile(
-                        title: Text(EditorState.namedValue(s.valueId)?.name ?? "Unknown"),
+                        title: Text(GameState.namedValue(s.valueId)?.name ?? "Unknown"),
                         subtitle: Text(s.template),
                         onTap: () async {
-                          final namedValues = EditorState.namedValuesType(variable.typeId)?.list ?? [];
+                          final namedValues = GameState.namedValuesType(variable.typeId)?.list ?? [];
                           final updated = await editNamedVariableStringifier(context, s, namedValues);
                           if (updated != null) {
                             setState(() {
@@ -232,7 +232,7 @@ class _StructVariablesEditorState extends State<StructVariablesEditor> {
                         });
                       }
                     } else if (variable is NamedVariable) {
-                      final namedValues = EditorState.namedValuesType(variable.typeId)?.list ?? [];
+                      final namedValues = GameState.namedValuesType(variable.typeId)?.list ?? [];
                       final newStringifier = NamedVariableStringifier(
                         valueId: '',
                         template: '',

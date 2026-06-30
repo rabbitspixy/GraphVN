@@ -1,12 +1,12 @@
 syntax = "proto3";
 
 message ProjectProto {
-  repeated EditorNodeProto nodes = 1;
-  repeated EditorTransitionProto transitions = 2;
+  repeated GameNodeProto nodes = 1;
+  repeated GameTransitionProto transitions = 2;
   repeated StructProto structs = 3;
 }
 
-message EditorTransitionProto {
+message GameTransitionProto {
   string id = 1;
   string text = 2;
   string from = 3;
@@ -19,7 +19,7 @@ message EditorTransitionProto {
   string naturalLanguageAction = 10;
 }
 
-message EditorNodeProto {
+message GameNodeProto {
   string id = 1;
   string text = 2;
   string label = 3;

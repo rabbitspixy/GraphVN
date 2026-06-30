@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:graph_vn/editor/editor_node.dart';
+import 'package:graph_vn/game/game_node.dart';
 import 'package:graph_vn/editor/pages/graph/tooltip_positioned.dart';
 
 class NodeTooltip extends StatelessWidget {
   final Offset position;
-  final EditorNode node;
+  final GameNode node;
   const NodeTooltip({
     super.key,
     required this.position,

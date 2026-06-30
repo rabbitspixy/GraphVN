@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:graph_vn/editor/modals/rename_dialog.dart';
 import 'package:graph_vn/editor/pages/variables/struct_editor.dart';
-import 'package:graph_vn/editor/struct.dart';
-import '../../editor_state.dart';
+import 'package:graph_vn/game/struct.dart';
+import '../../../game/game_state.dart';
 
 class EditorVariablesPage extends StatefulWidget {
   const EditorVariablesPage({super.key});
@@ -24,9 +24,9 @@ class _EditorVariablesPageState extends State<EditorVariablesPage> {
             children: [
               Expanded(
                 child: ListView.builder(
-                  itemCount: EditorState.structs.length + 1,
+                  itemCount: GameState.structs.length + 1,
                   itemBuilder: (context, index) {
-                    if (index == EditorState.structs.length) {
+                    if (index == GameState.structs.length) {
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: OutlinedButton.icon(
@@ -34,16 +34,16 @@ class _EditorVariablesPageState extends State<EditorVariablesPage> {
                           label: Text('Struct'),
                           onPressed: () {
                             setState(() {
-                              EditorState.structs.add(
+                              GameState.structs.add(
                                 Struct()
-                                  ..name="Структура ${EditorState.structs.length + 1}"
+                                  ..name="Структура ${GameState.structs.length + 1}"
                               );
                             });
                           },
                         ),
                       );
                     }
-                    final struct = EditorState.structs[index];
+                    final struct = GameState.structs[index];
                     return ListTile(
                       title: Text(struct.name),
                       selected: _selectedStructIndex == index,
@@ -74,7 +74,7 @@ class _EditorVariablesPageState extends State<EditorVariablesPage> {
           flex: 4,
           child: _selectedStructIndex == null
               ? Center(child: Text('Select a struct to edit'))
-              : StructEditor(struct: EditorState.structs[_selectedStructIndex!])
+              : StructEditor(struct: GameState.structs[_selectedStructIndex!])
         ),
       ],
     );

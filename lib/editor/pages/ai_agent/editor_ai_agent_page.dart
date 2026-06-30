@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:graph_vn/common/collection_util.dart';
 import 'package:graph_vn/common/find_block_util.dart';
 import 'package:graph_vn/common/parallel_util.dart';
-import 'package:graph_vn/editor/editor_node.dart';
-import 'package:graph_vn/editor/editor_state.dart';
-import 'package:graph_vn/editor/editor_transition.dart';
+import 'package:graph_vn/game/game_node.dart';
+import 'package:graph_vn/game/game_state.dart';
+import 'package:graph_vn/game/game_transition.dart';
 import 'package:graph_vn/llm/text_generator.dart';
 import 'package:graph_vn/main.dart';
 
@@ -75,12 +75,12 @@ class _EditorAiAgentPageState extends State<EditorAiAgentPage> {
   }
 
   void _processEmptyFields() {
-    for (final node in EditorState.nodes.values) {
+    for (final node in GameState.nodes.values) {
       if (node.naturalLanguageAction.isEmpty) {
         node.jsAction = "";
       }
     }
-    for (final transition in EditorState.transitions) {
+    for (final transition in GameState.transitions) {
       if (transition.naturalLanguageCondition.isEmpty) {
         transition.jsCondition = "";
       }
@@ -91,7 +91,7 @@ class _EditorAiAgentPageState extends State<EditorAiAgentPage> {
   }
 
   void _refindReplaceableInTexts() {
-    for (final node in EditorState.nodes.values) {
+    for (final node in GameState.nodes.values) {
       node.jsReplace = filterMapByKeys(
           node.jsReplace,
           findBlockDoubleCurlyBraces(node.text)
@@ -156,7 +156,7 @@ class _EditorAiAgentPageState extends State<EditorAiAgentPage> {
 
   List<Future<void> Function()> _processNodeReplaceable() {
     final tasks = <Future<void> Function()>[];
-    for (final node in EditorState.nodes.values) {
+    for (final node in GameState.nodes.values) {
       for (final replaceable in node.jsReplace.keys) {
         tasks.add(() async {
           final code = await TextGenerator.writeReplaceable(replaceable.replaceAll("{{", "").replaceAll("}}", ""));
@@ -188,16 +188,16 @@ class _EditorAiAgentPageState extends State<EditorAiAgentPage> {
     );
   }
 
-  List<EditorNode> _nodesWithDirtyActions() {
-    return EditorState.nodes.values.where((n) => n.naturalLanguageAction.isNotEmpty).toList();
+  List<GameNode> _nodesWithDirtyActions() {
+    return GameState.nodes.values.where((n) => n.naturalLanguageAction.isNotEmpty).toList();
   }
 
-  List<EditorTransition> _transitionsWithDirtyConditions() {
-    return EditorState.transitions.where((x) => x.naturalLanguageCondition.isNotEmpty).toList();
+  List<GameTransition> _transitionsWithDirtyConditions() {
+    return GameState.transitions.where((x) => x.naturalLanguageCondition.isNotEmpty).toList();
   }
 
-  List<EditorTransition> _transitionsWithDirtyActions() {
-    return EditorState.transitions.where((x) => x.naturalLanguageAction.isNotEmpty).toList();
+  List<GameTransition> _transitionsWithDirtyActions() {
+    return GameState.transitions.where((x) => x.naturalLanguageAction.isNotEmpty).toList();
   }
 
   @override

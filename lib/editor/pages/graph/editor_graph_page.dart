@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:graph_vn/editor/pages/graph/editor_canvas.dart';
-import 'package:graph_vn/editor/editor_node.dart';
-import 'package:graph_vn/editor/editor_state.dart';
-import 'package:graph_vn/editor/editor_transition.dart';
+import 'package:graph_vn/game/game_node.dart';
+import 'package:graph_vn/game/game_state.dart';
+import 'package:graph_vn/game/game_transition.dart';
 import 'package:graph_vn/editor/pages/graph/node_editor.dart';
 import 'package:graph_vn/editor/pages/graph/transition_editor.dart';
 
@@ -18,11 +18,11 @@ class EditorGraphPageState extends State<EditorGraphPage> {
   static EditorGraphPageState? instance;
 
   void _onSelectHandler(dynamic selectedObject) {
-    EditorState.selectedNode = null;
-    EditorState.selectedTransition = null;
+    GameState.selectedNode = null;
+    GameState.selectedTransition = null;
     switch (selectedObject) {
-      case EditorNode _: EditorState.selectedNode = selectedObject;
-      case EditorTransition _: EditorState.selectedTransition = selectedObject;
+      case GameNode _: GameState.selectedNode = selectedObject;
+      case GameTransition _: GameState.selectedTransition = selectedObject;
     }
     setState(() {});
   }
@@ -58,8 +58,8 @@ class EditorGraphPageState extends State<EditorGraphPage> {
       children: [
         EditorCanvas(
           key: _canvasKey,
-          selectedNode: EditorState.selectedNode,
-          selectedTransition: EditorState.selectedTransition,
+          selectedNode: GameState.selectedNode,
+          selectedTransition: GameState.selectedTransition,
           onSelect: _onSelectHandler,
         ),
         Positioned(
@@ -70,10 +70,10 @@ class EditorGraphPageState extends State<EditorGraphPage> {
             width: size.width * 0.5 - 50,
             color: Color.fromARGB(255, 230, 230, 230),
             padding: const EdgeInsets.all(8.0),
-            child: EditorState.selectedNode != null
-                ? NodeEditor(node: EditorState.selectedNode!, onChange: _onNodeEdited,)
-                : EditorState.selectedTransition != null
-                    ? TransitionEditor(transition: EditorState.selectedTransition!, onChange: _onTransitionEdited,)
+            child: GameState.selectedNode != null
+                ? NodeEditor(node: GameState.selectedNode!, onChange: _onNodeEdited,)
+                : GameState.selectedTransition != null
+                    ? TransitionEditor(transition: GameState.selectedTransition!, onChange: _onTransitionEdited,)
                     : const SizedBox.shrink(),
           ),
         ),

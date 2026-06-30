@@ -1,11 +1,11 @@
-import 'package:graph_vn/editor/editor_node.dart';
-import 'package:graph_vn/editor/editor_transition.dart';
-import 'package:graph_vn/editor/struct.dart';
+import 'package:graph_vn/game/game_node.dart';
+import 'package:graph_vn/game/game_transition.dart';
+import 'package:graph_vn/game/struct.dart';
 import 'package:graph_vn/generated-proto/data.pb.dart';
 
 class ProjectData {
-  final Map<String, EditorNode> nodes;
-  final List<EditorTransition> transitions;
+  final Map<String, GameNode> nodes;
+  final List<GameTransition> transitions;
   final List<Struct> structs;
 
   ProjectData({
@@ -26,8 +26,8 @@ class ProjectData {
 
 
     return ProjectData(
-        nodes: { for (var node in proto.nodes) node.id: EditorNode.fromProto(node) },
-        transitions: [ for (var t in proto.transitions) EditorTransition.fromProto(t) ],
+        nodes: { for (var node in proto.nodes) node.id: GameNode.fromProto(node) },
+        transitions: [ for (var t in proto.transitions) GameTransition.fromProto(t) ],
         structs: [ for (var s in proto.structs) Struct.fromProto(s) ],
     );
   }

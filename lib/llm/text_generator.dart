@@ -1,5 +1,5 @@
 import 'package:graph_vn/common/find_block_util.dart';
-import 'package:graph_vn/editor/editor_state.dart';
+import 'package:graph_vn/game/game_state.dart';
 import 'package:graph_vn/llm/llm_gateway.dart';
 
 class TextGenerator {
@@ -117,7 +117,7 @@ $replaceable
     final init = StringBuffer();
     init.writeln("variables = {};");
 
-    for (final struct in EditorState.structs) {
+    for (final struct in GameState.structs) {
       for (final variable in struct.variables) {
         final key = "${struct.name}->${variable.name}";
         init.writeln("");

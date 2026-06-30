@@ -3,7 +3,7 @@ import 'package:flutter_window_close/flutter_window_close.dart';
 import 'package:graph_vn/editor/widgets/project_selector.dart';
 import 'package:graph_vn/js_test.dart';
 import 'package:graph_vn/settings/app_settings.dart';
-import 'package:graph_vn/editor/editor_state.dart';
+import 'package:graph_vn/game/game_state.dart';
 import 'package:logger/logger.dart';
 import 'player/player.dart';
 import 'package:flutter/services.dart';
@@ -15,7 +15,7 @@ final logger = Logger();
 
 void main() {
   jsTest();
-  EditorState.loadLastSavedProject();
+  GameState.loadLastSavedProject();
   Player.updateState();
   initWindowCloseHandler();
   runApp(const RootWidget());
@@ -24,7 +24,7 @@ void main() {
 void initWindowCloseHandler() {
   FlutterWindowClose.setWindowShouldCloseHandler(() async {
     try {
-      EditorState.save();
+      GameState.save();
       saveAppSettings();
     } catch (e, s) {
       logger.e('project saving error', error: e, stackTrace: s);
@@ -64,7 +64,7 @@ class _RootWidgetState extends State<RootWidget> {
       return true;
     }
     if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.f5 && HardwareKeyboard.instance.isShiftPressed) {
-      EditorState.restart();
+      GameState.restart();
       Player.updateState();
       return true;
     }
@@ -73,17 +73,17 @@ class _RootWidgetState extends State<RootWidget> {
       return true;
     }
     if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.keyS && HardwareKeyboard.instance.isControlPressed) {
-      EditorState.save();
+      GameState.save();
       return true;
     }
     if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.delete) {
-      final node = EditorState.selectedNode;
+      final node = GameState.selectedNode;
       if (node != null) {
-        EditorState.deleteNode(node.id);
+        GameState.deleteNode(node.id);
       }
-      final transition = EditorState.selectedTransition;
+      final transition = GameState.selectedTransition;
       if (transition != null) {
-        EditorState.deleteTransition(transition.id);
+        GameState.deleteTransition(transition.id);
       }
       return true;
     }
@@ -101,7 +101,7 @@ class _RootWidgetState extends State<RootWidget> {
   void initState() {
     super.initState();
     HardwareKeyboard.instance.addHandler(_handleKey);
-    EditorState.stateUpdatedEvents.listen((_) => setState(() {}));
+    GameState.stateUpdatedEvents.listen((_) => setState(() {}));
   }
 
   @override
@@ -119,7 +119,7 @@ class _RootWidgetState extends State<RootWidget> {
         body: KeyboardListener(
           focusNode: _focusNode,
           autofocus: true,
-          child: EditorState.isProjectLoaded()
+          child: GameState.isProjectLoaded()
               ? Stack(
                   children: [
                     Visibility(

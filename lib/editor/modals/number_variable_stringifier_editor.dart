@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:graph_vn/editor/number_variable_stringifier.dart';
+import 'package:graph_vn/game/number_variable_stringifier.dart';
 
 /// Opens a modal dialog to edit a [NumberVariableStringifier].
 /// The dialog contains text fields for [rangeStart], [rangeEnd] and [template].

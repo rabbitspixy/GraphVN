@@ -1,6 +1,6 @@
-import 'package:graph_vn/editor/editor_state.dart';
-import 'package:graph_vn/editor/named_variable_stringifier.dart';
-import 'package:graph_vn/editor/number_variable_stringifier.dart';
+import 'package:graph_vn/game/game_state.dart';
+import 'package:graph_vn/game/named_variable_stringifier.dart';
+import 'package:graph_vn/game/number_variable_stringifier.dart';
 import 'package:graph_vn/generated-proto/data.pb.dart';
 import 'package:uuid/uuid.dart';
 
@@ -57,7 +57,7 @@ class NumberVariable extends Variable {
 
   @override
   String currentValueAsText() {
-    return EditorState.valueOfVariable(this);
+    return GameState.valueOfVariable(this);
   }
 
   @override
@@ -106,12 +106,12 @@ class NamedVariable extends Variable {
 
   @override
   String initialValueAsText() {
-    return EditorState.namedValue(initialValue)?.name ?? "?";
+    return GameState.namedValue(initialValue)?.name ?? "?";
   }
 
   @override
   String currentValueAsText() {
-    return EditorState.valueOfVariable(this);
+    return GameState.valueOfVariable(this);
   }
 
   @override

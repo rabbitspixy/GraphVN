@@ -2,26 +2,26 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter_js/flutter_js.dart';
-import 'package:graph_vn/editor/struct.dart';
+import 'package:graph_vn/game/struct.dart';
+import 'package:graph_vn/game/transition_position.dart';
 import 'package:graph_vn/settings/app_settings.dart';
 import 'package:graph_vn/app_constants.dart';
-import 'package:graph_vn/editor/editor_node.dart';
-import 'package:graph_vn/editor/editor_transition.dart';
-import 'package:graph_vn/editor/project_data.dart';
-import 'package:graph_vn/editor/transition_position.dart';
-import 'package:graph_vn/editor/variables.dart';
+import 'package:graph_vn/game/game_node.dart';
+import 'package:graph_vn/game/game_transition.dart';
+import 'package:graph_vn/game/project_data.dart';
+import 'package:graph_vn/game/variables.dart';
 import 'package:graph_vn/generated-proto/data.pb.dart';
 import 'dart:ui';
 
 import 'package:graph_vn/main.dart';
 
-class EditorState {
+class GameState {
   static String projectDir = "";
 
-  static final Map<String, EditorNode> nodes = <String, EditorNode>{};
-  static final List<EditorTransition> transitions = List.empty(growable: true);
-  static EditorNode? selectedNode;
-  static EditorTransition? selectedTransition;
+  static final Map<String, GameNode> nodes = <String, GameNode>{};
+  static final List<GameTransition> transitions = List.empty(growable: true);
+  static GameNode? selectedNode;
+  static GameTransition? selectedTransition;
   static final List<Struct> structs = List.empty(growable: true);
   static String currentNode = "";
   static JavascriptRuntime jsRuntime = getJavascriptRuntime();
@@ -42,7 +42,7 @@ class EditorState {
   static final stateUpdatedEvents = _stateUpdatedEventsController.stream;
 
   static void closeProject() {
-    EditorState.projectDir = "";
+    GameState.projectDir = "";
     nodes.clear();
     transitions.clear();
     selectedNode = null;
@@ -50,8 +50,8 @@ class EditorState {
     structs.clear();
     currentNode = "";
 
-    if (appSettings.lastOpenedProjectDir != EditorState.projectDir) {
-      appSettings = appSettings.copyWith(lastOpenedProjectDir: EditorState.projectDir);
+    if (appSettings.lastOpenedProjectDir != GameState.projectDir) {
+      appSettings = appSettings.copyWith(lastOpenedProjectDir: GameState.projectDir);
     }
 
     _stateUpdatedEventsController.add('');
@@ -68,7 +68,7 @@ class EditorState {
 
     final file = File("./${AppConstants.projectsDir}/$projectDir/main.bin");
     if (!file.existsSync()) {
-      EditorState.projectDir = projectDir;
+      GameState.projectDir = projectDir;
       _stateUpdatedEventsController.add('');
       return;
     }
@@ -93,10 +93,10 @@ class EditorState {
     updateAllTransitionPositions();
 
     //this should be done last
-    EditorState.projectDir = projectDir;
+    GameState.projectDir = projectDir;
     _stateUpdatedEventsController.add('');
-    if (appSettings.lastOpenedProjectDir != EditorState.projectDir) {
-      appSettings = appSettings.copyWith(lastOpenedProjectDir: EditorState.projectDir);
+    if (appSettings.lastOpenedProjectDir != GameState.projectDir) {
+      appSettings = appSettings.copyWith(lastOpenedProjectDir: GameState.projectDir);
     }
   }
 
@@ -124,9 +124,9 @@ class EditorState {
     logger.i('start saving project');
 
     final projectData = ProjectData(
-      nodes: EditorState.nodes,
-      transitions:  EditorState.transitions,
-      structs: EditorState.structs,
+      nodes: GameState.nodes,
+      transitions:  GameState.transitions,
+      structs: GameState.structs,
     );
     final file = File("./${AppConstants.projectsDir}/$projectDir/main.bin");
     final dir = file.parent;
@@ -174,36 +174,36 @@ class EditorState {
     return projectDir.isNotEmpty;
   }
 
-  static void addTransition(EditorTransition transition) {
+  static void addTransition(GameTransition transition) {
     transitions.add(transition);
     updateAllTransitionPositions();
     _stateUpdatedEventsController.add('');
   }
 
   static void deleteTransition(String id) {
-    if (EditorState.selectedTransition?.id == id) {
-      EditorState.selectedTransition = null;
+    if (GameState.selectedTransition?.id == id) {
+      GameState.selectedTransition = null;
     }
-    final idx = EditorState.transitions.indexWhere((t) => t.id == id);
+    final idx = GameState.transitions.indexWhere((t) => t.id == id);
     if (idx != -1) {
-      EditorState.transitions.removeAt(idx);
+      GameState.transitions.removeAt(idx);
     }
     _stateUpdatedEventsController.add('');
   }
 
-  static void addNode(EditorNode node) {
-    EditorState.nodes[node.id] = node;
+  static void addNode(GameNode node) {
+    GameState.nodes[node.id] = node;
     _stateUpdatedEventsController.add('');
   }
 
   static void deleteNode(String id) {
-    if (EditorState.selectedNode?.id == id) {
-      EditorState.selectedNode = null;
+    if (GameState.selectedNode?.id == id) {
+      GameState.selectedNode = null;
     }
-    final node = EditorState.nodes[id];
+    final node = GameState.nodes[id];
     if (node != null) {
-      EditorState.nodes.remove(node.id);
-      EditorState.transitions.removeWhere((t) => t.from == node.id || t.to == node.id);
+      GameState.nodes.remove(node.id);
+      GameState.transitions.removeWhere((t) => t.from == node.id || t.to == node.id);
     }
     _stateUpdatedEventsController.add('');
   }
@@ -213,14 +213,14 @@ class EditorState {
   }
 
   static bool trySetNodePositionById(String nodeId, int x, int y) {
-    final node = EditorState.nodes[nodeId];
+    final node = GameState.nodes[nodeId];
     if (node != null) {
       return trySetNodePosition(node, x, y);
     }
     return false;
   }
   
-  static bool trySetNodePosition(EditorNode node, int x, int y) {
+  static bool trySetNodePosition(GameNode node, int x, int y) {
     final newX = (x.toDouble() / 25).round() * 25;
     final newY = (y.toDouble() / 25).round() * 25;
     if (!hasNodeInPosition(newX, newY)) {
@@ -238,15 +238,15 @@ class EditorState {
   }
 
   static Struct? structByVariableId(String variableId) {
-    return EditorState.structs.where((s) => s.variables.any((v) => v.id == variableId)).firstOrNull;
+    return GameState.structs.where((s) => s.variables.any((v) => v.id == variableId)).firstOrNull;
   }
   
   static Variable? variableById(String variableId) {
-    return EditorState.structByVariableId(variableId)?.variableById(variableId);
+    return GameState.structByVariableId(variableId)?.variableById(variableId);
   }
 
   static String variableName(String variableId) {
-    final struct = EditorState.structByVariableId(variableId);
+    final struct = GameState.structByVariableId(variableId);
     if (struct == null) {
       return "variable";
     }
@@ -269,22 +269,22 @@ class EditorState {
     return namedVariableTypes.where((t) => t.list.where((v) => v.id == valueId).isNotEmpty).firstOrNull;
   }
 
-  static EditorNode? findNodeByLabel(String label) {
+  static GameNode? findNodeByLabel(String label) {
     return nodes.values.where((x) => x.label == label).firstOrNull;
   }
 
   static void updateAllTransitionPositions() {
     final Map<String, int> precalculatedPairCount = {};
-    for (final transition in EditorState.transitions) {
+    for (final transition in GameState.transitions) {
       final key = '${transition.from}->${transition.to}';
       precalculatedPairCount.update(key, (v) => v + 1, ifAbsent: () => 1);
     }
 
     final Map<String, int> pairCount = {};
 
-    for (final transition in EditorState.transitions) {
-      final fromNode = EditorState.nodes[transition.from];
-      final toNode = EditorState.nodes[transition.to];
+    for (final transition in GameState.transitions) {
+      final fromNode = GameState.nodes[transition.from];
+      final toNode = GameState.nodes[transition.to];
       if (fromNode == null || toNode == null) continue;
 
       final start = Offset(

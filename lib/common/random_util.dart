@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:graph_vn/editor/editor_transition.dart';
+import 'package:graph_vn/game/game_transition.dart';
 
 int randomInt(int fromInclusive, int toInclusive) {
   var diff = toInclusive - fromInclusive;
@@ -26,7 +26,7 @@ T randomChoise<T>(List<T> items) {
 
 
 
-EditorTransition? selectRandomTransition(List<EditorTransition> transitions) {
+GameTransition? selectRandomTransition(List<GameTransition> transitions) {
   if (transitions.isEmpty) {
     return null;
   }

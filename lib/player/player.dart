@@ -2,11 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:graph_vn/common/random_util.dart';
-import 'package:graph_vn/editor/editor_node.dart';
-import 'package:graph_vn/editor/editor_transition.dart';
+import 'package:graph_vn/game/game_node.dart';
+import 'package:graph_vn/game/game_transition.dart';
 import 'package:graph_vn/main.dart';
 import 'package:graph_vn/player/components.dart';
-import 'package:graph_vn/editor/editor_state.dart';
+import 'package:graph_vn/game/game_state.dart';
 
 class Player {
   static final ValueNotifier<PlayerImageInfo> imageInfoNotifier = ValueNotifier<PlayerImageInfo>(PlayerImageInfo(path: ''));
@@ -40,17 +40,17 @@ class Player {
   /// empty transitions (those without a button) by automatically selecting
   /// a random one when no button transitions are available.
   ///
-  /// The method updates the global [EditorState.currentNode] and
+  /// The method updates the global [GameState.currentNode] and
   /// triggers a UI update via [_updateStill].
   static void updateState({String? useTransition, String? goToNode}) {
-    EditorTransition? transition;
+    GameTransition? transition;
     if (useTransition != null) {
-      transition = EditorState.transitions.where((x) => x.id == useTransition).firstOrNull;
+      transition = GameState.transitions.where((x) => x.id == useTransition).firstOrNull;
     }
 
-    EditorNode? node;
+    GameNode? node;
     if (goToNode != null) {
-      node = EditorState.nodes[goToNode];
+      node = GameState.nodes[goToNode];
     }
     
     int iterations = 0;
@@ -58,12 +58,12 @@ class Player {
     while (transition != null || node != null) {
       if (transition != null) {
         _runActions(transition.jsAction);
-        node = EditorState.nodes[transition.to];
+        node = GameState.nodes[transition.to];
         transition = null;
       }
       if (node != null) {
         _runActions(node.jsAction);
-        EditorState.currentNode = node.id;
+        GameState.currentNode = node.id;
         if (node.isEmpty) {
           final allowedTransitions = Player.allowedTransitionsForCurrentState();
           if (allowedTransitions.every((x) => !x.isButton)){
@@ -71,7 +71,7 @@ class Player {
           }
         }
         if (node.gotoLabel.isNotEmpty) {
-          node = EditorState.findNodeByLabel(node.gotoLabel);
+          node = GameState.findNodeByLabel(node.gotoLabel);
         } else {
           node = null;
         }
@@ -88,22 +88,22 @@ class Player {
 
   static void _runActions(String jsAction) {
     final emptyFunc = "function doActions() {}";
-    final result = EditorState.jsRuntime.evaluate("$emptyFunc\n$jsAction\ndoActions();");
+    final result = GameState.jsRuntime.evaluate("$emptyFunc\n$jsAction\ndoActions();");
     if (result.isError) {
       logger.w("Javascript error:\n$jsAction\n\n${result.rawResult}");
     }
   }
 
-  static List<EditorTransition> allowedTransitionsForCurrentState() {
-    return EditorState.transitions
-      .where((t) => t.from == EditorState.currentNode)
+  static List<GameTransition> allowedTransitionsForCurrentState() {
+    return GameState.transitions
+      .where((t) => t.from == GameState.currentNode)
       .where((t) => _resolveTransitionConditions(t.jsCondition))
       .toList();
   }
 
   static bool _resolveTransitionConditions(String jsCondition) {
     final emptyFunc = "function testConditions() { return true; }";
-    final result = EditorState.jsRuntime.evaluate("$emptyFunc\n$jsCondition\ntestConditions();");
+    final result = GameState.jsRuntime.evaluate("$emptyFunc\n$jsCondition\ntestConditions();");
     if (result.isError) {
       logger.w("Javascript error:\n$jsCondition\n\n${result.rawResult}");
       return true;
@@ -119,7 +119,7 @@ class Player {
 
   static String _resolveGetTextValue(String js) {
     final emptyFunc = "function getText() { return \"\"; }";
-    final result = EditorState.jsRuntime.evaluate("$emptyFunc\n$js\ngetText();");
+    final result = GameState.jsRuntime.evaluate("$emptyFunc\n$js\ngetText();");
     if (result.isError) {
       logger.w("Javascript error:\n$js\n\n${result.rawResult}");
       return "JS_ERROR_2";
@@ -132,18 +132,18 @@ class Player {
 
   static void _updateStill() {
     buttons.value.clear();
-    if (EditorState.currentNode == "") {
+    if (GameState.currentNode == "") {
       final initResult = initStartGame();
       if (!initResult) {
         return;
       }
     }
-    final node = EditorState.nodes[EditorState.currentNode];
+    final node = GameState.nodes[GameState.currentNode];
     if (node == null) {
       return;
     }
     String nt = node.text;
-    for (final struct in EditorState.structs) {
+    for (final struct in GameState.structs) {
       for (final variable in struct.variables) {
         nt = nt.replaceAll("[${struct.name}->${variable.name}]", variable.currentValueAsText());
         for (final replaceable in node.jsReplace.keys) {
@@ -156,7 +156,7 @@ class Player {
     narrativeText.value = nt;
 
     final st = StringBuffer();
-    for (final struct in EditorState.structs) {
+    for (final struct in GameState.structs) {
       for (final variable in struct.variables) {
         var currentValueAsTextForPlayer = variable.currentValueAsTextForPlayer();
         if (currentValueAsTextForPlayer != null) {
@@ -176,7 +176,7 @@ class Player {
         .toList();
     
     if (node.imagePath.isNotEmpty) {
-      final file = File("projects/${EditorState.projectDir}/images/${node.imagePath}");
+      final file = File("projects/${GameState.projectDir}/images/${node.imagePath}");
       if (file.existsSync()) {
         imageInfoNotifier.value = PlayerImageInfo(
           path: file.path,
@@ -186,8 +186,8 @@ class Player {
   }
 
   static bool initStartGame() {
-    EditorState.restart();
-    final startNode = EditorState.nodes.values.where((node) => node.isStart).firstOrNull;
+    GameState.restart();
+    final startNode = GameState.nodes.values.where((node) => node.isStart).firstOrNull;
     if (startNode != null) {
       updateState(goToNode: startNode.id);
       return true;

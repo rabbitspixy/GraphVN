@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:graph_vn/editor/editor_node.dart';
-import 'package:graph_vn/editor/editor_state.dart';
+import 'package:graph_vn/game/game_node.dart';
+import 'package:graph_vn/game/game_state.dart';
 
 class NodePainter extends CustomPainter {
   final Offset offset;
   final int nodesCount;
-  final EditorNode? selectedNode;
-  final EditorNode? hoveredNode;
+  final GameNode? selectedNode;
+  final GameNode? hoveredNode;
   final int forcedRepaint;
-  NodePainter({required this.offset, required this.selectedNode, required this.hoveredNode, required this.forcedRepaint}) : nodesCount = EditorState.nodes.length;
+  NodePainter({required this.offset, required this.selectedNode, required this.hoveredNode, required this.forcedRepaint}) : nodesCount = GameState.nodes.length;
 
   @override
   void paint(Canvas canvas, Size size) {
-    for (final node in EditorState.nodes.values) {
+    for (final node in GameState.nodes.values) {
       final center = Offset(node.x.toDouble(), node.y.toDouble()) + offset;
       final nodeSize = _sizeOf(node);
 
@@ -35,7 +35,7 @@ class NodePainter extends CustomPainter {
     }
   }
 
-  double _sizeOf(EditorNode node) {
+  double _sizeOf(GameNode node) {
     if (node.isStart) {
       return 7;
     }
@@ -45,7 +45,7 @@ class NodePainter extends CustomPainter {
     return 5;
   }
 
-  Color _colorOf(EditorNode node) {
+  Color _colorOf(GameNode node) {
     if (node.isStart) {
       return const Color.fromARGB(255, 21, 207, 27);
     }

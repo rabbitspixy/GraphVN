@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:graph_vn/editor/editor_node.dart';
-import 'package:graph_vn/editor/editor_state.dart';
+import 'package:graph_vn/game/game_node.dart';
+import 'package:graph_vn/game/game_state.dart';
 import 'package:graph_vn/editor/modals/view_js_dialog.dart';
 
 class NodeEditor extends StatefulWidget {
-  final EditorNode node;
+  final GameNode node;
   final VoidCallback onChange;
 
   NodeEditor({
@@ -177,7 +177,7 @@ class _NodeEditorState extends State<NodeEditor> {
           width: double.infinity,
           child: ElevatedButton(
             onPressed: () {
-              EditorState.deleteNode(widget.node.id);
+              GameState.deleteNode(widget.node.id);
               widget.onChange();
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
