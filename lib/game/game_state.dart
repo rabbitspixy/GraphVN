@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter_js/flutter_js.dart';
+import 'package:graph_vn/common/js_util.dart';
 import 'package:graph_vn/game/named_value_type_repository.dart';
 import 'package:graph_vn/game/struct.dart';
 import 'package:graph_vn/game/transition_position.dart';
@@ -154,9 +155,11 @@ class GameState {
     for (final struct in structs) {
       for (final variable in struct.variables) {
         if (variable is NumberVariable) {
-          jsRuntime.evaluate("variables[${toJsString("${struct.name}->${variable.name}")}] = ${variable.initialValue.toDouble()}");
+          jsRuntime.evaluate("variables[${toJsString("${struct.name}->${variable.name}")}] = ${variable.initialValue.toString()}");
         }
-        // TODO: implement named variable type
+        if (variable is NamedVariable) {
+          jsRuntime.evaluate("variables[${toJsString("${struct.name}->${variable.name}")}] = ${GameState.namedValueTypes.findValueById(variable.initialValue)?.name}");
+        }
       }
     }
   }
@@ -166,10 +169,6 @@ class GameState {
     if (struct == null) return "JS_ERROR_1";
     final result = jsRuntime.evaluate("variables[${toJsString("${struct.name}->${variable.name}")}];");
     return result.stringResult;
-  }
-
-  static String toJsString(String str) {
-    return "\"$str\""; // TODO: implement escaping
   }
 
   static bool isProjectLoaded() {

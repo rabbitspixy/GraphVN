@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:graph_vn/editor/modals/add_variable_dialog.dart';
+import 'package:graph_vn/common/js_util.dart';
+import 'package:graph_vn/editor/modals/create_variable_dialog.dart';
+import 'package:graph_vn/editor/modals/enum_selector.dart';
+import 'package:graph_vn/editor/modals/named_values_type_dialog.dart';
+import 'package:graph_vn/editor/modals/number_edit_dialog.dart';
 import 'package:graph_vn/editor/modals/rename_dialog.dart';
 import 'package:graph_vn/editor/modals/text_edit_dialog.dart';
 import 'package:graph_vn/game/variables.dart';
@@ -8,6 +12,7 @@ import 'package:graph_vn/game/named_variable_stringifier.dart';
 import 'package:graph_vn/editor/modals/number_variable_stringifier_editor.dart';
 import 'package:graph_vn/editor/modals/named_variable_stringifier_editor.dart';
 import 'package:graph_vn/game/game_state.dart';
+import 'package:graph_vn/main.dart';
 
 import '../../../game/struct.dart';
 
@@ -61,7 +66,7 @@ class _StructVariablesEditorState extends State<StructVariablesEditor> {
                   icon: Icon(Icons.add),
                   label: Text('Variable'),
                   onPressed: () async {
-                    final newVariable = await showAddVariableDialog(context);
+                    final newVariable = await showCreateVariableDialog(context);
                     if (newVariable != null) {
                       setState(() {
                         widget.struct.variables.add(newVariable);
@@ -135,7 +140,19 @@ class _StructVariablesEditorState extends State<StructVariablesEditor> {
             decoration: InputDecoration(labelText: 'Current value'),
             child: GestureDetector(
               onTap: () async {
-                // TODO: variable.value = value from modal dialog
+                if (variable is NumberVariable) {
+                  await showNumberEditDialog(context, "${variable.name} current value", int.parse(variable.currentValueAsText()), (newValue) {
+                    GameState.jsRuntime.evaluate("variables[${toJsString("${widget.struct.name}->${variable.name}")}] = ${newValue.toString()}");
+                  });
+                }
+                if (variable is NamedVariable) {
+                  final namedValuesType = GameState.namedValueTypes.findById(variable.typeId);
+                  if (namedValuesType != null) {
+                    await showNamedValuesTypeDialog(context, namedValuesType: namedValuesType, onValueSelected: (newValue) {
+                      GameState.jsRuntime.evaluate("variables[${toJsString("${widget.struct.name}->${variable.name}")}] = ${newValue.name}");
+                    });
+                  }
+                }
                 setState(() {});
               },
               child: MouseRegion(
@@ -152,7 +169,19 @@ class _StructVariablesEditorState extends State<StructVariablesEditor> {
             decoration: InputDecoration(labelText: 'Initial value'),
             child: GestureDetector(
               onTap: () async {
-                // TODO: variable.initialValue = value from modal dialog
+                if (variable is NumberVariable) {
+                  await showNumberEditDialog(context, "${variable.name} initial value", variable.initialValue, (newValue) {
+                    variable.initialValue = newValue;
+                  });
+                }
+                if (variable is NamedVariable) {
+                  final namedValuesType = GameState.namedValueTypes.findById(variable.typeId);
+                  if (namedValuesType != null) {
+                    await showNamedValuesTypeDialog(context, namedValuesType: namedValuesType, onValueSelected: (newValue) {
+                      variable.initialValue = newValue.id;
+                    });
+                  }
+                }
                 setState(() {});
               },
               child: MouseRegion(
@@ -202,7 +231,7 @@ class _StructVariablesEditorState extends State<StructVariablesEditor> {
                         title: Text(GameState.namedValueTypes.findValueById(s.valueId)?.name ?? "Unknown"),
                         subtitle: Text(s.template),
                         onTap: () async {
-                          final namedValues = GameState.namedValueTypes.findById(variable.typeId)?.list ?? [];
+                          final namedValues = GameState.namedValueTypes.findById(variable.typeId)?.values ?? [];
                           final updated = await editNamedVariableStringifier(context, s, namedValues);
                           if (updated != null) {
                             setState(() {
@@ -232,7 +261,7 @@ class _StructVariablesEditorState extends State<StructVariablesEditor> {
                         });
                       }
                     } else if (variable is NamedVariable) {
-                      final namedValues = GameState.namedValueTypes.findById(variable.typeId)?.list ?? [];
+                      final namedValues = GameState.namedValueTypes.findById(variable.typeId)?.values ?? [];
                       final newStringifier = NamedVariableStringifier(
                         valueId: '',
                         template: '',

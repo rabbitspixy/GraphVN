@@ -7,7 +7,15 @@ import 'package:uuid/uuid.dart';
 class NamedValuesType {
   String id = Uuid().v4();
   String name = '';
-  List<NamedValue> list = List.empty(growable: true);
+  List<NamedValue> values = List.empty(growable: true);
+
+  void addValue(String name) {
+    if (values.where((x) => x.name == name).isNotEmpty) {
+      //TODO: Отобразить сообщение с ошибкой, что такое имя уже используется
+      return;
+    }
+    values.add(NamedValue(id: Uuid().v4(), name: name, description: ''));
+  }
 }
 
 class NamedValue {

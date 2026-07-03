@@ -13,6 +13,10 @@ class NodeTooltip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textContent = text();
+    if (textContent.isEmpty) {
+      return const SizedBox.shrink();
+    }
     return TooltipPositioned(
       position: position,
       child: Material(
@@ -25,7 +29,7 @@ class NodeTooltip extends StatelessWidget {
             borderRadius: BorderRadius.circular(4),
           ),
           child: Text(
-            text(),
+            textContent,
             style: const TextStyle(color: Colors.white, fontSize: 12),
             softWrap: true,
             overflow: TextOverflow.visible,
@@ -37,9 +41,11 @@ class NodeTooltip extends StatelessWidget {
 
   String text() {
     final result = StringBuffer();
-    result.writeln("--- Текст ---");
-    result.writeln(node.text);
-    result.writeln();
+    if (node.text.isNotEmpty) {
+      result.writeln("--- Текст ---");
+      result.writeln(node.text);
+      result.writeln();
+    }
     if (node.naturalLanguageAction.isNotEmpty) {
       result.writeln("--- Действия ---");
       result.writeln(node.naturalLanguageAction);

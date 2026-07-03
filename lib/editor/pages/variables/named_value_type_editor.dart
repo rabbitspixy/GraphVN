@@ -20,7 +20,7 @@ class _NamedValueTypeEditorState extends State<NamedValueTypeEditor> {
 
   @override
   Widget build(BuildContext context) {
-    final sortedList = List<NamedValue>.from(widget.namedValuesType.list)
+    final sortedList = List<NamedValue>.from(widget.namedValuesType.values)
       ..sort((a, b) => a.name.compareTo(b.name));
     
     if (_selectedIndex == null && sortedList.isNotEmpty) {
@@ -59,13 +59,8 @@ class _NamedValueTypeEditorState extends State<NamedValueTypeEditor> {
                   onPressed: () async {
                     final newName = await showRenameDialog(context, 'Add Named Value', '');
                     if (newName != null && newName.isNotEmpty) {
-                      final newValue = NamedValue(
-                        id: null,
-                        name: newName,
-                        description: '',
-                      );
                       setState(() {
-                        widget.namedValuesType.list.add(newValue);
+                        widget.namedValuesType.addValue(newName);
                         _selectedIndex ??= 0;
                       });
                     }

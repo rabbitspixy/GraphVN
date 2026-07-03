@@ -5,7 +5,7 @@ import 'package:graph_vn/game/variables.dart';
 const VARIABLE_TYPE_NUMBER = 'Number';
 const VARIABLE_TYPE_NAMED_VALUE = 'Named Value';
 
-Future<Variable?> showAddVariableDialog(BuildContext context) async {
+Future<Variable?> showCreateVariableDialog(BuildContext context) async {
   String selectedType = VARIABLE_TYPE_NUMBER;
   String name = '';
   String? selectedNamedTypeId;
@@ -76,7 +76,7 @@ Future<Variable?> showAddVariableDialog(BuildContext context) async {
                   if (selectedType == VARIABLE_TYPE_NUMBER) {
                     newVariable = NumberVariable()..name = name;
                   } else {
-                    newVariable = NamedVariable(typeId: selectedNamedTypeId!, initialValue: GameState.namedValueTypes.findById(selectedNamedTypeId!)?.list.firstOrNull?.id ?? '')
+                    newVariable = NamedVariable(typeId: selectedNamedTypeId!, initialValue: GameState.namedValueTypes.findById(selectedNamedTypeId!)?.values.firstOrNull?.id ?? '')
                       ..name = name;
                   }
                   Navigator.pop(context, newVariable);

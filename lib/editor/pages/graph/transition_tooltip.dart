@@ -13,6 +13,10 @@ class TransitionTooltip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textContent = text();
+    if (textContent.isEmpty) {
+      return const SizedBox.shrink();
+    }
     return TooltipPositioned(
       position: position,
       child: Material(
@@ -25,7 +29,7 @@ class TransitionTooltip extends StatelessWidget {
             borderRadius: BorderRadius.circular(4),
           ),
           child: Text(
-            text(),
+            textContent,
             style: const TextStyle(color: Colors.white, fontSize: 12),
             softWrap: true,
             overflow: TextOverflow.visible,
@@ -42,9 +46,11 @@ class TransitionTooltip extends StatelessWidget {
       result.writeln(transition.naturalLanguageCondition);
       result.writeln();
     }
-    result.writeln("--- Текст ---");
-    result.writeln(transition.text);
-    result.writeln();
+    if (transition.text.isNotEmpty) {
+      result.writeln("--- Текст ---");
+      result.writeln(transition.text);
+      result.writeln();
+    }
     if (transition.naturalLanguageAction.isNotEmpty) {
       result.writeln("--- Действия ---");
       result.writeln(transition.naturalLanguageAction);

@@ -25,11 +25,11 @@ class NamedValueTypeRepository {
   }
 
   NamedValue? findValueById(String valueId) {
-    return _namedValueTypes.expand((t) => t.list).where((v) => v.id == valueId).firstOrNull;
+    return _namedValueTypes.expand((t) => t.values).where((v) => v.id == valueId).firstOrNull;
   }
 
   NamedValuesType? findTypeByValueId(String valueId) {
-    return _namedValueTypes.where((t) => t.list.where((v) => v.id == valueId).isNotEmpty).firstOrNull;
+    return _namedValueTypes.where((t) => t.values.where((v) => v.id == valueId).isNotEmpty).firstOrNull;
   }
 
   NamedValuesType? _findByName(String name) {
