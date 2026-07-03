@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:graph_vn/game/game_state.dart';
 import 'package:graph_vn/game/variables.dart';
 
+const VARIABLE_TYPE_NUMBER = 'Number';
+const VARIABLE_TYPE_NAMED_VALUE = 'Named Value';
+
 Future<Variable?> showAddVariableDialog(BuildContext context) async {
-  String selectedType = 'Number';
+  String selectedType = VARIABLE_TYPE_NUMBER;
   String name = '';
   String? selectedNamedTypeId;
 
@@ -23,7 +27,7 @@ Future<Variable?> showAddVariableDialog(BuildContext context) async {
                 SizedBox(height: 8),
                 DropdownButton<String>(
                   value: selectedType,
-                  items: ['Number', 'Named Number']
+                  items: [VARIABLE_TYPE_NUMBER, VARIABLE_TYPE_NAMED_VALUE]
                       .map((t) => DropdownMenuItem(
                             value: t,
                             child: Text(t),
@@ -33,18 +37,18 @@ Future<Variable?> showAddVariableDialog(BuildContext context) async {
                     if (val != null) {
                       setState(() {
                         selectedType = val;
-                        if (selectedType == 'Named Number' &&
+                        if (selectedType == VARIABLE_TYPE_NAMED_VALUE &&
                             selectedNamedTypeId == null) {
-                          selectedNamedTypeId = namedVariableTypes.first.id;
+                          selectedNamedTypeId = GameState.namedValueTypes.first()?.id;
                         }
                       });
                     }
                   },
                 ),
-                if (selectedType == 'Named Number')
+                if (selectedType == 'Named Value')
                   DropdownButton<String>(
                     value: selectedNamedTypeId,
-                    items: namedVariableTypes
+                    items: GameState.namedValueTypes.all()
                         .map((t) => DropdownMenuItem(
                               value: t.id,
                               child: Text(t.name),
@@ -69,10 +73,10 @@ Future<Variable?> showAddVariableDialog(BuildContext context) async {
                 onPressed: () {
                   if (name.isEmpty) return;
                   Variable newVariable;
-                  if (selectedType == 'Number') {
+                  if (selectedType == VARIABLE_TYPE_NUMBER) {
                     newVariable = NumberVariable()..name = name;
                   } else {
-                    newVariable = NamedVariable(typeId: selectedNamedTypeId!)
+                    newVariable = NamedVariable(typeId: selectedNamedTypeId!, initialValue: GameState.namedValueTypes.findById(selectedNamedTypeId!)?.list.firstOrNull?.id ?? '')
                       ..name = name;
                   }
                   Navigator.pop(context, newVariable);

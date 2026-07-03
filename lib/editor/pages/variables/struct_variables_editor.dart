@@ -199,10 +199,10 @@ class _StructVariablesEditorState extends State<StructVariablesEditor> {
                     itemBuilder: (context, idx) {
                       final s = variable.stringifiers[idx];
                       return ListTile(
-                        title: Text(GameState.namedValue(s.valueId)?.name ?? "Unknown"),
+                        title: Text(GameState.namedValueTypes.findValueById(s.valueId)?.name ?? "Unknown"),
                         subtitle: Text(s.template),
                         onTap: () async {
-                          final namedValues = GameState.namedValuesType(variable.typeId)?.list ?? [];
+                          final namedValues = GameState.namedValueTypes.findById(variable.typeId)?.list ?? [];
                           final updated = await editNamedVariableStringifier(context, s, namedValues);
                           if (updated != null) {
                             setState(() {
@@ -232,7 +232,7 @@ class _StructVariablesEditorState extends State<StructVariablesEditor> {
                         });
                       }
                     } else if (variable is NamedVariable) {
-                      final namedValues = GameState.namedValuesType(variable.typeId)?.list ?? [];
+                      final namedValues = GameState.namedValueTypes.findById(variable.typeId)?.list ?? [];
                       final newStringifier = NamedVariableStringifier(
                         valueId: '',
                         template: '',

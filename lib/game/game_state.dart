@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter_js/flutter_js.dart';
+import 'package:graph_vn/game/named_value_type_repository.dart';
 import 'package:graph_vn/game/struct.dart';
 import 'package:graph_vn/game/transition_position.dart';
 import 'package:graph_vn/settings/app_settings.dart';
@@ -23,6 +24,7 @@ class GameState {
   static GameNode? selectedNode;
   static GameTransition? selectedTransition;
   static final List<Struct> structs = List.empty(growable: true);
+  static final NamedValueTypeRepository namedValueTypes = NamedValueTypeRepository();
   static String currentNode = "";
   static JavascriptRuntime jsRuntime = getJavascriptRuntime();
 
@@ -255,18 +257,6 @@ class GameState {
       return "variable";
     }
     return "${struct.name} - ${variable.name}";
-  }
-
-  static NamedValue? namedValue(String valueId) {
-    return namedVariableTypes.expand((t) => t.list).where((v) => v.id == valueId).firstOrNull;
-  }
-
-  static NamedValuesType? namedValuesType(String typeId) {
-    return namedVariableTypes.where((t) => t.id == typeId).firstOrNull;
-  }
-
-  static NamedValuesType? namedValueTypeByValueId(String valueId) {
-    return namedVariableTypes.where((t) => t.list.where((v) => v.id == valueId).isNotEmpty).firstOrNull;
   }
 
   static GameNode? findNodeByLabel(String label) {

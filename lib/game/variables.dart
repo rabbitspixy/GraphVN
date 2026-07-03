@@ -4,22 +4,21 @@ import 'package:graph_vn/game/number_variable_stringifier.dart';
 import 'package:graph_vn/generated-proto/data.pb.dart';
 import 'package:uuid/uuid.dart';
 
-final List<NamedValuesType> namedVariableTypes = [
-];
-
 class NamedValuesType {
   String id = Uuid().v4();
   String name = '';
-  List<NamedValue> list = List.empty();
+  List<NamedValue> list = List.empty(growable: true);
 }
 
 class NamedValue {
   String id;
   String name;
+  String description;
 
   NamedValue({
     required String? id,
     required this.name,
+    required this.description,
   }) : id = id ?? Uuid().v4();
 }
 
@@ -97,16 +96,14 @@ class NamedVariable extends Variable {
   String initialValue = '';
   List<NamedVariableStringifier> stringifiers = [];
 
-  NamedVariable({required this.typeId}) {
-    final type = namedVariableTypes.where((v) => v.id == typeId).firstOrNull;
-    if (type != null) {
-      initialValue = type.list.first.id;
-    }
-  }
+  NamedVariable({
+    required this.typeId,
+    required this.initialValue
+  });
 
   @override
   String initialValueAsText() {
-    return GameState.namedValue(initialValue)?.name ?? "?";
+    return GameState.namedValueTypes.findValueById(initialValue)?.name ?? "?";
   }
 
   @override
@@ -139,10 +136,12 @@ class NamedVariable extends Variable {
   }
 
   factory NamedVariable.fromProto(NamedVariableProto proto) {
-    final result = NamedVariable(typeId: proto.typeId);
+    final result = NamedVariable(
+        typeId: proto.typeId,
+        initialValue: proto.initialValue
+    );
     result.id = proto.id;
     result.name = proto.name;
-    result.initialValue = proto.initialValue;
     result.description = proto.description;
     return result;
   }
