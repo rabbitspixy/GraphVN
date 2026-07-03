@@ -82,7 +82,7 @@ class _TransitionButtonsState extends State<TransitionButtons> {
                 side: const BorderSide(color: Color.fromARGB(223, 206, 206, 206)),
                 elevation: 0,
               ),
-              onPressed: () => Player.updateState(useTransition: transition.transitionId),
+              onPressed: () => Player.progressState(useTransition: transition.transitionId),
               child: Text(transition.text),
             ),
           ),

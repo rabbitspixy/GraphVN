@@ -14,6 +14,7 @@ class Player {
   static final ValueNotifier<String> narrativeText = ValueNotifier<String>('');
   static final ValueNotifier<String> statusText = ValueNotifier('');
   static final ValueNotifier<List<ChoiseButton>> buttons = ValueNotifier<List<ChoiseButton>>([]);
+  static final ValueNotifier<VariablesDiffDebug> variablesDiffDebug = ValueNotifier(VariablesDiffDebug(previous: {}, current: {}));
 
   static void onScreenClick() {
     useRandomTransitionIfAllowed();
@@ -27,7 +28,7 @@ class Player {
     final allowedEmptyTransitions = allowedTransitions.where((x) => !x.isButton).toList();
     final randomTransition = selectRandomTransition(allowedEmptyTransitions);
     if (randomTransition != null) {
-      updateState(useTransition: randomTransition.id);
+      progressState(useTransition: randomTransition.id);
     }
   }
 
@@ -42,7 +43,7 @@ class Player {
   ///
   /// The method updates the global [GameState.currentNode] and
   /// triggers a UI update via [_updateStill].
-  static void updateState({String? useTransition, String? goToNode}) {
+  static void progressState({String? useTransition, String? goToNode}) {
     GameTransition? transition;
     if (useTransition != null) {
       transition = GameState.transitions.where((x) => x.id == useTransition).firstOrNull;
@@ -183,13 +184,29 @@ class Player {
         );
       }
     }
+
+    variablesDiffDebug.value = VariablesDiffDebug(
+      previous: variablesDiffDebug.value.current,
+      current: _collectVariablesForDebug(),
+    );
+  }
+
+  static Map<String, String> _collectVariablesForDebug() {
+    final Map<String, String> result = {};
+    for (final struct in GameState.structs) {
+      for (final variable in struct.variables) {
+        final key = "${struct.name}->${variable.name}";
+        result[key] = variable.currentValueAsText();
+      }
+    }
+    return result;
   }
 
   static bool initStartGame() {
     GameState.restart();
     final startNode = GameState.nodes.values.where((node) => node.isStart).firstOrNull;
     if (startNode != null) {
-      updateState(goToNode: startNode.id);
+      progressState(goToNode: startNode.id);
       return true;
     } else {
       clearState();

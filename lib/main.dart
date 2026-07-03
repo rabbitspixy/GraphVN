@@ -16,7 +16,7 @@ final logger = Logger();
 void main() {
   jsTest();
   GameState.loadLastSavedProject();
-  Player.updateState();
+  Player.progressState();
   initWindowCloseHandler();
   runApp(const RootWidget());
 }
@@ -47,7 +47,7 @@ class _RootWidgetState extends State<RootWidget> {
 
   void toggleEditor() {
     if (_showEditor) {
-      Player.updateState();
+      Player.progressState();
       setState(() {
         _showEditor = false;
       });
@@ -65,11 +65,11 @@ class _RootWidgetState extends State<RootWidget> {
     }
     if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.f5 && HardwareKeyboard.instance.isShiftPressed) {
       GameState.restart();
-      Player.updateState();
+      Player.progressState();
       return true;
     }
     if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.f5) {
-      Player.updateState();
+      Player.progressState();
       return true;
     }
     if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.keyS && HardwareKeyboard.instance.isControlPressed) {
