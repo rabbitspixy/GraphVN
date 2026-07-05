@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:graph_vn/common/number_util.dart';
+import 'package:graph_vn/editor/modals/confirm_dialog.dart';
 import 'package:graph_vn/editor/widgets/label_with_button.dart';
 import 'package:graph_vn/game/game_state.dart';
 import 'package:graph_vn/game/game_transition.dart';
@@ -147,9 +148,11 @@ class _TransitionEditorState extends State<TransitionEditor> {
         SizedBox(
           width: double.infinity,
           child: ElevatedButton(
-            onPressed: () {
-              GameState.deleteTransition(widget.transition.id);
-              widget.onChange();
+            onPressed: () async {
+              if (await showConfirmDialog(context, "Удалить переход?")) {
+                GameState.deleteTransition(widget.transition.id);
+                widget.onChange();
+              }
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
             child: const Text('Delete Transition'),

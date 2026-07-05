@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:graph_vn/editor/modals/confirm_dialog.dart';
 import 'package:graph_vn/editor/pages/graph/editor_canvas.dart';
 import 'package:graph_vn/game/game_node.dart';
 import 'package:graph_vn/game/game_state.dart';
@@ -35,7 +37,8 @@ class EditorGraphPageState extends State<EditorGraphPage> {
     setState(() {});
   }
 
-  void resetOffset(Size size) {
+  void resetOffset() {
+    final size = MediaQuery.of(context).size;
     _canvasKey.currentState?.resetOffset(size);
   }
 
@@ -56,18 +59,40 @@ class EditorGraphPageState extends State<EditorGraphPage> {
     final size = MediaQuery.of(context).size;
     return Stack(
       children: [
-        EditorCanvas(
-          key: _canvasKey,
-          selectedNode: GameState.selectedNode,
-          selectedTransition: GameState.selectedTransition,
-          onSelect: _onSelectHandler,
+        CallbackShortcuts(
+            bindings: <ShortcutActivator, VoidCallback>{
+              const SingleActivator(LogicalKeyboardKey.delete): () async {
+                final node = GameState.selectedNode;
+                if (node != null) {
+                  if (await showConfirmDialog(context, "Удалить узел?")) {
+                    GameState.deleteNode(node.id);
+                  }
+                }
+                final transition = GameState.selectedTransition;
+                if (transition != null) {
+                  if (await showConfirmDialog(context, "Удалить переход?")) {
+                    GameState.deleteTransition(transition.id);
+                  }
+                }
+              },
+
+              const SingleActivator(LogicalKeyboardKey.home): () async {
+                resetOffset();
+              },
+            },
+            child: EditorCanvas(
+              key: _canvasKey,
+              selectedNode: GameState.selectedNode,
+              selectedTransition: GameState.selectedTransition,
+              onSelect: _onSelectHandler,
+            )
         ),
         Positioned(
-          left: size.width * 0.5,
+          left: size.width * 0.65,
           top: 0,
           bottom: 0,
           child: Container(
-            width: size.width * 0.5 - 50,
+            width: size.width * 0.35 - 50,
             color: Color.fromARGB(255, 230, 230, 230),
             padding: const EdgeInsets.all(8.0),
             child: GameState.selectedNode != null

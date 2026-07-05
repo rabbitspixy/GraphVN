@@ -48,10 +48,13 @@ class EditorCanvasState extends State<EditorCanvas> {
   Offset? _hoverNodePosition;
   int _forcedRepaint = 0;
 
+  final FocusNode _focusNode = FocusNode();
+
   StreamSubscription<String>? _stateUpdatedEventsSubscription;
 
 
   void _onPointerDown(PointerDownEvent event) {
+    _focusNode.requestFocus();
     if (event.buttons & kPrimaryMouseButton != 0) {
       if (_hoveredNode != null) {
         _selectedNode = _hoveredNode;
@@ -229,6 +232,7 @@ class EditorCanvasState extends State<EditorCanvas> {
 
   @override
   void dispose() {
+    _focusNode.dispose();
     _stateUpdatedEventsSubscription?.cancel();
     super.dispose();
   }
@@ -258,26 +262,29 @@ class EditorCanvasState extends State<EditorCanvas> {
         onPointerMove: _onPointerMove,
         onPointerUp: _onPointerUp,
         behavior: HitTestBehavior.translucent,
-        child: SizedBox.expand(
-          child: Stack(
-            children: [
-              CustomPaint(
-                painter: TransitionPainter(offset: _offset, selectedTransition: widget.selectedTransition, hoveredTransition: _hoveredTransition),
-              ),
-              CustomPaint(
-                painter: NodePainter(offset: _offset, selectedNode: widget.selectedNode, hoveredNode: _hoveredNode, forcedRepaint: _forcedRepaint),
-              ),
-              if (_hoveredNode != null && _hoverNodePosition != null && !_nodeDragging)
-                NodeTooltip(
-                  position: _hoverNodePosition!,
-                  node: _hoveredNode!,
+        child: Focus(
+          focusNode: _focusNode,
+          child: SizedBox.expand(
+            child: Stack(
+              children: [
+                CustomPaint(
+                  painter: TransitionPainter(offset: _offset, selectedTransition: widget.selectedTransition, hoveredTransition: _hoveredTransition),
                 ),
-              if (_hoveredTransition != null && _hoverPosition != null)
-                TransitionTooltip(
-                  position: _hoverPosition!,
-                  transition: _hoveredTransition!,
+                CustomPaint(
+                  painter: NodePainter(offset: _offset, selectedNode: widget.selectedNode, hoveredNode: _hoveredNode, forcedRepaint: _forcedRepaint),
                 ),
-            ],
+                if (_hoveredNode != null && _hoverNodePosition != null && !_nodeDragging)
+                  NodeTooltip(
+                    position: _hoverNodePosition!,
+                    node: _hoveredNode!,
+                  ),
+                if (_hoveredTransition != null && _hoverPosition != null)
+                  TransitionTooltip(
+                    position: _hoverPosition!,
+                    transition: _hoveredTransition!,
+                  ),
+              ],
+            ),
           ),
         ),
       ),

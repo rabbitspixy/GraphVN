@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_window_close/flutter_window_close.dart';
+import 'package:graph_vn/editor/modals/confirm_dialog.dart';
 import 'package:graph_vn/editor/widgets/project_selector.dart';
+import 'package:graph_vn/game/game_node.dart';
+import 'package:graph_vn/game/game_transition.dart';
 import 'package:graph_vn/js_test.dart';
 import 'package:graph_vn/settings/app_settings.dart';
 import 'package:graph_vn/game/game_state.dart';
@@ -57,7 +60,7 @@ class _RootWidgetState extends State<RootWidget> {
       });
     }
   }
-  
+
   bool _handleKey(KeyEvent event) {
     if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.f1) {
       toggleEditor();
@@ -69,6 +72,7 @@ class _RootWidgetState extends State<RootWidget> {
       return true;
     }
     if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.f5) {
+      //TODO: проверить зачем я сделал этот хоткей. Возможно он вообще не нужен.
       Player.progressState();
       return true;
     }
@@ -76,27 +80,9 @@ class _RootWidgetState extends State<RootWidget> {
       GameState.save();
       return true;
     }
-    if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.delete) {
-      final node = GameState.selectedNode;
-      if (node != null) {
-        GameState.deleteNode(node.id);
-      }
-      final transition = GameState.selectedTransition;
-      if (transition != null) {
-        GameState.deleteTransition(transition.id);
-      }
-      return true;
-    }
-    if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.home) {
-      if (_showEditor) {
-        final size = MediaQuery.of(context).size;
-        EditorGraphPageState.instance?.resetOffset(size);
-      }
-      return true;
-    }
     return false;
   }
-  
+
   @override
   void initState() {
     super.initState();

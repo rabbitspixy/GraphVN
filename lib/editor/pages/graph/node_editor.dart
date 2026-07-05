@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:graph_vn/editor/modals/confirm_dialog.dart';
 import 'package:graph_vn/game/game_node.dart';
 import 'package:graph_vn/game/game_state.dart';
 import 'package:graph_vn/editor/modals/view_js_dialog.dart';
@@ -230,9 +231,11 @@ class _NodeEditorState extends State<NodeEditor> {
         SizedBox(
           width: double.infinity,
           child: ElevatedButton(
-            onPressed: () {
-              GameState.deleteNode(widget.node.id);
-              widget.onChange();
+            onPressed: () async {
+              if (await showConfirmDialog(context, "Удалить узел?")) {
+                GameState.deleteNode(widget.node.id);
+                widget.onChange();
+              }
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
             child: const Text('Удалить узел'),
