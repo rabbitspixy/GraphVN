@@ -1,3 +1,5 @@
+import 'package:dart_mappable/dart_mappable.dart';
+
 String toJsString(String str) {
-  return "\"$str\""; // TODO: implement escaping
+  return MapperContainer.globals.toJson(str);
 }

@@ -163,12 +163,7 @@ class GameState {
     jsRuntime.evaluate("let variables = {}");
     for (final struct in structs) {
       for (final variable in struct.variables) {
-        if (variable is NumberVariable) {
-          jsRuntime.evaluate("variables[${toJsString("${struct.name}->${variable.name}")}] = ${variable.initialValue.toString()}");
-        }
-        if (variable is NamedVariable) {
-          jsRuntime.evaluate("variables[${toJsString("${struct.name}->${variable.name}")}] = ${GameState.namedValueTypes.findValueById(variable.initialValue)?.name}");
-        }
+        jsRuntime.evaluate("variables[${toJsString("${struct.name}->${variable.name}")}] = ${variable.initialValueAsJsCode()}");
       }
     }
   }

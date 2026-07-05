@@ -1,5 +1,7 @@
 import 'package:graph_vn/common/find_block_util.dart';
+import 'package:graph_vn/common/js_util.dart';
 import 'package:graph_vn/game/game_state.dart';
+import 'package:graph_vn/game/variables.dart';
 import 'package:graph_vn/llm/llm_gateway.dart';
 
 class TextGenerator {
@@ -123,7 +125,11 @@ $replaceable
         init.writeln("");
         init.writeln("//Название: $key");
         init.writeln("//Описание: ${variable.description}");
-        init.writeln("variables[\"$key\"] = ${variable.initialValueAsText()}"); //TODO: initialValueAsJS, escape key for js string
+        if (variable is NamedVariable) {
+          final possibleValues = GameState.namedValueTypes.findById(variable.typeId)?.values.map((x) => toJsString(x.name)).join(", ");
+          init.writeln("//Возможные значения: $possibleValues");
+        }
+        init.writeln("variables[${toJsString(key)}] = ${variable.initialValueAsJsCode()}");
       }
     }
     return init.toString();

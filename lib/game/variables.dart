@@ -1,3 +1,4 @@
+import 'package:graph_vn/common/js_util.dart';
 import 'package:graph_vn/game/game_state.dart';
 import 'package:graph_vn/generated-proto/data.pb.dart';
 import 'package:uuid/uuid.dart';
@@ -70,6 +71,7 @@ abstract class Variable {
   Variable();
 
   String initialValueAsText();
+  String initialValueAsJsCode(); //TODO: escape js string
   String currentValueAsText();
 
   VariableProto toProto();
@@ -89,6 +91,11 @@ class NumberVariable extends Variable {
 
   @override
   String initialValueAsText() {
+    return initialValue.toString();
+  }
+
+  @override
+  String initialValueAsJsCode() {
     return initialValue.toString();
   }
 
@@ -130,6 +137,11 @@ class NamedVariable extends Variable {
   @override
   String initialValueAsText() {
     return GameState.namedValueTypes.findValueById(initialValue)?.name ?? "?";
+  }
+
+  @override
+  String initialValueAsJsCode() {
+    return toJsString(GameState.namedValueTypes.findValueById(initialValue)?.name ?? "null");
   }
 
   @override
