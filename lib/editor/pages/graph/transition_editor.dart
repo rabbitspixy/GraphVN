@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:graph_vn/common/number_util.dart';
+import 'package:graph_vn/editor/widgets/label_with_button.dart';
 import 'package:graph_vn/game/game_state.dart';
 import 'package:graph_vn/game/game_transition.dart';
 import 'package:graph_vn/editor/modals/view_js_dialog.dart';
@@ -77,14 +78,34 @@ class _TransitionEditorState extends State<TransitionEditor> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Transition Text', style: TextStyle(fontWeight: FontWeight.bold)),
+        LabelWithButton(
+            label: 'Transition Text',
+          help: [
+            'Текст на кнопке перехода',
+            '',
+            'Если текста нет, то кнопка не отображается',
+            'Если окажется так что у игрока нет вообще ниодной кнопки, то сработает случайный доступный бестекстовый переход'
+          ],
+        ),
         TextField(
           controller: _controller,
           maxLines: null,
           decoration: const InputDecoration(border: OutlineInputBorder()),
         ),
         const SizedBox(height: 8),
-        const Text('Weight', style: TextStyle(fontWeight: FontWeight.bold)),
+        LabelWithButton(
+            label: 'Weight',
+          help: [
+            'Используется только для определения шанса случайного перехода',
+            'Если во время выполнения случайного перехода доступно несколько переходов, то шанс работает как отношение веса одного перехода к весу другого перехода',
+            'Например переход с весом 15, будет срабатывать в три раза чаще чем переход с весом 5, потому что 15 в три раза больше чем 5',
+            'Шансы в процентах на примере с четырьмя доступными переходами:',
+            'Переход с весом 1 - Шанс 1/20 (0.05%)',
+            'Переход с весом 4 - Шанс 4/20 (0.2%)',
+            'Переход с весом 5 - Шанс 5/20 (0.25%)',
+            'Переход с весом 10 - Шанс 10/20 (0.5%)',
+          ],
+        ),
         TextField(
           controller: _weightController,
           keyboardType: TextInputType.number,
@@ -93,26 +114,14 @@ class _TransitionEditorState extends State<TransitionEditor> {
           ),
         ),
         const SizedBox(height: 8),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('Natural Language Condition', style: TextStyle(fontWeight: FontWeight.bold)),
-            const SizedBox(width: 8),
-            Tooltip(
-              message: 'Просмотр JS Condition',
-              child: SizedBox(
-                width: 24,
-                height: 24,
-                child: IconButton(
-                  icon: const Icon(Icons.visibility, size: 14),
-                  padding: EdgeInsets.zero,
-                  onPressed: () {
-                    showJavascriptCodeDialog(context, GameState.codeRepository.conditions[widget.transition.naturalLanguageCondition] ?? '');
-                  },
-                ),
-              ),
-            ),
+        LabelWithButton(
+            label: 'Natural Language Condition',
+          help: [
+            'Условие доступности перехода на естественном языке'
           ],
+          onShowJs: () {
+            showJavascriptCodeDialog(context, GameState.codeRepository.conditions[widget.transition.naturalLanguageCondition] ?? '');
+          },
         ),
         TextField(
           controller: _naturalLanguageConditionController,
@@ -120,26 +129,14 @@ class _TransitionEditorState extends State<TransitionEditor> {
           decoration: const InputDecoration(border: OutlineInputBorder()),
         ),
         const SizedBox(height: 8),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('Natural Language Action', style: TextStyle(fontWeight: FontWeight.bold)),
-            const SizedBox(width: 8),
-            Tooltip(
-              message: 'Просмотр JS Action',
-              child: SizedBox(
-                width: 24,
-                height: 24,
-                child: IconButton(
-                  icon: const Icon(Icons.visibility, size: 14),
-                  padding: EdgeInsets.zero,
-                  onPressed: () {
-                    showJavascriptCodeDialog(context, GameState.codeRepository.actions[widget.transition.naturalLanguageAction] ?? '');
-                  },
-                ),
-              ),
-            ),
+        LabelWithButton(
+            label: 'Natural Language Action',
+          help: [
+            'Действия на естественном языке, которые выполнятся при совершении перехода'
           ],
+          onShowJs: () {
+            showJavascriptCodeDialog(context, GameState.codeRepository.actions[widget.transition.naturalLanguageAction] ?? '');
+          },
         ),
         TextField(
           controller: _naturalLanguageActionController,

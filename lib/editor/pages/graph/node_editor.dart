@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:graph_vn/game/game_node.dart';
 import 'package:graph_vn/game/game_state.dart';
 import 'package:graph_vn/editor/modals/view_js_dialog.dart';
+import 'package:graph_vn/editor/widgets/label_with_button.dart';
 
 class NodeEditor extends StatefulWidget {
   final GameNode node;
@@ -105,53 +106,69 @@ class _NodeEditorState extends State<NodeEditor> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Label', style: TextStyle(fontWeight: FontWeight.bold)),
+        LabelWithButton(
+          label: 'Label',
+          help: [
+            'Метка узла.',
+            'Отображается на графе узла.',
+            'Позволяет сделать переход в узел через поле Goto label',
+          ],
+        ),
         TextField(
           controller: _labelTextController,
           maxLines: null,
           decoration: const InputDecoration(border: OutlineInputBorder()),
         ),
         const SizedBox(height: 8),
-        const Text('Speaker', style: TextStyle(fontWeight: FontWeight.bold)),
+        LabelWithButton(
+            label: 'Speaker',
+          help: [
+            'Отображается как имя говорящего персонажа над текстом'
+          ],
+        ),
         TextField(
           controller: _speakerTextController,
           maxLines: null,
           decoration: const InputDecoration(border: OutlineInputBorder()),
         ),
         const SizedBox(height: 8),
-        const Text('Text', style: TextStyle(fontWeight: FontWeight.bold)),
+        LabelWithButton(
+            label: 'Text',
+          help: [
+            'Отображаемый текст',
+            '',
+            'ИИ вставка текста:',
+            'Добавь блок из двоных фигурных скобок, с инструкцией внутри что нужно вставить в это место в тексте',
+            'Например: {{ Количество здоровья }}'
+          ],
+        ),
         TextField(
           controller: _nodeTextController,
           maxLines: null,
           decoration: const InputDecoration(border: OutlineInputBorder()),
         ),
         const SizedBox(height: 8),
-        const Text('Image Path', style: TextStyle(fontWeight: FontWeight.bold)),
+        LabelWithButton(
+            label: 'Image Path',
+          help: [
+            'Путь к отображаемому изображению'
+          ],
+        ),
         TextField(
           controller: _imagePathController,
           maxLines: null,
           decoration: const InputDecoration(border: OutlineInputBorder()),
         ),
         const SizedBox(height: 8),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('Natural Language Trigger', style: TextStyle(fontWeight: FontWeight.bold)),
-            const SizedBox(width: 8),
-            Tooltip(
-              message: 'Просмотр JS Trigger',
-              child: SizedBox(
-                width: 24,
-                height: 24,
-                child: IconButton(
-                  icon: const Icon(Icons.visibility, size: 14),
-                  padding: EdgeInsets.zero,
-                  onPressed: () {
-                    showJavascriptCodeDialog(context, GameState.codeRepository.conditions[widget.node.naturalLanguageTrigger] ?? '');
-                  },
-                ),
-              ),
-            ),
+        LabelWithButton(
+          label: 'Natural Language Trigger',
+          onShowJs: () {
+            showJavascriptCodeDialog(context, GameState.codeRepository.conditions[widget.node.naturalLanguageTrigger] ?? '');
+          },
+          help: [
+            'Триггер-проверка на естественном языке',
+            'Если проверка сработает, то игрока моментально перенесет в этот узел',
+            'Если игрок уже находится в этом узле, то ничего не произойдёт',
           ],
         ),
         TextField(
@@ -160,25 +177,14 @@ class _NodeEditorState extends State<NodeEditor> {
           decoration: const InputDecoration(border: OutlineInputBorder()),
         ),
         const SizedBox(height: 8),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('Natural Language Action', style: TextStyle(fontWeight: FontWeight.bold)),
-            const SizedBox(width: 8),
-            Tooltip(
-              message: 'Просмотр JS Action',
-              child: SizedBox(
-                width: 24,
-                height: 24,
-                child: IconButton(
-                  icon: const Icon(Icons.visibility, size: 14),
-                  padding: EdgeInsets.zero,
-                  onPressed: () {
-                    showJavascriptCodeDialog(context, GameState.codeRepository.actions[widget.node.naturalLanguageAction] ?? '');
-                  },
-                ),
-              ),
-            ),
+        LabelWithButton(
+          label: 'Natural Language Action',
+          onShowJs: () {
+            showJavascriptCodeDialog(context, GameState.codeRepository.actions[widget.node.naturalLanguageAction] ?? '');
+          },
+          help: [
+            'Действия на естественном языке, которые выполняются при переходе в этот узел',
+            'Действия выполняются до отображения текста узла',
           ],
         ),
         TextField(
@@ -187,7 +193,12 @@ class _NodeEditorState extends State<NodeEditor> {
           decoration: const InputDecoration(border: OutlineInputBorder()),
         ),
         const SizedBox(height: 8),
-        const Text('Go to Label', style: TextStyle(fontWeight: FontWeight.bold)),
+        LabelWithButton(
+            label: 'Goto label',
+          help: [
+            'Если сюда вписать корректную метку узла, то игрока моментально перенесет в указанный узел без отображения текста в текущем узле'
+          ],
+        ),
         TextField(
           controller: _gotoLabelTextController,
           maxLines: null,
@@ -206,7 +217,13 @@ class _NodeEditorState extends State<NodeEditor> {
                 });
               },
             ),
-            const Text('Start Node'),
+            LabelWithButton(
+                label: 'Start Node',
+              help: [
+                'Стартовая локация',
+                'Может быть только одна'
+              ],
+            ),
           ],
         ),
         const SizedBox(height: 8),
@@ -218,7 +235,7 @@ class _NodeEditorState extends State<NodeEditor> {
               widget.onChange();
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text('Delete Node'),
+            child: const Text('Удалить узел'),
           ),
         ),
       ],

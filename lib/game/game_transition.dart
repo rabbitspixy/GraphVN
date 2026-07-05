@@ -11,6 +11,7 @@ class GameTransition {
   String to = "";
   //must be greater than 0
   int weight = 1;
+  int order = 1;
   List<GenerateImageMetadata> generateImageMetadata = [];
   String naturalLanguageCondition = "";
   String naturalLanguageAction = "";

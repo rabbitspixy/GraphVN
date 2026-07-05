@@ -120,22 +120,15 @@ class EditorCanvasState extends State<EditorCanvas> {
         _offset = _offsetStart! + delta;
       });
     }
+    _updateHover(event.localPosition);
   }
 
   void _onPointerUp(PointerUpEvent event) {
     if (_linkingNodeId != null) {
-      // Find target node under pointer
-      for (final node in GameState.nodes.values) {
-        final left = node.x.toDouble() - 5 + _offset.dx;
-        final top = node.y.toDouble() - 5 + _offset.dy;
-        final rect = Rect.fromLTWH(left, top, 10, 10);
-        if (rect.contains(event.localPosition) && node.id != _linkingNodeId) {
-          // Create transition
-          GameState.addTransition(GameTransition()
-            ..from = _linkingNodeId!
-            ..to = node.id);
-          break;
-        }
+      if (_hoveredNode != null && _hoveredNode!.id != _linkingNodeId) {
+        GameState.addTransition(GameTransition()
+          ..from = _linkingNodeId!
+          ..to = _hoveredNode!.id);
       }
       _linkingNodeId = null;
     } else if (_nodeDragging) {

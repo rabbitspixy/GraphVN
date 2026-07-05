@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:graph_vn/common/find_block_util.dart';
@@ -82,6 +83,8 @@ class Player {
         GameState.currentNode = node.id;
         if (node.isEmptyNode) {
           final allowedTransitions = Player.allowedTransitionsForCurrentState();
+          allowedTransitions.shuffle();
+          allowedTransitions.sort((a, b) => a.order - b.order);
           if (allowedTransitions.every((x) => !x.isButton)){
             transition = selectRandomTransition(allowedTransitions);
           }
