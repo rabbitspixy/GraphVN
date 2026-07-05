@@ -21,6 +21,7 @@ class _NodeEditorState extends State<NodeEditor> {
   late TextEditingController _speakerTextController;
   late TextEditingController _labelTextController;
   late TextEditingController _imagePathController;
+  late TextEditingController _naturalLanguageTriggerController;
   late TextEditingController _naturalLanguageActionController;
   late TextEditingController _gotoLabelTextController;
   bool _isStart = false;
@@ -32,6 +33,7 @@ class _NodeEditorState extends State<NodeEditor> {
     _speakerTextController = TextEditingController(text: widget.node.speaker);
     _labelTextController = TextEditingController(text: widget.node.label);
     _imagePathController = TextEditingController(text: widget.node.imagePath);
+    _naturalLanguageTriggerController = TextEditingController(text: widget.node.naturalLanguageTrigger);
     _naturalLanguageActionController = TextEditingController(text: widget.node.naturalLanguageAction);
     _gotoLabelTextController = TextEditingController(text: widget.node.gotoLabel);
     _isStart = widget.node.isStart;
@@ -63,6 +65,13 @@ class _NodeEditorState extends State<NodeEditor> {
         setState(() {});
       }
     });
+    _naturalLanguageTriggerController.addListener(() {
+      if (_naturalLanguageTriggerController.text != widget.node.naturalLanguageTrigger) {
+        widget.node.naturalLanguageTrigger = _naturalLanguageTriggerController.text;
+        widget.onChange();
+        setState(() {});
+      }
+    });
     _naturalLanguageActionController.addListener(() {
       if (_naturalLanguageActionController.text != widget.node.naturalLanguageAction) {
         widget.node.naturalLanguageAction = _naturalLanguageActionController.text;
@@ -85,6 +94,7 @@ class _NodeEditorState extends State<NodeEditor> {
     _speakerTextController.dispose();
     _labelTextController.dispose();
     _imagePathController.dispose();
+    _naturalLanguageTriggerController.dispose();
     _naturalLanguageActionController.dispose();
     _gotoLabelTextController.dispose();
     super.dispose();
@@ -119,6 +129,33 @@ class _NodeEditorState extends State<NodeEditor> {
         const Text('Image Path', style: TextStyle(fontWeight: FontWeight.bold)),
         TextField(
           controller: _imagePathController,
+          maxLines: null,
+          decoration: const InputDecoration(border: OutlineInputBorder()),
+        ),
+        const SizedBox(height: 8),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Natural Language Trigger', style: TextStyle(fontWeight: FontWeight.bold)),
+            const SizedBox(width: 8),
+            Tooltip(
+              message: 'Просмотр JS Trigger',
+              child: SizedBox(
+                width: 24,
+                height: 24,
+                child: IconButton(
+                  icon: const Icon(Icons.visibility, size: 14),
+                  padding: EdgeInsets.zero,
+                  onPressed: () {
+                    showJavascriptCodeDialog(context, GameState.codeRepository.conditions[widget.node.naturalLanguageTrigger] ?? '');
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
+        TextField(
+          controller: _naturalLanguageTriggerController,
           maxLines: null,
           decoration: const InputDecoration(border: OutlineInputBorder()),
         ),

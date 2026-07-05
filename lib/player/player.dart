@@ -32,6 +32,20 @@ class Player {
     }
   }
 
+  static void progressState({String? useTransition, String? goToNode}) {
+    //TODO: сейчас всё слишком сильно сломается, если во время выполнения метода _unsafeProgressState вылетит Exception. Для этого нужно добавить функционал транзакций
+    //TODO: final checkpoint = GameState.createCheckpoint();
+    try {
+      _unsafeProgressState(
+        useTransition: useTransition,
+        goToNode: goToNode,
+      );
+    } catch (e) {
+      logger.e("Progress state error", error: e);
+      //TODO: GameState.rollbackTo(checkpoint);
+    }
+  }
+
   /// Updates the player's state by following transitions starting from the current node.
   ///
   /// If [useTransition] is provided, the method will start from the transition
@@ -43,7 +57,7 @@ class Player {
   ///
   /// The method updates the global [GameState.currentNode] and
   /// triggers a UI update via [_updateStill].
-  static void progressState({String? useTransition, String? goToNode}) {
+  static void _unsafeProgressState({String? useTransition, String? goToNode}) {
     GameTransition? transition;
     if (useTransition != null) {
       transition = GameState.transitions.where((x) => x.id == useTransition).firstOrNull;
@@ -55,24 +69,30 @@ class Player {
     }
     
     int iterations = 0;
-    int maxIterations = 10000;
+    int maxIterations = 1000;
     while (transition != null || node != null) {
       if (transition != null) {
         _runActions(transition.naturalLanguageAction);
-        node = GameState.nodes[transition.to];
+        node = _checkTriggers() ?? GameState.nodes[transition.to];
         transition = null;
+        GameState.currentNode = '';
       }
       if (node != null) {
         _runActions(node.naturalLanguageAction);
         GameState.currentNode = node.id;
-        if (node.isEmpty) {
+        if (node.isEmptyNode) {
           final allowedTransitions = Player.allowedTransitionsForCurrentState();
           if (allowedTransitions.every((x) => !x.isButton)){
             transition = selectRandomTransition(allowedTransitions);
           }
         }
-        if (node.gotoLabel.isNotEmpty) {
+        final triggeredNode = _checkTriggers();
+        if (triggeredNode != null) {
+          node = triggeredNode;
+          transition = null;
+        } else if (node.gotoLabel.isNotEmpty) {
           node = GameState.findNodeByLabel(node.gotoLabel);
+          transition = null;
         } else {
           node = null;
         }
@@ -87,6 +107,22 @@ class Player {
     _updateStill();
   }
 
+  static GameNode? _checkTriggers() {
+    for (final node in GameState.nodes.values) {
+      if (GameState.currentNode == node.id) {
+        continue;
+      }
+      final naturalLanguageTrigger = node.naturalLanguageTrigger;
+      if (naturalLanguageTrigger.isEmpty) {
+        continue;
+      }
+      if (_calculateConditions(naturalLanguageTrigger, false)) {
+        return node;
+      }
+    }
+    return null;
+  }
+
   static void _runActions(String naturalLanguageAction) {
     final emptyFunc = "function doActions() {}";
     final js = GameState.codeRepository.actions[naturalLanguageAction] ?? '';
@@ -99,12 +135,12 @@ class Player {
   static List<GameTransition> allowedTransitionsForCurrentState() {
     return GameState.transitions
       .where((t) => t.from == GameState.currentNode)
-      .where((t) => _resolveTransitionConditions(t.naturalLanguageCondition))
+      .where((t) => _calculateConditions(t.naturalLanguageCondition, true))
       .toList();
   }
 
-  static bool _resolveTransitionConditions(String naturalLanguageCondition) {
-    final emptyFunc = "function testConditions() { return true; }";
+  static bool _calculateConditions(String naturalLanguageCondition, bool valueIfNoCondition) {
+    final emptyFunc = "function testConditions() { return $valueIfNoCondition; }";
     final js = GameState.codeRepository.conditions[naturalLanguageCondition] ?? '';
     final result = GameState.jsRuntime.evaluate("$emptyFunc\n$js\ntestConditions();");
     if (result.isError) {
@@ -120,7 +156,7 @@ class Player {
     throw Exception("JS condition invalid:\n$js\n\nrawResult=(${result.rawResult.runtimeType})${result.rawResult}");
   }
 
-  static String _resolveGetTextValue(String js) {
+  static String _calculateGetText(String js) {
     final emptyFunc = "function getText() { return \"\"; }";
     final result = GameState.jsRuntime.evaluate("$emptyFunc\n$js\ngetText();");
     if (result.isError) {
@@ -152,7 +188,7 @@ class Player {
         final replaceables = findBlockDoubleCurlyBraces(node.text);
         for (final replaceable in replaceables) {
           final jsCode = GameState.codeRepository.replaceables[replaceable] ?? '';
-          nt = nt.replaceAll(replaceable, _resolveGetTextValue(jsCode));
+          nt = nt.replaceAll(replaceable, _calculateGetText(jsCode));
         }
       }
     }

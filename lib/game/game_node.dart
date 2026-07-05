@@ -13,10 +13,12 @@ class GameNode {
   String imagePath = "";
   List<GenerateImageMetadata> generateImageMetadata = [];
   String speaker = "";
+  String naturalLanguageTrigger = "";
   String naturalLanguageAction = "";
   String gotoLabel = "";
 
-  bool get isEmpty => text.isEmpty;
+  bool get isTrigger => naturalLanguageTrigger.isNotEmpty;
+  bool get isEmptyNode => text.isEmpty;
 
   GameNode();
 
@@ -31,6 +33,7 @@ class GameNode {
     result.imagePath = imagePath;
     result.generatedImages.addAll(generateImageMetadata.map((x) => x.toProto()));
     result.speaker = speaker;
+    result.naturalLanguageTrigger = naturalLanguageTrigger;
     result.naturalLanguageAction = naturalLanguageAction;
     result.gotoLabel = gotoLabel;
     return result;
@@ -47,6 +50,7 @@ class GameNode {
     result.imagePath = proto.imagePath;
     result.generateImageMetadata.addAll(proto.generatedImages.map((x) => GenerateImageMetadata.fromProto(x)));
     result.speaker = proto.speaker;
+    result.naturalLanguageTrigger = proto.naturalLanguageTrigger;
     result.naturalLanguageAction = proto.naturalLanguageAction;
     result.gotoLabel = proto.gotoLabel;
     return result;

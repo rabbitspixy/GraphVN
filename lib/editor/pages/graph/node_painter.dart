@@ -39,17 +39,23 @@ class NodePainter extends CustomPainter {
     if (node.isStart) {
       return 7;
     }
-    if (node.isEmpty) {
-      return 3;
+    if (node.isTrigger) {
+      return 7;
     }
-    return 5;
+    if (node.isEmptyNode) {
+      return 4;
+    }
+    return 7;
   }
 
   Color _colorOf(GameNode node) {
     if (node.isStart) {
       return const Color.fromARGB(255, 21, 207, 27);
     }
-    if (node.isEmpty) {
+    if (node.isTrigger) {
+      return const Color.fromARGB(255, 255, 89, 188);
+    }
+    if (node.isEmptyNode) {
       return const Color.fromARGB(255, 201, 201, 201);
     }
     return const Color.fromARGB(255, 90, 128, 255);
