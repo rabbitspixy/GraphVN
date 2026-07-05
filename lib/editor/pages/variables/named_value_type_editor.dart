@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:graph_vn/editor/modals/confirm_dialog.dart';
 import 'package:graph_vn/editor/modals/rename_dialog.dart';
 import 'package:graph_vn/editor/pages/variables/named_value_details.dart';
 import 'package:graph_vn/game/variables.dart';
@@ -18,10 +19,28 @@ class NamedValueTypeEditor extends StatefulWidget {
 class _NamedValueTypeEditorState extends State<NamedValueTypeEditor> {
   int? _selectedIndex;
 
+  List<NamedValue> _sortedNamedValues() {
+    return List<NamedValue>.from(widget.namedValuesType.values)
+      ..sort((a, b) => a.name.compareTo(b.name));
+  }
+
+  Future<void> _removeSelectedNamedValue() async {
+    final itemToRemove = _sortedNamedValues()[_selectedIndex!];
+    if (await showConfirmDialog(context, "Удалить ${itemToRemove.name}?")) {
+      setState(() {
+        widget.namedValuesType.values.remove(itemToRemove);
+        if (widget.namedValuesType.values.isEmpty) {
+          _selectedIndex = null;
+        } else if (_selectedIndex! >= widget.namedValuesType.values.length) {
+          _selectedIndex = widget.namedValuesType.values.length - 1;
+        }
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final sortedList = List<NamedValue>.from(widget.namedValuesType.values)
-      ..sort((a, b) => a.name.compareTo(b.name));
+    final sortedList = _sortedNamedValues();
     
     if (_selectedIndex == null && sortedList.isNotEmpty) {
       _selectedIndex = 0;
@@ -53,15 +72,7 @@ class _NamedValueTypeEditorState extends State<NamedValueTypeEditor> {
                       icon: Icon(Icons.remove),
                       onPressed: _selectedIndex != null
                           ? () async {
-                              setState(() {
-                                final itemToRemove = sortedList[_selectedIndex!];
-                                widget.namedValuesType.values.remove(itemToRemove);
-                                if (widget.namedValuesType.values.isEmpty) {
-                                  _selectedIndex = null;
-                                } else if (_selectedIndex! >= widget.namedValuesType.values.length) {
-                                  _selectedIndex = widget.namedValuesType.values.length - 1;
-                                }
-                              });
+                              await _removeSelectedNamedValue();
                             }
                           : null,
                     ),

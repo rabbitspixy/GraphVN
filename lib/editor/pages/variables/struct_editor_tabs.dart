@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:graph_vn/editor/pages/variables/struct_variables_editor.dart';
 import 'package:graph_vn/game/struct.dart';
 
-class StructEditor extends StatefulWidget {
+class StructEditorTabs extends StatefulWidget {
   final Struct struct;
-  const StructEditor({super.key, required this.struct});
+  const StructEditorTabs({super.key, required this.struct});
 
   @override
-  State<StructEditor> createState() => _StructEditorState();
+  State<StructEditorTabs> createState() => _StructEditorTabsState();
 }
 
-class _StructEditorState extends State<StructEditor> with TickerProviderStateMixin {
+class _StructEditorTabsState extends State<StructEditorTabs> with TickerProviderStateMixin {
 
   late final TabController _tabController;
 

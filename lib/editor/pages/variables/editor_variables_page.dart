@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:graph_vn/editor/modals/rename_dialog.dart';
-import 'package:graph_vn/editor/pages/variables/struct_editor.dart';
+import 'package:graph_vn/editor/pages/variables/struct_editor_tabs.dart';
 import 'package:graph_vn/editor/pages/variables/named_value_type_editor.dart';
 import 'package:graph_vn/game/struct.dart';
 import '../../../game/game_state.dart';
@@ -120,7 +120,7 @@ class _EditorVariablesPageState extends State<EditorVariablesPage> {
           child: _selectedStructIndex == null && _selectedNamedValueTypeIndex == null
               ? Center(child: Text('Select a struct or named value type to edit'))
               : _selectedStructIndex != null
-                  ? StructEditor(struct: GameState.structs[_selectedStructIndex!])
+                  ? StructEditorTabs(struct: GameState.structs[_selectedStructIndex!])
                   : NamedValueTypeEditor(namedValuesType: GameState.namedValueTypes.all()[_selectedNamedValueTypeIndex!])
         ),
       ],
