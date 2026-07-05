@@ -13,7 +13,6 @@ class Player {
   static final ValueNotifier<PlayerImageInfo> imageInfoNotifier = ValueNotifier<PlayerImageInfo>(PlayerImageInfo(path: ''));
   static final ValueNotifier<String> speakerName = ValueNotifier<String>('');
   static final ValueNotifier<String> narrativeText = ValueNotifier<String>('');
-  static final ValueNotifier<String> statusText = ValueNotifier('');
   static final ValueNotifier<List<ChoiseButton>> buttons = ValueNotifier<List<ChoiseButton>>([]);
   static final ValueNotifier<VariablesDiffDebug> variablesDiffDebug = ValueNotifier(VariablesDiffDebug(previous: {}, current: {}));
 
@@ -160,21 +159,6 @@ class Player {
     speakerName.value = node.speaker;
     narrativeText.value = nt;
 
-    final st = StringBuffer();
-    for (final struct in GameState.structs) {
-      for (final variable in struct.variables) {
-        var currentValueAsTextForPlayer = variable.currentValueAsTextForPlayer();
-        if (currentValueAsTextForPlayer != null) {
-          if (currentValueAsTextForPlayer.isNotEmpty) {
-            st.writeln(currentValueAsTextForPlayer);
-          }
-        } else {
-          st.writeln("${struct.name}-${variable.name}: ${variable.currentValueAsText()}");
-        }
-      }
-    }
-    statusText.value = st.toString();
-
     buttons.value = allowedTransitionsForCurrentState()
         .where((t) => t.isButton)
         .map((t) => ChoiseButton(text: t.text, transitionId: t.id))
@@ -222,7 +206,6 @@ class Player {
     imageInfoNotifier.value = PlayerImageInfo();
     speakerName.value = "";
     narrativeText.value = "";
-    statusText.value = "";
     buttons.value = [];
   }
 }

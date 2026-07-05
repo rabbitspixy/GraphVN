@@ -22,40 +22,16 @@ class PlayerRootWidget extends StatelessWidget {
             child: ValueListenableBuilder<VariablesDiffDebug>(
               valueListenable: Player.variablesDiffDebug,
               builder: (context, diffDebug, child) {
+                final textSpan = diffDebug.getChangedVariablesTableText();
+                
                 return Container(
                   padding: const EdgeInsets.all(8.0),
                   decoration: BoxDecoration(
                     color: const Color.fromARGB(120, 0, 0, 0),
                     borderRadius: BorderRadius.circular(8.0),
                   ),
-                  child: Text(
-                    diffDebug.getChangedVariablesTableText(),
-                    style: GoogleFonts.robotoMono(
-                      color: Colors.white,
-                      fontSize: 12,
-                    ),
-                    textAlign: TextAlign.left,
-                    softWrap: true,
-                  ),
-                );
-              },
-            ),
-          ),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: ValueListenableBuilder<String>(
-              valueListenable: Player.statusText,
-              builder: (context, text, child) {
-                return Container(
-                  margin: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
-                  padding: const EdgeInsets.all(8.0),
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(120, 0, 0, 0),
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: Text(
-                    text,
-                    style: const TextStyle(color: Colors.white),
+                  child: RichText(
+                    text: textSpan,
                     textAlign: TextAlign.left,
                     softWrap: true,
                   ),

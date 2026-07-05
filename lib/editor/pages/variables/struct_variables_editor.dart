@@ -1,16 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:graph_vn/common/js_util.dart';
 import 'package:graph_vn/editor/modals/create_variable_dialog.dart';
-import 'package:graph_vn/editor/modals/named_values_type_dialog.dart';
-import 'package:graph_vn/editor/modals/number_edit_dialog.dart';
-import 'package:graph_vn/editor/modals/rename_dialog.dart';
-import 'package:graph_vn/editor/modals/text_edit_dialog.dart';
 import 'package:graph_vn/game/variables.dart';
-import 'package:graph_vn/game/number_variable_stringifier.dart';
-import 'package:graph_vn/game/named_variable_stringifier.dart';
-import 'package:graph_vn/editor/modals/number_variable_stringifier_editor.dart';
-import 'package:graph_vn/editor/modals/named_variable_stringifier_editor.dart';
-import 'package:graph_vn/game/game_state.dart';
 
 import '../../../game/struct.dart';
 import 'variable_details_widget.dart';

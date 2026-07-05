@@ -1,6 +1,4 @@
 import 'package:graph_vn/game/game_state.dart';
-import 'package:graph_vn/game/named_variable_stringifier.dart';
-import 'package:graph_vn/game/number_variable_stringifier.dart';
 import 'package:graph_vn/generated-proto/data.pb.dart';
 import 'package:uuid/uuid.dart';
 
@@ -73,7 +71,6 @@ abstract class Variable {
 
   String initialValueAsText();
   String currentValueAsText();
-  String? currentValueAsTextForPlayer();
 
   VariableProto toProto();
   factory Variable.fromProto(VariableProto proto) {
@@ -87,7 +84,6 @@ abstract class Variable {
 
 class NumberVariable extends Variable {
   int initialValue = 0;
-  List<NumberVariableStringifier> stringifiers = [];
 
   NumberVariable();
 
@@ -99,17 +95,6 @@ class NumberVariable extends Variable {
   @override
   String currentValueAsText() {
     return GameState.valueOfVariable(this);
-  }
-
-  @override
-  String? currentValueAsTextForPlayer() {
-    for (final stringifier in stringifiers) {
-      final result = stringifier.evaluate(int.parse(currentValueAsText()));
-      if (result != null) {
-        return result;
-      }
-    }
-    return null;
   }
 
   @override
@@ -136,7 +121,6 @@ class NumberVariable extends Variable {
 class NamedVariable extends Variable {
   String typeId;
   String initialValue = '';
-  List<NamedVariableStringifier> stringifiers = [];
 
   NamedVariable({
     required this.typeId,
@@ -151,18 +135,6 @@ class NamedVariable extends Variable {
   @override
   String currentValueAsText() {
     return GameState.valueOfVariable(this);
-  }
-
-  @override
-  String? currentValueAsTextForPlayer() {
-    // TODO: implement
-    // for (final stringifier in stringifiers) {
-    //   final result = stringifier.evaluate(value);
-    //   if (result != null) {
-    //     return result;
-    //   }
-    // }
-    return null;
   }
 
   @override
