@@ -137,7 +137,7 @@ class _NodeEditorState extends State<NodeEditor> {
                   icon: const Icon(Icons.visibility, size: 14),
                   padding: EdgeInsets.zero,
                   onPressed: () {
-                    showJavascriptCodeDialog(context, widget.node.jsAction);
+                    showJavascriptCodeDialog(context, GameState.codeRepository.actions[widget.node.naturalLanguageAction] ?? '');
                   },
                 ),
               ),

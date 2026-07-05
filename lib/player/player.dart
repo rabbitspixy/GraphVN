@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:graph_vn/common/find_block_util.dart';
 import 'package:graph_vn/common/random_util.dart';
 import 'package:graph_vn/game/game_node.dart';
 import 'package:graph_vn/game/game_transition.dart';
@@ -58,12 +59,12 @@ class Player {
     int maxIterations = 10000;
     while (transition != null || node != null) {
       if (transition != null) {
-        _runActions(transition.jsAction);
+        _runActions(transition.naturalLanguageAction);
         node = GameState.nodes[transition.to];
         transition = null;
       }
       if (node != null) {
-        _runActions(node.jsAction);
+        _runActions(node.naturalLanguageAction);
         GameState.currentNode = node.id;
         if (node.isEmpty) {
           final allowedTransitions = Player.allowedTransitionsForCurrentState();
@@ -87,26 +88,28 @@ class Player {
     _updateStill();
   }
 
-  static void _runActions(String jsAction) {
+  static void _runActions(String naturalLanguageAction) {
     final emptyFunc = "function doActions() {}";
-    final result = GameState.jsRuntime.evaluate("$emptyFunc\n$jsAction\ndoActions();");
+    final js = GameState.codeRepository.actions[naturalLanguageAction] ?? '';
+    final result = GameState.jsRuntime.evaluate("$emptyFunc\n$js\ndoActions();");
     if (result.isError) {
-      logger.w("Javascript error:\n$jsAction\n\n${result.rawResult}");
+      logger.w("Javascript error:\n$js\n\n${result.rawResult}");
     }
   }
 
   static List<GameTransition> allowedTransitionsForCurrentState() {
     return GameState.transitions
       .where((t) => t.from == GameState.currentNode)
-      .where((t) => _resolveTransitionConditions(t.jsCondition))
+      .where((t) => _resolveTransitionConditions(t.naturalLanguageCondition))
       .toList();
   }
 
-  static bool _resolveTransitionConditions(String jsCondition) {
+  static bool _resolveTransitionConditions(String naturalLanguageCondition) {
     final emptyFunc = "function testConditions() { return true; }";
-    final result = GameState.jsRuntime.evaluate("$emptyFunc\n$jsCondition\ntestConditions();");
+    final js = GameState.codeRepository.conditions[naturalLanguageCondition] ?? '';
+    final result = GameState.jsRuntime.evaluate("$emptyFunc\n$js\ntestConditions();");
     if (result.isError) {
-      logger.w("Javascript error:\n$jsCondition\n\n${result.rawResult}");
+      logger.w("Javascript error:\n$js\n\n${result.rawResult}");
       return true;
     }
     if (result.rawResult == true && result.rawResult.runtimeType == bool) {
@@ -115,7 +118,7 @@ class Player {
     if (result.rawResult == false && result.rawResult.runtimeType == bool) {
       return false;
     }
-    throw Exception("JS condition invalid:\n$jsCondition\n\nrawResult=(${result.rawResult.runtimeType})${result.rawResult}");
+    throw Exception("JS condition invalid:\n$js\n\nrawResult=(${result.rawResult.runtimeType})${result.rawResult}");
   }
 
   static String _resolveGetTextValue(String js) {
@@ -147,9 +150,10 @@ class Player {
     for (final struct in GameState.structs) {
       for (final variable in struct.variables) {
         nt = nt.replaceAll("[${struct.name}->${variable.name}]", variable.currentValueAsText());
-        for (final replaceable in node.jsReplace.keys) {
-          final getTextCode = node.jsReplace[replaceable]!;
-          nt = nt.replaceAll(replaceable, _resolveGetTextValue(getTextCode));
+        final replaceables = findBlockDoubleCurlyBraces(node.text);
+        for (final replaceable in replaceables) {
+          final jsCode = GameState.codeRepository.replaceables[replaceable] ?? '';
+          nt = nt.replaceAll(replaceable, _resolveGetTextValue(jsCode));
         }
       }
     }

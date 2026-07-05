@@ -4,6 +4,8 @@ message ProjectProto {
   repeated GameNodeProto nodes = 1;
   repeated GameTransitionProto transitions = 2;
   repeated StructProto structs = 3;
+  CodeRepositoryProto codeRepository = 4;
+  repeated NamedValueTypeProto namedValueTypes = 5;
 }
 
 message GameTransitionProto {
@@ -12,8 +14,6 @@ message GameTransitionProto {
   string from = 3;
   string to = 4;
   int32 weight = 5;
-  string jsCondition = 6;
-  string jsAction = 7;
   repeated GenerateImageMetadataProto generatedImages = 8;
   string naturalLanguageCondition = 9;
   string naturalLanguageAction = 10;
@@ -26,7 +26,6 @@ message GameNodeProto {
   int64 x = 4;
   int64 y = 5;
   bool isStart = 6;
-  string jsAction = 7;
   string imagePath = 8;
   repeated GenerateImageMetadataProto generatedImages = 9;
   string speaker = 11;
@@ -38,6 +37,18 @@ message StructProto {
   string id = 1;
   string name = 2;
   repeated VariableProto variables = 3;
+}
+
+message NamedValueTypeProto {
+  string id = 1;
+  string name = 2;
+  repeated NamedValueProto values = 3;
+}
+
+message NamedValueProto {
+  string id = 1;
+  string name = 2;
+  string description = 3;
 }
 
 message VariableProto {
@@ -69,4 +80,10 @@ message GenerateImageMetadataProto {
   string style = 2;
   string description = 3;
   string llmGeneratedPrompt = 4;
+}
+
+message CodeRepositoryProto {
+  map<string, string> actions = 1;
+  map<string, string> conditions = 2;
+  map<string, string> replaceables = 3;
 }

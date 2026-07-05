@@ -9,12 +9,30 @@ class NamedValuesType {
   String name = '';
   List<NamedValue> values = List.empty(growable: true);
 
+  NamedValuesType();
+
   void addValue(String name) {
     if (values.where((x) => x.name == name).isNotEmpty) {
       //TODO: Отобразить сообщение с ошибкой, что такое имя уже используется
       return;
     }
     values.add(NamedValue(id: Uuid().v4(), name: name, description: ''));
+  }
+
+  NamedValueTypeProto toProto() {
+    final result = NamedValueTypeProto();
+    result.id = id;
+    result.name = name;
+    result.values.addAll(values.map((x) => x.toProto()));
+    return result;
+  }
+
+  factory NamedValuesType.fromProto(NamedValueTypeProto proto) {
+    final result = NamedValuesType();
+    result.id = proto.id;
+    result.name = proto.name;
+    result.values.addAll([for (var v in proto.values) NamedValue.fromProto(v)]);
+    return result;
   }
 }
 
@@ -28,6 +46,22 @@ class NamedValue {
     required this.name,
     required this.description,
   }) : id = id ?? Uuid().v4();
+
+  NamedValueProto toProto() {
+    final result = NamedValueProto();
+    result.id = id;
+    result.name = name;
+    result.description = description;
+    return result;
+  }
+
+  factory NamedValue.fromProto(NamedValueProto proto) {
+    return NamedValue(
+      id: proto.id,
+      name: proto.name,
+      description: proto.description,
+    );
+  }
 }
 
 abstract class Variable {

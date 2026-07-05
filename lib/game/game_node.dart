@@ -14,8 +14,6 @@ class GameNode {
   List<GenerateImageMetadata> generateImageMetadata = [];
   String speaker = "";
   String naturalLanguageAction = "";
-  String jsAction = "";
-  Map<String, String> jsReplace = Map.identity();
   String gotoLabel = "";
 
   bool get isEmpty => text.isEmpty;
@@ -34,7 +32,6 @@ class GameNode {
     result.generatedImages.addAll(generateImageMetadata.map((x) => x.toProto()));
     result.speaker = speaker;
     result.naturalLanguageAction = naturalLanguageAction;
-    result.jsAction = jsAction;
     result.gotoLabel = gotoLabel;
     return result;
   }
@@ -51,7 +48,6 @@ class GameNode {
     result.generateImageMetadata.addAll(proto.generatedImages.map((x) => GenerateImageMetadata.fromProto(x)));
     result.speaker = proto.speaker;
     result.naturalLanguageAction = proto.naturalLanguageAction;
-    result.jsAction = proto.jsAction;
     result.gotoLabel = proto.gotoLabel;
     return result;
   }

@@ -107,7 +107,7 @@ class _TransitionEditorState extends State<TransitionEditor> {
                   icon: const Icon(Icons.visibility, size: 14),
                   padding: EdgeInsets.zero,
                   onPressed: () {
-                    showJavascriptCodeDialog(context, widget.transition.jsCondition);
+                    showJavascriptCodeDialog(context, GameState.codeRepository.conditions[widget.transition.naturalLanguageCondition] ?? '');
                   },
                 ),
               ),
@@ -134,7 +134,7 @@ class _TransitionEditorState extends State<TransitionEditor> {
                   icon: const Icon(Icons.visibility, size: 14),
                   padding: EdgeInsets.zero,
                   onPressed: () {
-                    showJavascriptCodeDialog(context, widget.transition.jsAction);
+                    showJavascriptCodeDialog(context, GameState.codeRepository.actions[widget.transition.naturalLanguageAction] ?? '');
                   },
                 ),
               ),

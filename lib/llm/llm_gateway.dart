@@ -25,7 +25,9 @@ class LLMGateway {
     final messages = [ChatMessage.user(prompt)];
     final response = await ai.chat(messages);
     final responseText = response.text;
+    final responseThinking = response.thinking;
     logger.d("AI request\n$prompt");
+    logger.d("AI thinking\n$responseThinking");
     logger.d("AI response\n$responseText");
     if (responseText == null) {
       return null;

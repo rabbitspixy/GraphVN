@@ -106,7 +106,7 @@ class _EditorVariablesPageState extends State<EditorVariablesPage> {
                   onPressed: () async {
                     final name = await showRenameDialog(context, 'New Named Value Type', '');
                     if (name != null && name.isNotEmpty) {
-                      GameState.namedValueTypes.create(name);
+                      GameState.namedValueTypes.createEmpty(name);
                       setState(() {});
                     }
                   },

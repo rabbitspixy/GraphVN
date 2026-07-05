@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter_js/flutter_js.dart';
 import 'package:graph_vn/common/js_util.dart';
+import 'package:graph_vn/game/code_repository.dart';
 import 'package:graph_vn/game/named_value_type_repository.dart';
 import 'package:graph_vn/game/struct.dart';
 import 'package:graph_vn/game/transition_position.dart';
@@ -25,8 +26,9 @@ class GameState {
   static GameNode? selectedNode;
   static GameTransition? selectedTransition;
   static final List<Struct> structs = List.empty(growable: true);
-  static final NamedValueTypeRepository namedValueTypes = NamedValueTypeRepository();
+  static NamedValueTypeRepository namedValueTypes = NamedValueTypeRepository();
   static String currentNode = "";
+  static CodeRepository codeRepository = CodeRepository();
   static JavascriptRuntime jsRuntime = getJavascriptRuntime();
 
   static List<String> getProjectFolders() {
@@ -51,6 +53,8 @@ class GameState {
     selectedNode = null;
     selectedTransition = null;
     structs.clear();
+    codeRepository = CodeRepository();
+    namedValueTypes = NamedValueTypeRepository();
     currentNode = "";
 
     if (appSettings.lastOpenedProjectDir != GameState.projectDir) {
@@ -93,6 +97,9 @@ class GameState {
     nodes.addAll(projectData.nodes);
     transitions.addAll(projectData.transitions);
     structs.addAll(projectData.structs);
+    codeRepository = projectData.codeRepository;
+    namedValueTypes = NamedValueTypeRepository();
+    namedValueTypes.addAll(projectData.namedValueTypes);
     updateAllTransitionPositions();
 
     //this should be done last
@@ -130,6 +137,8 @@ class GameState {
       nodes: GameState.nodes,
       transitions:  GameState.transitions,
       structs: GameState.structs,
+      codeRepository: codeRepository,
+      namedValueTypes: namedValueTypes.all(),
     );
     final file = File("./${AppConstants.projectsDir}/$projectDir/main.bin");
     final dir = file.parent;

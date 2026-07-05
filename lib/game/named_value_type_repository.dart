@@ -3,7 +3,20 @@ import 'package:graph_vn/game/variables.dart';
 class NamedValueTypeRepository {
   final List<NamedValuesType> _namedValueTypes = List.empty(growable: true);
 
-  void create(String name) {
+  void add(NamedValuesType t) {
+    if (_findByName(t.name) != null) {
+      return;
+    }
+    _namedValueTypes.add(t);
+  }
+
+  void addAll(List<NamedValuesType> types) {
+    for (final type in types) {
+      add(type);
+    }
+  }
+
+  void createEmpty(String name) {
     if (_findByName(name) != null) {
       return;
     }

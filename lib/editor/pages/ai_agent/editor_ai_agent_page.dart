@@ -33,11 +33,14 @@ class _EditorAiAgentPageState extends State<EditorAiAgentPage> {
         builder: (dialogContext, setDialogState) {
           _dialogContext = dialogContext;
           _dialogSetState = setDialogState;
+          _runAiAgentStep2();
           return _buildProgressDialog();
         },
       ),
     );
+  }
 
+  void _runAiAgentStep2() async {
     final stopwatch = Stopwatch()..start();
     try {
       await _processAllTasks();
@@ -60,53 +63,30 @@ class _EditorAiAgentPageState extends State<EditorAiAgentPage> {
   }
 
   Future<void> _processAllTasks() async {
-    _processEmptyFields();
-    _refindReplaceableInTexts();
+    final tasks = [
+      ..._nodeActionTasks(),
+      ..._transitionConditionTasks(),
+      ..._transitionActionTasks(),
+      ..._nodeReplaceableTasks()
+    ];
+    _totalTasks = tasks.length;
     
-    final nodeActionLambdas = _processNodeActions();
-    final transitionConditionLambdas = _processTransitionConditions();
-    final transitionActionLambdas = _processTransitionActions();
-    final replaceableTasks = _processNodeReplaceable();
-    
-    final allLambdas = [...nodeActionLambdas, ...transitionConditionLambdas, ...transitionActionLambdas, ...replaceableTasks];
-    _totalTasks = allLambdas.length;
-    
-    await runInParallel(allLambdas, 4);
+    await runInParallel(tasks, 4);
   }
 
-  void _processEmptyFields() {
+  List<Future<void> Function()> _nodeActionTasks() {
+    final lambdas = <Future<void> Function()>[];
     for (final node in GameState.nodes.values) {
       if (node.naturalLanguageAction.isEmpty) {
-        node.jsAction = "";
+        continue;
       }
-    }
-    for (final transition in GameState.transitions) {
-      if (transition.naturalLanguageCondition.isEmpty) {
-        transition.jsCondition = "";
+      if (GameState.codeRepository.actions.containsKey(node.naturalLanguageAction)) {
+        continue;
       }
-      if (transition.naturalLanguageAction.isEmpty) {
-        transition.jsAction = "";
-      }
-    }
-  }
-
-  void _refindReplaceableInTexts() {
-    for (final node in GameState.nodes.values) {
-      node.jsReplace = filterMapByKeys(
-          node.jsReplace,
-          findBlockDoubleCurlyBraces(node.text)
-      );
-    }
-    //TODO: сделать тоже самое для transitions
-  }
-
-  List<Future<void> Function()> _processNodeActions() {
-    final lambdas = <Future<void> Function()>[];
-    for (final node in _nodesWithDirtyActions()) {
       lambdas.add(() async {
         final code = await TextGenerator.writeAction(node.naturalLanguageAction);
         if (code != null) {
-          node.jsAction = code;
+          GameState.codeRepository.actions[node.naturalLanguageAction] = code;
         } else {
           logger.w("No code generated for actions of node ${node.id}");
         }
@@ -118,13 +98,19 @@ class _EditorAiAgentPageState extends State<EditorAiAgentPage> {
     return lambdas;
   }
 
-  List<Future<void> Function()> _processTransitionConditions() {
+  List<Future<void> Function()> _transitionConditionTasks() {
     final lambdas = <Future<void> Function()>[];
-    for (final transition in _transitionsWithDirtyConditions()) {
+    for (final transition in GameState.transitions) {
+      if (transition.naturalLanguageCondition.isEmpty) {
+        continue;
+      }
+      if (GameState.codeRepository.conditions.containsKey(transition.naturalLanguageCondition)) {
+        continue;
+      }
       lambdas.add(() async {
         final code = await TextGenerator.writeCondition(transition.naturalLanguageCondition);
         if (code != null) {
-          transition.jsCondition = code;
+          GameState.codeRepository.conditions[transition.naturalLanguageCondition] = code;
         } else {
           logger.w("No code generated for conditions of transition ${transition.id}");
         }
@@ -136,13 +122,19 @@ class _EditorAiAgentPageState extends State<EditorAiAgentPage> {
     return lambdas;
   }
 
-  List<Future<void> Function()> _processTransitionActions() {
+  List<Future<void> Function()> _transitionActionTasks() {
     final lambdas = <Future<void> Function()>[];
-    for (final transition in _transitionsWithDirtyActions()) {
+    for (final transition in GameState.transitions) {
+      if (transition.naturalLanguageAction.isEmpty) {
+        continue;
+      }
+      if (GameState.codeRepository.actions.containsKey(transition.naturalLanguageAction)) {
+        continue;
+      }
       lambdas.add(() async {
         final code = await TextGenerator.writeAction(transition.naturalLanguageAction);
         if (code != null) {
-          transition.jsAction = code;
+          GameState.codeRepository.actions[transition.naturalLanguageAction] = code;
         } else {
           logger.w("No code generated for actions of transition ${transition.id}");
         }
@@ -154,14 +146,21 @@ class _EditorAiAgentPageState extends State<EditorAiAgentPage> {
     return lambdas;
   }
 
-  List<Future<void> Function()> _processNodeReplaceable() {
+  List<Future<void> Function()> _nodeReplaceableTasks() {
     final tasks = <Future<void> Function()>[];
     for (final node in GameState.nodes.values) {
-      for (final replaceable in node.jsReplace.keys) {
+      final replaceables = findBlockDoubleCurlyBraces(node.text);
+      for (final replaceable in replaceables) {
+        if (replaceable.isEmpty) {
+          continue;
+        }
+        if (GameState.codeRepository.replaceables.containsKey(replaceable)) {
+          continue;
+        }
         tasks.add(() async {
           final code = await TextGenerator.writeReplaceable(replaceable.replaceAll("{{", "").replaceAll("}}", ""));
           if (code != null) {
-            node.jsReplace[replaceable] = code;
+            GameState.codeRepository.replaceables[replaceable] = code;
           } else {
             logger.w("No code generated for replaceable $replaceable of node ${node.id}");
           }
@@ -186,18 +185,6 @@ class _EditorAiAgentPageState extends State<EditorAiAgentPage> {
         ],
       ),
     );
-  }
-
-  List<GameNode> _nodesWithDirtyActions() {
-    return GameState.nodes.values.where((n) => n.naturalLanguageAction.isNotEmpty).toList();
-  }
-
-  List<GameTransition> _transitionsWithDirtyConditions() {
-    return GameState.transitions.where((x) => x.naturalLanguageCondition.isNotEmpty).toList();
-  }
-
-  List<GameTransition> _transitionsWithDirtyActions() {
-    return GameState.transitions.where((x) => x.naturalLanguageAction.isNotEmpty).toList();
   }
 
   @override
