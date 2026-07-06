@@ -41,25 +41,82 @@ class _EditorAiAgentPageState extends State<EditorAiAgentPage> {
     }
   }
 
+  Future<void> _clearGeneratedCode() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Очистить сгенерированный код'),
+        content: const Text('Вы уверены, что хотите очистить весь сгенерированный код?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, false),
+            child: const Text('Отмена'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, true),
+            child: const Text('Очистить'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true || !mounted) return;
+
+    setState(() {
+      GameState.codeRepository.clear();
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Сгенерированный код очищен'),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: ElevatedButton(
-        onPressed: _runAiAgent,
-        style: ElevatedButton.styleFrom(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          ElevatedButton(
+            onPressed: _runAiAgent,
+            style: ElevatedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: const [
+                Icon(Icons.play_arrow),
+                SizedBox(width: 8),
+                Text('Запустить AI агент'),
+              ],
+            ),
           ),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: const [
-            Icon(Icons.play_arrow),
-            SizedBox(width: 8),
-            Text('Запустить AI агент'),
-          ],
-        ),
+          const SizedBox(height: 16),
+          ElevatedButton(
+            onPressed: _clearGeneratedCode,
+            style: ElevatedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: const [
+                Icon(Icons.clear),
+                SizedBox(width: 8),
+                Text('Очистить сгенерированный код'),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

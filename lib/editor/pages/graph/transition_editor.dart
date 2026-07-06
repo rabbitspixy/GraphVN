@@ -154,7 +154,7 @@ class _TransitionEditorState extends State<TransitionEditor> {
                 widget.onChange();
               }
             },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
             child: const Text('Delete Transition'),
           ),
         ),

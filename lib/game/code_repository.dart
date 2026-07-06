@@ -8,6 +8,12 @@ class CodeRepository {
 
   CodeRepository();
 
+  void clear() {
+    actions.clear();
+    conditions.clear();
+    replaceables.clear();
+  }
+
   CodeRepositoryProto toProto() {
     final result = CodeRepositoryProto();
     result.actions.addAll(actions);

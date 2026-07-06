@@ -237,7 +237,7 @@ class _NodeEditorState extends State<NodeEditor> {
                 widget.onChange();
               }
             },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
             child: const Text('Удалить узел'),
           ),
         ),

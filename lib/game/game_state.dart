@@ -17,6 +17,7 @@ import 'package:graph_vn/generated-proto/data.pb.dart';
 import 'dart:ui';
 
 import 'package:graph_vn/main.dart';
+import 'package:protobuf/protobuf.dart';
 
 class GameState {
   static String projectDir = "";

@@ -86,14 +86,12 @@ class _RootWidgetState extends State<RootWidget> {
   @override
   void initState() {
     super.initState();
-    HardwareKeyboard.instance.addHandler(_handleKey);
     GameState.stateUpdatedEvents.listen((_) => setState(() {}));
   }
 
   @override
   void dispose() {
     _focusNode.dispose();
-    HardwareKeyboard.instance.removeHandler(_handleKey);
     super.dispose();
   }
 
@@ -105,6 +103,7 @@ class _RootWidgetState extends State<RootWidget> {
         body: KeyboardListener(
           focusNode: _focusNode,
           autofocus: true,
+          onKeyEvent: _handleKey,
           child: GameState.isProjectLoaded()
               ? Stack(
                   children: [
