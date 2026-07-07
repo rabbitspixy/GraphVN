@@ -41,6 +41,10 @@ class NodeTooltip extends StatelessWidget {
 
   String text() {
     final result = StringBuffer();
+    if (node.name.isNotEmpty) {
+      result.writeln(node.name);
+      result.writeln();
+    }
     if (node.text.isNotEmpty) {
       result.writeln("--- Текст ---");
       result.writeln(node.text);

@@ -7,6 +7,7 @@ class GameNode {
   String id = Uuid().v4();
   String text = '';
   String label = '';
+  String name = '';
   int x = 0;
   int y = 0;
   bool isStart = false;
@@ -27,6 +28,7 @@ class GameNode {
     result.id = id;
     result.text = text;
     result.label = label;
+    result.name = name;
     result.x = Int64(x);
     result.y = Int64(y);
     result.isStart = isStart;
@@ -44,6 +46,7 @@ class GameNode {
     result.id = proto.id;
     result.text = proto.text;
     result.label = proto.label;
+    result.name = proto.name;
     result.x = proto.x.toInt();
     result.y = proto.y.toInt();
     result.isStart = proto.isStart;

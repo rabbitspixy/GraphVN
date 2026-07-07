@@ -32,6 +32,7 @@ message GameNodeProto {
   string naturalLanguageTrigger = 14;
   string naturalLanguageAction = 12;
   string gotoLabel = 13;
+  string name = 15;
 }
 
 message StructProto {

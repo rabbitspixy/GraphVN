@@ -37,7 +37,8 @@ class EditorCanvasState extends State<EditorCanvas> {
   Offset? _nodeOffsetStart;
   bool _nodeDragging = false;
   String? _linkingNodeId;
-  Duration _lastClickTime = Duration.zero;
+  Duration _lastPrimaryButtonDownTime = Duration.zero;
+  Duration _lastPrimaryButtonUpTime = Duration.zero;
   Size? _lastSize;
   bool _sizeInitialized = false;
   GameTransition? _hoveredTransition;
@@ -57,56 +58,84 @@ class EditorCanvasState extends State<EditorCanvas> {
     _focusNode.requestFocus();
     if (event.buttons & kPrimaryMouseButton != 0) {
       if (_hoveredNode != null) {
-        _selectedNode = _hoveredNode;
-        _selectedTransition = null;
-        widget.onSelect(_selectedNode!);
+        _selectNode(_hoveredNode);
       } else if (_hoveredTransition != null) {
-        _selectedNode = null;
-        _selectedTransition = _hoveredTransition;
-        widget.onSelect(_selectedTransition!);
+        _selectTransition(_hoveredTransition);
       } else {
-        _selectedNode = null;
-        _selectedTransition = null;
-        widget.onSelect(null);
+        _unselectNodesAndTransitions();
       }
-      if (event.timeStamp - _lastClickTime < const Duration(milliseconds: 300)) {
-        _createNewNodeAt(event.localPosition - _offset);
-        _lastClickTime = Duration(milliseconds: 0);
+      if (_hoveredNode != null &&
+          event.timeStamp - _lastPrimaryButtonUpTime < const Duration(milliseconds: 300)) {
+        _linkingNodeId = _hoveredNode?.id;
         return;
       }
-      _lastClickTime = event.timeStamp;
-    }
-
-    // Handle node dragging with left mouse button
-    if (event.buttons & kPrimaryMouseButton != 0) {
-      // If Ctrl is pressed, start linking
+      if (_hoveredNode == null &&
+          _hoveredTransition == null &&
+          event.timeStamp - _lastPrimaryButtonDownTime < const Duration(milliseconds: 300)) {
+        _createNewNodeAt(event.localPosition - _offset);
+        _lastPrimaryButtonDownTime = Duration(milliseconds: 0);
+        return;
+      } else {
+        _lastPrimaryButtonDownTime = event.timeStamp;
+      }
       if (HardwareKeyboard.instance.isControlPressed) {
-        if (_selectedNode != null) {
-          _linkingNodeId = _selectedNode?.id;
+        if (_hoveredNode != null) {
+          _linkingNodeId = _hoveredNode?.id;
           return;
         }
       } else {
-        if (_selectedNode != null) {
-          _draggingNodeId = _selectedNode?.id;
+        if (_hoveredNode != null) {
+          _draggingNodeId = _hoveredNode?.id;
           _nodeDragStart = event.localPosition;
-          _nodeOffsetStart = Offset(_selectedNode!.x.toDouble(), _selectedNode!.y.toDouble());
+          _nodeOffsetStart = Offset(_hoveredNode!.x.toDouble(), _hoveredNode!.y.toDouble());
           _nodeDragging = true;
           return;
         }
       }
     }
+
     // Handle canvas panning with middle mouse button
-    if (_linkingNodeId == null && event.buttons & kMiddleMouseButton != 0) {
+    if (event.buttons & kMiddleMouseButton != 0) {
       _dragStart = event.localPosition;
       _offsetStart = _offset;
       _dragging = true;
     }
+
+    if (_hoveredNode != null && event.buttons & kSecondaryMouseButton != 0) {
+      _linkingNodeId = _hoveredNode?.id;
+      return;
+    }
+  }
+
+  void _selectNode(GameNode? node) {
+    if (node == null) {
+      return;
+    }
+    _selectedNode = node;
+    _selectedTransition = null;
+    widget.onSelect(node);
+  }
+
+  void _selectTransition(GameTransition? transition) {
+    if (transition == null) {
+      return;
+    }
+    _selectedNode = null;
+    _selectedTransition = transition;
+    widget.onSelect(transition);
+  }
+
+  void _unselectNodesAndTransitions() {
+    _selectedNode = null;
+    _selectedTransition = null;
+    widget.onSelect(null);
   }
 
   void _createNewNodeAt(Offset localPos) {
     final newNode = GameNode();
     if (GameState.trySetNodePosition(newNode, localPos.dx.round(), localPos.dy.round())) {
       GameState.addNode(newNode);
+      _selectNode(newNode);
     }
   }
 
@@ -127,23 +156,45 @@ class EditorCanvasState extends State<EditorCanvas> {
   }
 
   void _onPointerUp(PointerUpEvent event) {
-    if (_linkingNodeId != null) {
-      if (_hoveredNode != null && _hoveredNode!.id != _linkingNodeId) {
-        GameState.addTransition(GameTransition()
-          ..from = _linkingNodeId!
-          ..to = _hoveredNode!.id);
-      }
-      _linkingNodeId = null;
-    } else if (_nodeDragging) {
-      _nodeDragging = false;
-      _draggingNodeId = null;
-      _nodeDragStart = null;
-      _nodeOffsetStart = null;
-    } else if (_dragging) {
-      _dragging = false;
-      _dragStart = null;
-      _offsetStart = null;
+    if (_linkingNodeId != null && event.buttons & kPrimaryButton == 0) {
+      _finishLinking();
     }
+    if (_linkingNodeId != null && event.buttons & kSecondaryButton == 0) {
+      _finishLinking();
+    }
+    if (_nodeDragging && event.buttons & kPrimaryButton == 0) {
+      _finishNodeDragging();
+    }
+    if (_dragging && event.buttons & kMiddleMouseButton == 0) {
+      _finishCanvasDragging();
+    }
+    if (event.buttons & kSecondaryMouseButton == 0) {
+      _lastPrimaryButtonUpTime = event.timeStamp;
+    }
+  }
+
+  void _finishLinking() {
+    if (_hoveredNode != null && _hoveredNode!.id != _linkingNodeId) {
+      var transition = GameTransition()
+        ..from = _linkingNodeId!
+        ..to = _hoveredNode!.id;
+      GameState.addTransition(transition);
+      _selectTransition(transition);
+    }
+    _linkingNodeId = null;
+  }
+
+  void _finishNodeDragging() {
+    _nodeDragging = false;
+    _draggingNodeId = null;
+    _nodeDragStart = null;
+    _nodeOffsetStart = null;
+  }
+
+  void _finishCanvasDragging() {
+    _dragging = false;
+    _dragStart = null;
+    _offsetStart = null;
   }
 
   void _updateHover(Offset globalPosition) {

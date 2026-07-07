@@ -19,7 +19,8 @@ class NodeEditor extends StatefulWidget {
 }
 
 class _NodeEditorState extends State<NodeEditor> {
-  late TextEditingController _nodeTextController;
+  late TextEditingController _nameTextController;
+  late TextEditingController _textTextController;
   late TextEditingController _speakerTextController;
   late TextEditingController _labelTextController;
   late TextEditingController _imagePathController;
@@ -31,7 +32,8 @@ class _NodeEditorState extends State<NodeEditor> {
   @override
   void initState() {
     super.initState();
-    _nodeTextController = TextEditingController(text: widget.node.text);
+    _nameTextController = TextEditingController(text: widget.node.name);
+    _textTextController = TextEditingController(text: widget.node.text);
     _speakerTextController = TextEditingController(text: widget.node.speaker);
     _labelTextController = TextEditingController(text: widget.node.label);
     _imagePathController = TextEditingController(text: widget.node.imagePath);
@@ -39,9 +41,16 @@ class _NodeEditorState extends State<NodeEditor> {
     _naturalLanguageActionController = TextEditingController(text: widget.node.naturalLanguageAction);
     _gotoLabelTextController = TextEditingController(text: widget.node.gotoLabel);
     _isStart = widget.node.isStart;
-    _nodeTextController.addListener(() {
-      if (_nodeTextController.text != widget.node.text) {
-        widget.node.text = _nodeTextController.text;
+    _nameTextController.addListener(() {
+      if (_nameTextController.text != widget.node.name) {
+        widget.node.name = _nameTextController.text;
+        widget.onChange();
+        setState(() {});
+      }
+    });
+    _textTextController.addListener(() {
+      if (_textTextController.text != widget.node.text) {
+        widget.node.text = _textTextController.text;
         widget.onChange();
         setState(() {});
       }
@@ -92,7 +101,8 @@ class _NodeEditorState extends State<NodeEditor> {
 
   @override
   void dispose() {
-    _nodeTextController.dispose();
+    _nameTextController.dispose();
+    _textTextController.dispose();
     _speakerTextController.dispose();
     _labelTextController.dispose();
     _imagePathController.dispose();
@@ -107,6 +117,18 @@ class _NodeEditorState extends State<NodeEditor> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        LabelWithButton(
+          label: 'Название',
+          help: [
+            'Название узла',
+          ],
+        ),
+        TextField(
+          controller: _nameTextController,
+          maxLines: null,
+          decoration: const InputDecoration(border: OutlineInputBorder()),
+        ),
+        const SizedBox(height: 8),
         LabelWithButton(
           label: 'Label',
           help: [
@@ -144,7 +166,7 @@ class _NodeEditorState extends State<NodeEditor> {
           ],
         ),
         TextField(
-          controller: _nodeTextController,
+          controller: _textTextController,
           maxLines: null,
           decoration: const InputDecoration(border: OutlineInputBorder()),
         ),
