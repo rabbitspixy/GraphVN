@@ -267,6 +267,37 @@ class GameState {
     return nodes.values.where((x) => x.label == label).firstOrNull;
   }
 
+  static void renameVariable(String id, String newName) {
+    var variable = variableById(id);
+    if (variable == null) {
+      return;
+    }
+    var struct = structByVariableId(id);
+    if (struct == null) {
+      return;
+    }
+    var oldJsName = toJsString("${struct.name}->${variable.name}");
+    variable.name = newName;
+    var newJsName = toJsString("${struct.name}->${variable.name}");
+    codeRepository.replaceInCode(oldJsName, newJsName);
+    jsRuntime.evaluate("variables[$newJsName] = variables[$oldJsName]; delete variables[$oldJsName];");
+  }
+
+  static void renameStruct(String id, String newName) {
+    var struct = structById(id);
+    if (struct == null) {
+      return;
+    }
+    var oldStructName = struct.name;
+    struct.name = newName;
+    for (final variable in struct.variables) {
+      var oldJsName = toJsString("$oldStructName->${variable.name}");
+      var newJsName = toJsString("${struct.name}->${variable.name}");
+      codeRepository.replaceInCode(oldJsName, newJsName);
+      jsRuntime.evaluate("variables[$newJsName] = variables[$oldJsName]; delete variables[$oldJsName];");
+    }
+  }
+
   static void updateAllTransitionPositions() {
     final Map<String, int> precalculatedPairCount = {};
     for (final transition in GameState.transitions) {

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:graph_vn/common/js_util.dart';
 import 'package:graph_vn/editor/modals/confirm_dialog.dart';
 import 'package:graph_vn/editor/modals/create_variable_dialog.dart';
+import 'package:graph_vn/game/game_state.dart';
 import 'package:graph_vn/game/variables.dart';
 
 import '../../../game/struct.dart';
@@ -63,6 +65,8 @@ class _StructVariablesEditorState extends State<StructVariablesEditor> {
                         if (newVariable != null) {
                           setState(() {
                             widget.struct.variables.add(newVariable);
+                            var jsName = toJsString("${widget.struct.name}->${newVariable.name}");
+                            GameState.jsRuntime.evaluate("variables[$jsName] = ${newVariable.initialValueAsJsCode()};");
                             _selectedIndex ??= 0;
                           });
                         }

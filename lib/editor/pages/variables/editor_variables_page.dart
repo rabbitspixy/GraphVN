@@ -44,9 +44,8 @@ class _EditorVariablesPageState extends State<EditorVariablesPage> {
                       onPressed: () async {
                         final newName = await showRenameDialog(context, 'Edit Struct Name', struct.name);
                         if (newName != null) {
-                          setState(() {
-                            struct.name = newName;
-                          });
+                          GameState.renameStruct(struct.id, newName);
+                          setState(() {});
                         }
                       },
                     ),

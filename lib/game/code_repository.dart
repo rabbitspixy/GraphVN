@@ -8,6 +8,12 @@ class CodeRepository {
 
   CodeRepository();
 
+  void replaceInCode(String from, String to) {
+    actions.updateAll((k, v) => v.replaceAll(from, to));
+    conditions.updateAll((k, v) => v.replaceAll(from, to));
+    replaceables.updateAll((k, v) => v.replaceAll(from, to));
+  }
+
   void clear() {
     actions.clear();
     conditions.clear();

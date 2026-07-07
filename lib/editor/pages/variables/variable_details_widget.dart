@@ -38,9 +38,8 @@ class _VariableDetailsWidgetState extends State<VariableDetailsWidget> {
               onTap: () async {
                 final newName = await showRenameDialog(context, 'Edit Variable Name', variable.name);
                 if (newName != null) {
-                  setState(() {
-                    variable.name = newName;
-                  });
+                  GameState.renameVariable(variable.id, newName);
+                  setState(() {});
                 }
               },
               child: MouseRegion(
