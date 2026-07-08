@@ -317,25 +317,27 @@ class EditorCanvasState extends State<EditorCanvas> {
           focusNode: _focusNode,
           debugLabel: "Editor Canvas Focus",
           child: SizedBox.expand(
-            child: Stack(
-              children: [
-                CustomPaint(
-                  painter: TransitionPainter(offset: _offset, selectedTransition: widget.selectedTransition, hoveredTransition: _hoveredTransition),
-                ),
-                CustomPaint(
-                  painter: NodePainter(offset: _offset, selectedNode: widget.selectedNode, hoveredNode: _hoveredNode, forcedRepaint: _forcedRepaint),
-                ),
-                if (_hoveredNode != null && _hoverNodePosition != null && !_nodeDragging)
-                  NodeTooltip(
-                    position: _hoverNodePosition!,
-                    node: _hoveredNode!,
+            child: ClipRect(
+              child: Stack(
+                children: [
+                  CustomPaint(
+                    painter: TransitionPainter(offset: _offset, selectedTransition: widget.selectedTransition, hoveredTransition: _hoveredTransition),
                   ),
-                if (_hoveredTransition != null && _hoverPosition != null)
-                  TransitionTooltip(
-                    position: _hoverPosition!,
-                    transition: _hoveredTransition!,
+                  CustomPaint(
+                    painter: NodePainter(offset: _offset, selectedNode: widget.selectedNode, hoveredNode: _hoveredNode, forcedRepaint: _forcedRepaint),
                   ),
-              ],
+                  if (_hoveredNode != null && _hoverNodePosition != null && !_nodeDragging)
+                    NodeTooltip(
+                      position: _hoverNodePosition!,
+                      node: _hoveredNode!,
+                    ),
+                  if (_hoveredTransition != null && _hoverPosition != null)
+                    TransitionTooltip(
+                      position: _hoverPosition!,
+                      transition: _hoveredTransition!,
+                    ),
+                ],
+              ),
             ),
           ),
         ),

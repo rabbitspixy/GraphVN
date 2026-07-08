@@ -57,42 +57,43 @@ class EditorGraphPageState extends State<EditorGraphPage> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    return Stack(
+    return Row(
       children: [
-        CallbackShortcuts(
-            bindings: <ShortcutActivator, VoidCallback>{
-              const SingleActivator(LogicalKeyboardKey.delete): () async {
-                final node = GameState.selectedNode;
-                if (node != null) {
-                  if (await showConfirmDialog(context, "Удалить узел?")) {
-                    GameState.deleteNode(node.id);
+        Expanded(
+          flex: 65,
+          child: CallbackShortcuts(
+              bindings: <ShortcutActivator, VoidCallback>{
+                const SingleActivator(LogicalKeyboardKey.delete): () async {
+                  final node = GameState.selectedNode;
+                  if (node != null) {
+                    if (await showConfirmDialog(context, "Удалить узел?")) {
+                      GameState.deleteNode(node.id);
+                    }
                   }
-                }
-                final transition = GameState.selectedTransition;
-                if (transition != null) {
-                  if (await showConfirmDialog(context, "Удалить переход?")) {
-                    GameState.deleteTransition(transition.id);
+                  final transition = GameState.selectedTransition;
+                  if (transition != null) {
+                    if (await showConfirmDialog(context, "Удалить переход?")) {
+                      GameState.deleteTransition(transition.id);
+                    }
                   }
-                }
-              },
+                },
 
-              const SingleActivator(LogicalKeyboardKey.home): () async {
-                resetOffset();
+                const SingleActivator(LogicalKeyboardKey.home): () async {
+                  resetOffset();
+                },
               },
-            },
-            child: EditorCanvas(
-              key: _canvasKey,
-              selectedNode: GameState.selectedNode,
-              selectedTransition: GameState.selectedTransition,
-              onSelect: _onSelectHandler,
-            )
+              child: EditorCanvas(
+                key: _canvasKey,
+                selectedNode: GameState.selectedNode,
+                selectedTransition: GameState.selectedTransition,
+                onSelect: _onSelectHandler,
+              )
+          ),
         ),
-        Positioned(
-          left: size.width * 0.65,
-          top: 0,
-          bottom: 0,
+        Expanded(
+          flex: 35,
           child: Container(
-            width: size.width * 0.35 - 50,
+            height: double.infinity,
             color: Color.fromARGB(255, 230, 230, 230),
             padding: const EdgeInsets.all(8.0),
             child: GameState.selectedNode != null

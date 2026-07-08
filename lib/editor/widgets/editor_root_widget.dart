@@ -57,33 +57,14 @@ class _EditorRootWidgetState extends State<EditorRootWidget> {
           ),
         ),
         Expanded(
-          child: Stack(
+          child: IndexedStack(
+            index: _page.index,
             children: [
-              Visibility(
-                visible: _page == EditorPage.project,
-                maintainState: true,
-                child: const EditorProjectPage(),
-              ),
-              Visibility(
-                visible: _page == EditorPage.graph,
-                maintainState: true,
-                child: const EditorGraphPage(),
-              ),
-              Visibility(
-                visible: _page == EditorPage.variables,
-                maintainState: true,
-                child: const EditorVariablesPage(),
-              ),
-              Visibility(
-                visible: _page == EditorPage.aiAgent,
-                maintainState: true,
-                child: const EditorAiAgentPage(),
-              ),
-              Visibility(
-                visible: _page == EditorPage.settings,
-                maintainState: true,
-                child: const EditorSettingsPage(),
-              ),
+              const EditorProjectPage(),
+              const EditorGraphPage(),
+              const EditorVariablesPage(),
+              const EditorAiAgentPage(),
+              const EditorSettingsPage(),
             ],
           ),
         ),

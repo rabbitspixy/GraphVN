@@ -70,18 +70,11 @@ class _RootWidgetState extends State<RootWidget> {
   }
 
   Widget _project() {
-    return Stack(
+    return IndexedStack(
+      index: _showEditor ? 0 : 1,
       children: [
-        Visibility(
-          visible: _showEditor,
-          maintainState: true,
-          child: const EditorRootWidget(),
-        ),
-        Visibility(
-          visible: !_showEditor,
-          maintainState: true,
-          child: const PlayerRootWidget(),
-        ),
+        const EditorRootWidget(),
+        const PlayerRootWidget(),
       ],
     );
   }
