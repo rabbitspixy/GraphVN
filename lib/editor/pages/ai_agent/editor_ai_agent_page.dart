@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:graph_vn/common/find_block_util.dart';
+import 'package:graph_vn/common/substring_util.dart';
 import 'package:graph_vn/common/parallel_util.dart';
 import 'package:graph_vn/game/game_node.dart';
 import 'package:graph_vn/game/game_state.dart';
 import 'package:graph_vn/game/game_transition.dart';
-import 'package:graph_vn/llm/text_generator.dart';
+import 'package:graph_vn/llm/js_code_generator.dart';
 import 'package:graph_vn/main.dart';
 
 class EditorAiAgentPage extends StatefulWidget {
@@ -190,7 +190,7 @@ class _AiAgentProgressDialogState extends State<_AiAgentProgressDialog> {
     if (node.naturalLanguageAction.isNotEmpty &&
         !GameState.codeRepository.actions.containsKey(node.naturalLanguageAction)) {
       tasks.add(() async {
-        final code = await TextGenerator.writeAction(node.naturalLanguageAction);
+        final code = await JsCodeGenerator.writeAction(node.naturalLanguageAction);
         if (code != null) {
           GameState.codeRepository.actions[node.naturalLanguageAction] = code;
         } else {
@@ -209,7 +209,7 @@ class _AiAgentProgressDialogState extends State<_AiAgentProgressDialog> {
     if (node.naturalLanguageTrigger.isNotEmpty &&
         !GameState.codeRepository.conditions.containsKey(node.naturalLanguageTrigger)) {
       tasks.add(() async {
-        final code = await TextGenerator.writeCondition(node.naturalLanguageTrigger);
+        final code = await JsCodeGenerator.writeCondition(node.naturalLanguageTrigger);
         if (code != null) {
           GameState.codeRepository.conditions[node.naturalLanguageTrigger] = code;
         } else {
@@ -235,7 +235,7 @@ class _AiAgentProgressDialogState extends State<_AiAgentProgressDialog> {
       final cleanReplaceable = replaceable.replaceAll("{{", "").replaceAll("}}", "");
       
       tasks.add(() async {
-        final code = await TextGenerator.writeReplaceable(cleanReplaceable);
+        final code = await JsCodeGenerator.writeReplaceable(cleanReplaceable);
         if (code != null) {
           GameState.codeRepository.replaceables[replaceable] = code;
         } else {
@@ -254,7 +254,7 @@ class _AiAgentProgressDialogState extends State<_AiAgentProgressDialog> {
     if (transition.naturalLanguageCondition.isNotEmpty &&
         !GameState.codeRepository.conditions.containsKey(transition.naturalLanguageCondition)) {
       tasks.add(() async {
-        final code = await TextGenerator.writeCondition(transition.naturalLanguageCondition);
+        final code = await JsCodeGenerator.writeCondition(transition.naturalLanguageCondition);
         if (code != null) {
           GameState.codeRepository.conditions[transition.naturalLanguageCondition] = code;
         } else {
@@ -273,7 +273,7 @@ class _AiAgentProgressDialogState extends State<_AiAgentProgressDialog> {
     if (transition.naturalLanguageAction.isNotEmpty &&
         !GameState.codeRepository.actions.containsKey(transition.naturalLanguageAction)) {
       tasks.add(() async {
-        final code = await TextGenerator.writeAction(transition.naturalLanguageAction);
+        final code = await JsCodeGenerator.writeAction(transition.naturalLanguageAction);
         if (code != null) {
           GameState.codeRepository.actions[transition.naturalLanguageAction] = code;
         } else {

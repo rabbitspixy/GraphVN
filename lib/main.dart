@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_window_close/flutter_window_close.dart';
-import 'package:graph_vn/editor/modals/confirm_dialog.dart';
 import 'package:graph_vn/editor/widgets/project_selector.dart';
-import 'package:graph_vn/game/game_node.dart';
-import 'package:graph_vn/game/game_transition.dart';
 import 'package:graph_vn/js_test.dart';
 import 'package:graph_vn/settings/app_settings.dart';
 import 'package:graph_vn/game/game_state.dart';
 import 'package:logger/logger.dart';
 import 'player/player.dart';
 import 'package:flutter/services.dart';
-import 'editor/widgets/editor.dart';
-import 'editor/pages/graph/editor_graph_page.dart';
+import 'editor/widgets/editor_root_widget.dart';
 import 'player/widgets/player_root_widget.dart';
 
 final logger = Logger();
@@ -45,10 +41,10 @@ class RootWidget extends StatefulWidget {
 }
 
 class _RootWidgetState extends State<RootWidget> {
+  final _rootFocusScope = FocusScopeNode(debugLabel: "My Custom Root Focus Node");
   bool _showEditor = false;
-  final FocusNode _focusNode = FocusNode();
 
-  void toggleEditor() {
+  void _toggleEditor() {
     if (_showEditor) {
       Player.progressState();
       setState(() {
@@ -61,28 +57,6 @@ class _RootWidgetState extends State<RootWidget> {
     }
   }
 
-  bool _handleKey(KeyEvent event) {
-    if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.f1) {
-      toggleEditor();
-      return true;
-    }
-    if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.f5 && HardwareKeyboard.instance.isShiftPressed) {
-      GameState.restart();
-      Player.progressState();
-      return true;
-    }
-    if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.f5) {
-      //TODO: проверить зачем я сделал этот хоткей. Возможно он вообще не нужен.
-      Player.progressState();
-      return true;
-    }
-    if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.keyS && HardwareKeyboard.instance.isControlPressed) {
-      GameState.save();
-      return true;
-    }
-    return false;
-  }
-
   @override
   void initState() {
     super.initState();
@@ -91,8 +65,25 @@ class _RootWidgetState extends State<RootWidget> {
 
   @override
   void dispose() {
-    _focusNode.dispose();
     super.dispose();
+    _rootFocusScope.dispose();
+  }
+
+  Widget _project() {
+    return Stack(
+      children: [
+        Visibility(
+          visible: _showEditor,
+          maintainState: true,
+          child: const EditorRootWidget(),
+        ),
+        Visibility(
+          visible: !_showEditor,
+          maintainState: true,
+          child: const PlayerRootWidget(),
+        ),
+      ],
+    );
   }
 
   @override
@@ -100,26 +91,32 @@ class _RootWidgetState extends State<RootWidget> {
     return MaterialApp(
       title: 'Graph VN',
       home: Scaffold(
-        body: KeyboardListener(
-          focusNode: _focusNode,
+        body: FocusScope(
           autofocus: true,
-          onKeyEvent: _handleKey,
-          child: GameState.isProjectLoaded()
-              ? Stack(
-                  children: [
-                    Visibility(
-                      visible: _showEditor,
-                      maintainState: true,
-                      child: const EditorRootWidget(),
-                    ),
-                    Visibility(
-                      visible: !_showEditor,
-                      maintainState: true,
-                      child: const PlayerRootWidget(),
-                    ),
-                  ],
-                )
-              : const ProjectSelector(),
+          node: _rootFocusScope,
+          onFocusChange: (hasFocus) {
+            if (_rootFocusScope.hasPrimaryFocus) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                _rootFocusScope.nextFocus();
+              });
+            }
+          },
+          child: CallbackShortcuts(
+            bindings: <ShortcutActivator, VoidCallback>{
+              const SingleActivator(LogicalKeyboardKey.f1): () async {
+                _toggleEditor();
+              },
+              const SingleActivator(
+                LogicalKeyboardKey.keyS,
+                control: true,
+              ): () async {
+                GameState.save();
+              },
+            },
+            child: GameState.isProjectLoaded()
+                ? _project()
+                : const ProjectSelector(),
+          ),
         ),
       ),
     );

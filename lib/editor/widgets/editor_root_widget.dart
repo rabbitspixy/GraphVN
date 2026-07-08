@@ -40,18 +40,20 @@ class _EditorRootWidgetState extends State<EditorRootWidget> {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Container(
-          width: 50,
-          color: Colors.grey[200],
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              buildPageButton(EditorPage.project, Icons.folder_open),
-              buildPageButton(EditorPage.graph, Icons.hub),
-              buildPageButton(EditorPage.variables, Icons.data_object),
-              buildPageButton(EditorPage.aiAgent, Icons.auto_awesome),
-              buildPageButton(EditorPage.settings, Icons.settings),
-            ],
+        ExcludeFocus(
+          child: Container(
+            width: 50,
+            color: Colors.grey[200],
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                buildPageButton(EditorPage.project, Icons.folder_open),
+                buildPageButton(EditorPage.graph, Icons.hub),
+                buildPageButton(EditorPage.variables, Icons.data_object),
+                buildPageButton(EditorPage.aiAgent, Icons.auto_awesome),
+                buildPageButton(EditorPage.settings, Icons.settings),
+              ],
+            ),
           ),
         ),
         Expanded(

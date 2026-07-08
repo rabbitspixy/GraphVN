@@ -2,12 +2,12 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
-import 'package:graph_vn/common/find_block_util.dart';
+import 'package:graph_vn/common/substring_util.dart';
 import 'package:graph_vn/common/random_util.dart';
 import 'package:graph_vn/game/game_node.dart';
 import 'package:graph_vn/game/game_transition.dart';
 import 'package:graph_vn/main.dart';
-import 'package:graph_vn/player/components.dart';
+import 'package:graph_vn/player/player_models.dart';
 import 'package:graph_vn/game/game_state.dart';
 
 class Player {

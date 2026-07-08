@@ -1,10 +1,10 @@
-import 'package:graph_vn/common/find_block_util.dart';
+import 'package:graph_vn/common/substring_util.dart';
 import 'package:graph_vn/common/js_util.dart';
 import 'package:graph_vn/game/game_state.dart';
 import 'package:graph_vn/game/variables.dart';
 import 'package:graph_vn/llm/llm_gateway.dart';
 
-class TextGenerator {
+class JsCodeGenerator {
 
   static Future<String?> writeAction(String naturalLanguageAction) async {
     //TODO: Добавить в промпт "Сначала опиши шаги решения задачи на английском языке, а потом приступи к написанию кода" если модель не reasoning

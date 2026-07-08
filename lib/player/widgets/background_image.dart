@@ -2,7 +2,7 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:graph_vn/player/components.dart';
+import 'package:graph_vn/player/player_models.dart';
 import 'package:graph_vn/player/player.dart';
 
 class BackgroundImageWidget extends StatefulWidget {

@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:graph_vn/player/components.dart';
+import 'package:graph_vn/player/player_models.dart';
 import 'package:graph_vn/player/player.dart';
 
 class TransitionButtons extends StatefulWidget {

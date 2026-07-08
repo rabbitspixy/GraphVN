@@ -49,7 +49,7 @@ class EditorCanvasState extends State<EditorCanvas> {
   Offset? _hoverNodePosition;
   int _forcedRepaint = 0;
 
-  final FocusNode _focusNode = FocusNode();
+  final FocusNode _focusNode = FocusNode(debugLabel: "Editor Canvas Focus Node");
 
   StreamSubscription<String>? _stateUpdatedEventsSubscription;
 
@@ -315,6 +315,7 @@ class EditorCanvasState extends State<EditorCanvas> {
         behavior: HitTestBehavior.translucent,
         child: Focus(
           focusNode: _focusNode,
+          debugLabel: "Editor Canvas Focus",
           child: SizedBox.expand(
             child: Stack(
               children: [
