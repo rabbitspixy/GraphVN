@@ -189,6 +189,14 @@ class GameState {
     updateAllTransitionPositions();
     _stateUpdatedEventsController.add('');
   }
+  
+  static List<GameTransition> findTransitions({String? from, String? to}) {
+    return transitions.where((t) {
+      if (from != null && t.from != from) return false;
+      if (to != null && t.to != to) return false;
+      return true;
+    }).toList();
+  }
 
   static void deleteTransition(String id) {
     if (GameState.selectedTransition?.id == id) {

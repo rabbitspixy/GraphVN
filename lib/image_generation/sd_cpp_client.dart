@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
+import 'package:graph_vn/ai/ai_servers.dart';
 
 class SDCppClient {
   static Future<Uint8List> generate(String prompt) async {
@@ -11,8 +13,10 @@ class SDCppClient {
       headers: {'Content-Type': 'application/json'},
     ));
 
+    final extraArgs = '<sd_cpp_extra_args>{"seed": -1}</sd_cpp_extra_args>';
+
     final response = await dio.post('/v1/images/generations', data: {
-      'prompt': prompt,
+      'prompt': prompt + extraArgs,
       'size': '1280x720',
       'output_format': 'jpeg',
       'output_compression': 80,
@@ -25,6 +29,7 @@ class SDCppClient {
 }
 
 void main() async {
+  await AiServers.ensureStableDiffusionCppIsRunning();
   final imgBytes = await SDCppClient.generate("Cyberpunk");
   File("sdcpp_test.jpg").writeAsBytesSync(imgBytes);
 }

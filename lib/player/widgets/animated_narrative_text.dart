@@ -52,11 +52,24 @@ class _AnimatedNarrativeTextState extends State<AnimatedNarrativeText> {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      _displayedText,
-      style: const TextStyle(color: Colors.white),
-      textAlign: TextAlign.left,
-      softWrap: true,
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.only(right: 20),
+      decoration: BoxDecoration(
+        color: Colors.black54,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      padding: const EdgeInsets.all(16),
+      child: Text(
+        _displayedText,
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 24,
+          fontWeight: FontWeight.normal,
+        ),
+        textAlign: TextAlign.left,
+        softWrap: true,
+      ),
     );
   }
 }

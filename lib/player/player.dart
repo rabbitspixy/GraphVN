@@ -196,7 +196,7 @@ class Player {
       }
     }
     speakerName.value = node.speaker;
-    narrativeText.value = nt;
+    narrativeText.value = removeDoubleParenthesesBlocks(nt);
 
     buttons.value = allowedTransitionsForCurrentState()
         .where((t) => t.isButton)
