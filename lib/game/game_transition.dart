@@ -1,7 +1,7 @@
 import 'package:flutter/services.dart' as game_transition;
+import 'package:graph_vn/ai/image_generation/generate_image_metadata.dart';
 import 'package:graph_vn/game/transition_position.dart';
 import 'package:graph_vn/generated-proto/data.pb.dart';
-import 'package:graph_vn/image_generation/generate_image_metadata.dart';
 import 'package:uuid/uuid.dart';
 
 class GameTransition {

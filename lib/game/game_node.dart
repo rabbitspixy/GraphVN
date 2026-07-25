@@ -1,5 +1,5 @@
+import 'package:graph_vn/ai/image_generation/generate_image_metadata.dart';
 import 'package:graph_vn/generated-proto/data.pb.dart';
-import 'package:graph_vn/image_generation/generate_image_metadata.dart';
 import 'package:uuid/uuid.dart';
 import 'package:fixnum/fixnum.dart';
 

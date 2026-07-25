@@ -2,16 +2,16 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:graph_vn/ai/ai_servers.dart';
+import 'package:graph_vn/ai/image_generation/generate_image_metadata.dart';
+import 'package:graph_vn/ai/image_generation/sd_cpp_client.dart';
+import 'package:graph_vn/ai/llm/image_prompt_generator.dart';
+import 'package:graph_vn/ai/llm/js_code_generator.dart';
 import 'package:graph_vn/app_constants.dart';
 import 'package:graph_vn/common/substring_util.dart';
 import 'package:graph_vn/common/parallel_util.dart';
 import 'package:graph_vn/game/game_node.dart';
 import 'package:graph_vn/game/game_state.dart';
 import 'package:graph_vn/game/game_transition.dart';
-import 'package:graph_vn/image_generation/generate_image_metadata.dart';
-import 'package:graph_vn/image_generation/sd_cpp_client.dart';
-import 'package:graph_vn/llm/image_prompt_generator.dart';
-import 'package:graph_vn/llm/js_code_generator.dart';
 import 'package:graph_vn/main.dart';
 
 class EditorAiAgentPage extends StatefulWidget {
@@ -273,22 +273,24 @@ class _AiAgentProgressDialogState extends State<_AiAgentProgressDialog> {
     final tasks = <Future<void> Function()>[];
 
     if (node.imagePath.isEmpty && !node.isEmptyNode) {
-      tasks.add(() async {
-        final imagePrompt = await ImagePromptGenerator.writePrompt(
-            GameState.aiImageStyle,
-            node.text,
-            GameState.findTransitions(to: node.id).where((t) => t.isButton).map((t) => t.text).toList(),
-            GameState.findTransitions(from: node.id).where((t) => t.isButton).map((t) => t.text).toList()
-        );
-        if (imagePrompt != null) {
-          node.generateImageMetadata.add(
-              GenerateImageMetadata()
-                ..style = GameState.aiImageStyle
-                ..llmGeneratedPrompt = imagePrompt
+      if (node.generateImageMetadata.every((m) => File("./${AppConstants.projectsDir}/${GameState.projectDir}/images/ai/${m.id}.jpg").existsSync())) {
+        tasks.add(() async {
+          final imagePrompt = await ImagePromptGenerator.writePrompt(
+              GameState.aiImageStyle,
+              node.text,
+              GameState.findTransitions(to: node.id).where((t) => t.isButton).map((t) => t.text).toList(),
+              GameState.findTransitions(from: node.id).where((t) => t.isButton).map((t) => t.text).toList()
           );
-        }
-        widget.onTaskCompleted();
-      });
+          if (imagePrompt != null) {
+            node.generateImageMetadata.add(
+                GenerateImageMetadata()
+                  ..style = GameState.aiImageStyle
+                  ..llmGeneratedPrompt = imagePrompt
+            );
+          }
+          widget.onTaskCompleted();
+        });
+      }
     }
 
     return tasks;
@@ -335,12 +337,14 @@ class _AiAgentProgressDialogState extends State<_AiAgentProgressDialog> {
   List<Future<void> Function()> _createNodeImageGenerationTasks(GameNode node) {
     final tasks = <Future<void> Function()>[];
 
-    if (node.imagePath.isEmpty && node.generateImageMetadata.isNotEmpty) {
+    for (final generateImageMetadata in node.generateImageMetadata) {
+      final imagePath = "ai/${generateImageMetadata.id}.jpg";
+      final imageFile = File("./${AppConstants.projectsDir}/${GameState.projectDir}/images/$imagePath");
+      if (imageFile.existsSync()) {
+        continue;
+      }
       tasks.add(() async {
-        var generateImageMetadata = node.generateImageMetadata.last;
         final imageBytes = await SDCppClient.generate(generateImageMetadata.llmGeneratedPrompt);
-        final imagePath = "ai/${generateImageMetadata.id}.jpg";
-        final imageFile = File("./${AppConstants.projectsDir}/${GameState.projectDir}/images/$imagePath");
         await imageFile.parent.create(recursive: true);
         await imageFile.writeAsBytes(imageBytes);
         node.imagePath = imagePath;

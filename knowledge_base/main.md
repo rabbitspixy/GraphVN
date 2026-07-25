@@ -84,18 +84,18 @@ lib/
 │           ├── named_value_type_editor.dart  # Редактор типов именованных значений
 │           ├── struct_variables_editor.dart  # Вкладка структуры для редактирования переменных структуры
 │           └── struct_editor_tabs.dart       # Вкладки редактора структуры
-├── llm/                              # Интеграция с LLM моделями
-│   ├── llm_gateway.dart              # Шлюз для LLM запросов
-│   └── js_code_generator.dart        # Генератор Javascript кода
+├── ai/                               # Интеграция с ИИ моделями
+│   ├── llm/                          # Интеграция с LLM моделями
+│   │   ├── llm_gateway.dart          # Шлюз для LLM запросов
+│   │   ├── js_code_generator.dart    # Генератор Javascript кода
+│   │   └── image_prompt_generator.dart # Генератор промптов для изображений
+│   └── image_generation/             # Генерация изображений
+│       ├── generate_image_metadata.dart # Генерация метаданных изображений
+│       └── sd_cpp_client.dart        # Клиент для SD CPP
 ├── settings/                         # Модуль настроек приложения
 │   ├── app_settings.dart             # Сохранение и загрузка настроек приложения
 │   └── app_settings_model.dart       # Модель настроек приложения
-└── image_generation/                 # Генерация изображений
-    ├── image_generator.dart          # Генератор изображений
-    ├── generate_image_metadata.dart  # Генерация метаданных изображений
-    ├── comfyui_install.dart          # Установка ComfyUI
-    └── COMFYUI_INSTALL.md            # Инструкция по установке ComfyUI
-```
+└── generated/                        # Сгенерированные файлы (gitignored)
 
 ## Сценарии проекта
 

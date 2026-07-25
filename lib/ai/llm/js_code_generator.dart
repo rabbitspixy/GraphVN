@@ -1,8 +1,8 @@
+import 'package:graph_vn/ai/llm/llm_gateway.dart';
 import 'package:graph_vn/common/substring_util.dart';
 import 'package:graph_vn/common/js_util.dart';
 import 'package:graph_vn/game/game_state.dart';
 import 'package:graph_vn/game/variables.dart';
-import 'package:graph_vn/llm/llm_gateway.dart';
 
 class JsCodeGenerator {
 

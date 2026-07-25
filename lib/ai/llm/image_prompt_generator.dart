@@ -1,4 +1,4 @@
-import 'package:graph_vn/llm/llm_gateway.dart';
+import 'package:graph_vn/ai/llm/llm_gateway.dart';
 
 class ImagePromptGenerator {
 
