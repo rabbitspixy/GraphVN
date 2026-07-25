@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:graph_vn/player/player.dart';
 
 class AnimatedNarrativeText extends StatefulWidget {
-  const AnimatedNarrativeText({super.key});
+  final VoidCallback? onTextFinished;
+  const AnimatedNarrativeText({super.key, this.onTextFinished});
 
   @override
   State<AnimatedNarrativeText> createState() => _AnimatedNarrativeTextState();
@@ -34,6 +35,7 @@ class _AnimatedNarrativeTextState extends State<AnimatedNarrativeText> {
         });
       } else {
         timer.cancel();
+        widget.onTextFinished?.call();
       }
     });
   }
@@ -52,14 +54,8 @@ class _AnimatedNarrativeTextState extends State<AnimatedNarrativeText> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      margin: const EdgeInsets.only(right: 20),
-      decoration: BoxDecoration(
-        color: Colors.black54,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      padding: const EdgeInsets.all(16),
+    return Padding(
+      padding: const EdgeInsets.only(right: 20),
       child: Text(
         _displayedText,
         style: const TextStyle(

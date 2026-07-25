@@ -16,16 +16,87 @@ class PlayerRootWidget extends StatefulWidget {
 
 class _PlayerRootWidgetState extends State<PlayerRootWidget> {
   final FocusNode _focusNode = FocusNode(debugLabel: "Player Root Focus Node");
+  int _selectedIndex = 0;
+  bool _showButtons = false;
+
+  @override
+  void initState() {
+    super.initState();
+    Player.buttons.addListener(_onButtonsChanged);
+    Player.narrativeText.addListener(_onNarrativeTextChanged);
+  }
+
+  @override
+  void dispose() {
+    Player.buttons.removeListener(_onButtonsChanged);
+    Player.narrativeText.removeListener(_onNarrativeTextChanged);
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  void _onButtonsChanged() {
+    setState(() {
+      _selectedIndex = 0;
+      _showButtons = false;
+    });
+  }
+
+  void _onNarrativeTextChanged() {
+    setState(() {
+      _showButtons = false;
+    });
+  }
+
+  void _onTextFinished() {
+    setState(() {
+      _showButtons = true;
+    });
+  }
 
   void _onTap() {
     _focusNode.requestFocus();
     Player.onScreenClick();
   }
 
-  @override
-  void dispose() {
-    _focusNode.dispose();
-    super.dispose();
+  void _onArrowUp() {
+    if (!_showButtons) return;
+    final len = Player.buttons.value.length;
+    if (len > 0) {
+      setState(() {
+        _selectedIndex = (_selectedIndex - 1).clamp(0, len - 1);
+      });
+    }
+  }
+
+  void _onArrowDown() {
+    if (!_showButtons) return;
+    final len = Player.buttons.value.length;
+    if (len > 0) {
+      setState(() {
+        _selectedIndex = (_selectedIndex + 1).clamp(0, len - 1);
+      });
+    }
+  }
+
+  void _onEnter() {
+    if (!_showButtons) return;
+    final buttons = Player.buttons.value;
+    if (_selectedIndex >= 0 && _selectedIndex < buttons.length) {
+      Player.progressState(useTransition: buttons[_selectedIndex].transitionId);
+    }
+  }
+
+  void _onButtonHover(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  void _onButtonSubmit(int index) {
+    final buttons = Player.buttons.value;
+    if (index >= 0 && index < buttons.length) {
+      Player.progressState(useTransition: buttons[index].transitionId);
+    }
   }
 
   @override
@@ -60,24 +131,35 @@ class _PlayerRootWidgetState extends State<PlayerRootWidget> {
           bottom: 0,
           left: 0,
           right: 0,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ValueListenableBuilder<List<ChoiseButton>>(
-                valueListenable: Player.buttons,
-                builder: (context, transitionList, child) {
-                  return TransitionButtons(transitions: transitionList);
-                },
+          child: Container(
+            decoration: const BoxDecoration(
+              color: Colors.black54,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(12),
+                topRight: Radius.circular(12),
               ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 16.0),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: const SpeakerNarrativeBlock(),
+            ),
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SpeakerNarrativeBlock(onTextFinished: _onTextFinished),
+                const SizedBox(height: 12),
+                ValueListenableBuilder<List<ChoiseButton>>(
+                  valueListenable: Player.buttons,
+                  builder: (context, transitionList, child) {
+                    return TransitionButtons(
+                      transitions: transitionList,
+                      selectedIndex: _selectedIndex,
+                      show: _showButtons,
+                      onHover: _onButtonHover,
+                      onSubmit: _onButtonSubmit,
+                    );
+                  },
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ],
@@ -88,7 +170,10 @@ class _PlayerRootWidgetState extends State<PlayerRootWidget> {
         const SingleActivator(LogicalKeyboardKey.f5, shift: true): () async {
           GameState.restart();
           Player.progressState();
-        }
+        },
+        const SingleActivator(LogicalKeyboardKey.arrowUp): _onArrowUp,
+        const SingleActivator(LogicalKeyboardKey.arrowDown): _onArrowDown,
+        const SingleActivator(LogicalKeyboardKey.enter): _onEnter,
       },
       child: Focus(
         focusNode: _focusNode,
