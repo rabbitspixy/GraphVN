@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:graph_vn/ai/ai_servers.dart';
 import 'package:graph_vn/common/substring_util.dart';
 import 'package:graph_vn/common/parallel_util.dart';
 import 'package:graph_vn/game/game_node.dart';
@@ -151,7 +152,7 @@ class _AiAgentProgressDialogState extends State<_AiAgentProgressDialog> {
 
   Future<void> _startProcessing() async {
     try {
-      await _processAllTasks();
+      await _processTextTasks();
       if (mounted) {
         Navigator.pop(context);
       }
@@ -163,7 +164,8 @@ class _AiAgentProgressDialogState extends State<_AiAgentProgressDialog> {
     }
   }
 
-  Future<void> _processAllTasks() async {
+  Future<void> _processTextTasks() async {
+    await AiServers.ensureLlamaCppIsRunning();
     final tasks = <Future<void> Function()>[];
     
     for (final node in GameState.nodes.values) {

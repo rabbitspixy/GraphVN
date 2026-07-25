@@ -53,3 +53,4 @@ app.*.map.json
 /projects
 /ComfyUI
 /sdcpp_test.jpg
+/airuntime

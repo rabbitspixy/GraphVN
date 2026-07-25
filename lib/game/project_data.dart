@@ -11,6 +11,7 @@ class ProjectData {
   final List<Struct> structs;
   final CodeRepository codeRepository;
   final List<NamedValuesType> namedValueTypes;
+  final String aiImageStyle;
 
   ProjectData({
     required this.nodes,
@@ -18,6 +19,7 @@ class ProjectData {
     required this.structs,
     required this.codeRepository,
     required this.namedValueTypes,
+    this.aiImageStyle = '',
   });
 
   ProjectProto toProto() {
@@ -27,6 +29,7 @@ class ProjectData {
     result.structs.addAll(structs.map((x) => x.toProto()));
     result.codeRepository = codeRepository.toProto();
     result.namedValueTypes.addAll(namedValueTypes.map((x) => x.toProto()));
+    result.aiImageStyle = aiImageStyle;
     return result;
   }
 
@@ -37,6 +40,7 @@ class ProjectData {
         structs: [ for (var s in proto.structs) Struct.fromProto(s) ],
         codeRepository: CodeRepository.fromProto(proto.codeRepository),
         namedValueTypes: [ for (var t in proto.namedValueTypes) NamedValuesType.fromProto(t) ],
+        aiImageStyle: proto.aiImageStyle,
     );
   }
 }

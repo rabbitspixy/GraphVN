@@ -6,6 +6,7 @@ message ProjectProto {
   repeated StructProto structs = 3;
   CodeRepositoryProto codeRepository = 4;
   repeated NamedValueTypeProto namedValueTypes = 5;
+  string aiImageStyle = 6;
 }
 
 message GameTransitionProto {

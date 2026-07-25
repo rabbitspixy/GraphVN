@@ -30,6 +30,7 @@ class GameState {
   static NamedValueTypeRepository namedValueTypes = NamedValueTypeRepository();
   static String currentNode = "";
   static CodeRepository codeRepository = CodeRepository();
+  static String aiImageStyle = '';
   static JavascriptRuntime jsRuntime = getJavascriptRuntime();
 
   static List<String> getProjectFolders() {
@@ -55,6 +56,7 @@ class GameState {
     selectedTransition = null;
     structs.clear();
     codeRepository = CodeRepository();
+    aiImageStyle = '';
     namedValueTypes = NamedValueTypeRepository();
     currentNode = "";
 
@@ -99,6 +101,7 @@ class GameState {
     transitions.addAll(projectData.transitions);
     structs.addAll(projectData.structs);
     codeRepository = projectData.codeRepository;
+    aiImageStyle = projectData.aiImageStyle;
     namedValueTypes = NamedValueTypeRepository();
     namedValueTypes.addAll(projectData.namedValueTypes);
     updateAllTransitionPositions();
@@ -140,6 +143,7 @@ class GameState {
       structs: GameState.structs,
       codeRepository: codeRepository,
       namedValueTypes: namedValueTypes.all(),
+      aiImageStyle: aiImageStyle,
     );
     final file = File("./${AppConstants.projectsDir}/$projectDir/main.bin");
     final dir = file.parent;
