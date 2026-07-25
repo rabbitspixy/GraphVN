@@ -49,10 +49,11 @@ class EditorCanvasState extends State<EditorCanvas> {
   Offset? _hoverNodePosition;
   int _forcedRepaint = 0;
 
-  final FocusNode _focusNode = FocusNode(debugLabel: "Editor Canvas Focus Node");
+  final FocusNode _focusNode = FocusNode(
+    debugLabel: "Editor Canvas Focus Node",
+  );
 
   StreamSubscription<String>? _stateUpdatedEventsSubscription;
-
 
   void _onPointerDown(PointerDownEvent event) {
     _focusNode.requestFocus();
@@ -65,13 +66,15 @@ class EditorCanvasState extends State<EditorCanvas> {
         _unselectNodesAndTransitions();
       }
       if (_hoveredNode != null &&
-          event.timeStamp - _lastPrimaryButtonUpTime < const Duration(milliseconds: 300)) {
+          event.timeStamp - _lastPrimaryButtonUpTime <
+              const Duration(milliseconds: 300)) {
         _linkingNodeId = _hoveredNode?.id;
         return;
       }
       if (_hoveredNode == null &&
           _hoveredTransition == null &&
-          event.timeStamp - _lastPrimaryButtonDownTime < const Duration(milliseconds: 300)) {
+          event.timeStamp - _lastPrimaryButtonDownTime <
+              const Duration(milliseconds: 300)) {
         _createNewNodeAt(event.localPosition - _offset);
         _lastPrimaryButtonDownTime = Duration(milliseconds: 0);
         return;
@@ -87,7 +90,10 @@ class EditorCanvasState extends State<EditorCanvas> {
         if (_hoveredNode != null) {
           _draggingNodeId = _hoveredNode?.id;
           _nodeDragStart = event.localPosition;
-          _nodeOffsetStart = Offset(_hoveredNode!.x.toDouble(), _hoveredNode!.y.toDouble());
+          _nodeOffsetStart = Offset(
+            _hoveredNode!.x.toDouble(),
+            _hoveredNode!.y.toDouble(),
+          );
           _nodeDragging = true;
           return;
         }
@@ -133,17 +139,29 @@ class EditorCanvasState extends State<EditorCanvas> {
 
   void _createNewNodeAt(Offset localPos) {
     final newNode = GameNode();
-    if (GameState.trySetNodePosition(newNode, localPos.dx.round(), localPos.dy.round())) {
+    if (GameState.trySetNodePosition(
+      newNode,
+      localPos.dx.round(),
+      localPos.dy.round(),
+    )) {
       GameState.addNode(newNode);
       _selectNode(newNode);
     }
   }
 
   void _onPointerMove(PointerMoveEvent event) {
-    if (_linkingNodeId == null && _nodeDragging && _draggingNodeId != null && _nodeDragStart != null && _nodeOffsetStart != null) {
+    if (_linkingNodeId == null &&
+        _nodeDragging &&
+        _draggingNodeId != null &&
+        _nodeDragStart != null &&
+        _nodeOffsetStart != null) {
       final delta = event.localPosition - _nodeDragStart!;
       setState(() {
-        GameState.trySetNodePositionById(_draggingNodeId!, (_nodeOffsetStart!.dx + delta.dx).round(), (_nodeOffsetStart!.dy + delta.dy).round());
+        GameState.trySetNodePositionById(
+          _draggingNodeId!,
+          (_nodeOffsetStart!.dx + delta.dx).round(),
+          (_nodeOffsetStart!.dy + delta.dy).round(),
+        );
         _forcedRepaint++;
       });
     } else if (_dragging && _dragStart != null && _offsetStart != null) {
@@ -199,7 +217,7 @@ class EditorCanvasState extends State<EditorCanvas> {
 
   void _updateHover(Offset globalPosition) {
     final nearestItem = _getNearestItemAtPosition(globalPosition);
-    
+
     setState(() {
       if (nearestItem != null && nearestItem is GameTransition) {
         _hoveredTransition = nearestItem;
@@ -220,18 +238,32 @@ class EditorCanvasState extends State<EditorCanvas> {
     });
   }
 
-  void resetOffset(Size size) {
+  void resetOffset() {
+    final canvasSize = _lastSize;
+    if (canvasSize == null) return;
     setState(() {
-      _offset = Offset(size.width / 2, size.height / 2);
+      _offset = Offset(canvasSize.width / 2, canvasSize.height / 2);
+    });
+  }
+
+  void centerSelectedNode() {
+    final node = _selectedNode;
+    if (node == null) return;
+    final canvasSize = _lastSize;
+    if (canvasSize == null) return;
+    setState(() {
+      _offset =
+          Offset(-node.x.toDouble(), -node.y.toDouble()) +
+          Offset(canvasSize.width / 2, canvasSize.height / 2);
     });
   }
 
   dynamic _getNearestItemAtPosition(Offset pos) {
     const double threshold = 12.0;
-    
+
     GameNode? nearestNode;
     double nearestNodeDist = double.infinity;
-    
+
     for (final node in GameState.nodes.values) {
       final center = Offset(node.x.toDouble(), node.y.toDouble()) + _offset;
       final dist = (pos - center).distance;
@@ -240,10 +272,10 @@ class EditorCanvasState extends State<EditorCanvas> {
         nearestNode = node;
       }
     }
-    
+
     GameTransition? nearestTransition;
     double nearestTransitionDist = double.infinity;
-    
+
     for (final transition in GameState.transitions) {
       final dist = (pos - (transition.pos.center + _offset)).distance;
       if (dist < nearestTransitionDist && dist <= threshold) {
@@ -251,27 +283,27 @@ class EditorCanvasState extends State<EditorCanvas> {
         nearestTransition = transition;
       }
     }
-    
+
     if (nearestNode == null && nearestTransition == null) {
       return null;
     }
-    
+
     if (nearestNode == null) {
       return nearestTransition;
     }
-    
+
     if (nearestTransition == null) {
       return nearestNode;
     }
-    
-    return nearestNodeDist <= nearestTransitionDist ? nearestNode : nearestTransition;
+
+    return nearestNodeDist <= nearestTransitionDist
+        ? nearestNode
+        : nearestTransition;
   }
 
   void _onHover(PointerHoverEvent event) {
     _updateHover(event.localPosition);
   }
-
-
 
   @override
   void initState() {
@@ -290,58 +322,75 @@ class EditorCanvasState extends State<EditorCanvas> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    if (!_sizeInitialized) {
-      _offset = Offset(size.width / 2, size.height / 2);
-      _sizeInitialized = true;
-      _lastSize = size;
-    } else if (_lastSize != null && (_lastSize!.width != size.width || _lastSize!.height != size.height)) {
-      final oldCenter = Offset(_lastSize!.width / 2, _lastSize!.height / 2);
-      final newCenter = Offset(size.width / 2, size.height / 2);
-      final delta = newCenter - oldCenter;
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        setState(() {
-          _offset += delta;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final size = Size(constraints.maxWidth, constraints.maxHeight);
+        if (!_sizeInitialized) {
+          _offset = Offset(size.width / 2, size.height / 2);
+          _sizeInitialized = true;
           _lastSize = size;
-        });
-      });
-    }
-    return MouseRegion(
-      onHover: _onHover,
-      child: Listener(
-        onPointerDown: _onPointerDown,
-        onPointerMove: _onPointerMove,
-        onPointerUp: _onPointerUp,
-        behavior: HitTestBehavior.translucent,
-        child: Focus(
-          focusNode: _focusNode,
-          debugLabel: "Editor Canvas Focus",
-          child: SizedBox.expand(
-            child: ClipRect(
-              child: Stack(
-                children: [
-                  CustomPaint(
-                    painter: TransitionPainter(offset: _offset, selectedTransition: widget.selectedTransition, hoveredTransition: _hoveredTransition),
+        } else if (_lastSize != null &&
+            (_lastSize!.width != size.width ||
+                _lastSize!.height != size.height)) {
+          final oldCenter = Offset(_lastSize!.width / 2, _lastSize!.height / 2);
+          final newCenter = Offset(size.width / 2, size.height / 2);
+          final delta = newCenter - oldCenter;
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            setState(() {
+              _offset += delta;
+              _lastSize = size;
+            });
+          });
+        }
+        return MouseRegion(
+          onHover: _onHover,
+          child: Listener(
+            onPointerDown: _onPointerDown,
+            onPointerMove: _onPointerMove,
+            onPointerUp: _onPointerUp,
+            behavior: HitTestBehavior.translucent,
+            child: Focus(
+              focusNode: _focusNode,
+              debugLabel: "Editor Canvas Focus",
+              child: SizedBox.expand(
+                child: ClipRect(
+                  child: Stack(
+                    children: [
+                      CustomPaint(
+                        painter: TransitionPainter(
+                          offset: _offset,
+                          selectedTransition: widget.selectedTransition,
+                          hoveredTransition: _hoveredTransition,
+                        ),
+                      ),
+                      CustomPaint(
+                        painter: NodePainter(
+                          offset: _offset,
+                          selectedNode: widget.selectedNode,
+                          hoveredNode: _hoveredNode,
+                          forcedRepaint: _forcedRepaint,
+                        ),
+                      ),
+                      if (_hoveredNode != null &&
+                          _hoverNodePosition != null &&
+                          !_nodeDragging)
+                        NodeTooltip(
+                          position: _hoverNodePosition!,
+                          node: _hoveredNode!,
+                        ),
+                      if (_hoveredTransition != null && _hoverPosition != null)
+                        TransitionTooltip(
+                          position: _hoverPosition!,
+                          transition: _hoveredTransition!,
+                        ),
+                    ],
                   ),
-                  CustomPaint(
-                    painter: NodePainter(offset: _offset, selectedNode: widget.selectedNode, hoveredNode: _hoveredNode, forcedRepaint: _forcedRepaint),
-                  ),
-                  if (_hoveredNode != null && _hoverNodePosition != null && !_nodeDragging)
-                    NodeTooltip(
-                      position: _hoverNodePosition!,
-                      node: _hoveredNode!,
-                    ),
-                  if (_hoveredTransition != null && _hoverPosition != null)
-                    TransitionTooltip(
-                      position: _hoverPosition!,
-                      transition: _hoveredTransition!,
-                    ),
-                ],
+                ),
               ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

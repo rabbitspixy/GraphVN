@@ -37,11 +37,6 @@ class EditorGraphPageState extends State<EditorGraphPage> {
     setState(() {});
   }
 
-  void resetOffset() {
-    final size = MediaQuery.of(context).size;
-    _canvasKey.currentState?.resetOffset(size);
-  }
-
   @override
   void initState() {
     super.initState();
@@ -56,7 +51,6 @@ class EditorGraphPageState extends State<EditorGraphPage> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     return Row(
       children: [
         Expanded(
@@ -79,7 +73,11 @@ class EditorGraphPageState extends State<EditorGraphPage> {
                 },
 
                 const SingleActivator(LogicalKeyboardKey.home): () async {
-                  resetOffset();
+                  _canvasKey.currentState?.resetOffset();
+                },
+
+                const SingleActivator(LogicalKeyboardKey.keyC): () async {
+                  _canvasKey.currentState?.centerSelectedNode();
                 },
               },
               child: EditorCanvas(
