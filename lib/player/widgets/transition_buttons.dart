@@ -45,7 +45,7 @@ class _TransitionButtonsState extends State<TransitionButtons>
     if (widget.show && !oldWidget.show) {
       _controller.forward();
     } else if (!widget.show && oldWidget.show) {
-      _controller.reverse();
+      _controller.value = 0.0;
     }
   }
 
@@ -75,9 +75,16 @@ class _TransitionButtonsState extends State<TransitionButtons>
                 child: Text(
                   '> ${transition.text}',
                   style: TextStyle(
-                    color: isSelected ? Colors.white : Colors.white54,
+                    color: isSelected ? Colors.lightBlue : Colors.white70,
                     fontSize: 20,
                     fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                    shadows: [
+                      Shadow(
+                        offset: Offset(2.0, 2.0),
+                        blurRadius: 3.0,
+                        color: Colors.black
+                      )
+                    ]
                   ),
                 ),
               ),

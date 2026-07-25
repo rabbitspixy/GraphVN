@@ -5,6 +5,7 @@ import 'package:graph_vn/js_test.dart';
 import 'package:graph_vn/settings/app_settings.dart';
 import 'package:graph_vn/game/game_state.dart';
 import 'package:logger/logger.dart';
+import 'package:window_manager/window_manager.dart';
 import 'player/player.dart';
 import 'package:flutter/services.dart';
 import 'editor/widgets/editor_root_widget.dart';
@@ -12,7 +13,9 @@ import 'player/widgets/player_root_widget.dart';
 
 final logger = Logger();
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await windowManager.ensureInitialized();
   jsTest();
   GameState.loadLastSavedProject();
   Player.progressState();
@@ -55,6 +58,11 @@ class _RootWidgetState extends State<RootWidget> {
         _showEditor = true;
       });
     }
+  }
+
+  void _toggleFullscreen() async {
+    bool isFullScreen = await windowManager.isFullScreen();
+    await windowManager.setFullScreen(!isFullScreen);
   }
 
   @override
@@ -104,6 +112,9 @@ class _RootWidgetState extends State<RootWidget> {
                 control: true,
               ): () async {
                 GameState.save();
+              },
+              const SingleActivator(LogicalKeyboardKey.f11): () async {
+                _toggleFullscreen();
               },
             },
             child: GameState.isProjectLoaded()

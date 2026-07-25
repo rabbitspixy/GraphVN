@@ -18,7 +18,7 @@ class _AnimatedNarrativeTextState extends State<AnimatedNarrativeText> {
   @override
   void initState() {
     super.initState();
-    Player.narrativeText.addListener(_onNarrativeTextChanged);
+    Player.narrativeVersion.addListener(_startAnimation);
     _startAnimation();
   }
 
@@ -43,13 +43,9 @@ class _AnimatedNarrativeTextState extends State<AnimatedNarrativeText> {
 
   @override
   void dispose() {
-    Player.narrativeText.removeListener(_onNarrativeTextChanged);
+    Player.narrativeVersion.removeListener(_startAnimation);
     _timer?.cancel();
     super.dispose();
-  }
-
-  void _onNarrativeTextChanged() {
-    _startAnimation();
   }
 
   @override
@@ -62,6 +58,13 @@ class _AnimatedNarrativeTextState extends State<AnimatedNarrativeText> {
           color: Colors.white,
           fontSize: 24,
           fontWeight: FontWeight.normal,
+          shadows: [
+            Shadow(
+                offset: Offset(2.0, 2.0),
+                blurRadius: 3.0,
+                color: Colors.black
+            )
+          ]
         ),
         textAlign: TextAlign.left,
         softWrap: true,

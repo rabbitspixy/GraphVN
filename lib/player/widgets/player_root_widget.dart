@@ -22,27 +22,19 @@ class _PlayerRootWidgetState extends State<PlayerRootWidget> {
   @override
   void initState() {
     super.initState();
-    Player.buttons.addListener(_onButtonsChanged);
-    Player.narrativeText.addListener(_onNarrativeTextChanged);
+    Player.narrativeVersion.addListener(_onNarrativeVersionChanged);
   }
 
   @override
   void dispose() {
-    Player.buttons.removeListener(_onButtonsChanged);
-    Player.narrativeText.removeListener(_onNarrativeTextChanged);
+    Player.narrativeVersion.removeListener(_onNarrativeVersionChanged);
     _focusNode.dispose();
     super.dispose();
   }
 
-  void _onButtonsChanged() {
+  void _onNarrativeVersionChanged() {
     setState(() {
       _selectedIndex = 0;
-      _showButtons = false;
-    });
-  }
-
-  void _onNarrativeTextChanged() {
-    setState(() {
       _showButtons = false;
     });
   }

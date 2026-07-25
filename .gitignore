@@ -54,3 +54,4 @@ app.*.map.json
 /ComfyUI
 /sdcpp_test.jpg
 /airuntime
+/.gigacode

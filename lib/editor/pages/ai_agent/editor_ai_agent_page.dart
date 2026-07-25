@@ -341,7 +341,7 @@ class _AiAgentProgressDialogState extends State<_AiAgentProgressDialog> {
         final imageBytes = await SDCppClient.generate(generateImageMetadata.llmGeneratedPrompt);
         final imagePath = "ai/${generateImageMetadata.id}.jpg";
         final imageFile = File("./${AppConstants.projectsDir}/${GameState.projectDir}/images/$imagePath");
-        await imageFile.parent.create();
+        await imageFile.parent.create(recursive: true);
         await imageFile.writeAsBytes(imageBytes);
         node.imagePath = imagePath;
         widget.onTaskCompleted();

@@ -16,6 +16,7 @@ class Player {
   static final ValueNotifier<String> narrativeText = ValueNotifier<String>('');
   static final ValueNotifier<List<ChoiseButton>> buttons = ValueNotifier<List<ChoiseButton>>([]);
   static final ValueNotifier<VariablesDiffDebug> variablesDiffDebug = ValueNotifier(VariablesDiffDebug(previous: {}, current: {}));
+  static final ValueNotifier<int> narrativeVersion = ValueNotifier<int>(0);
 
   static void onScreenClick() {
     useRandomTransitionIfAllowed();
@@ -216,6 +217,8 @@ class Player {
       previous: variablesDiffDebug.value.current,
       current: _collectVariablesForDebug(),
     );
+
+    narrativeVersion.value++;
   }
 
   static Map<String, String> _collectVariablesForDebug() {
