@@ -28,12 +28,6 @@ This is early-stage software — rough around the edges, actively changing, and 
 
 ---
 
-## Screenshots
-
-> 📸 Screenshots and demo videos coming soon.
-
----
-
 ## Quick Start
 
 - Download pre-built binaries from the [releases page](https://github.com/spix-rayt/graph_vn/releases)
@@ -48,3 +42,14 @@ This is early-stage software — rough around the edges, actively changing, and 
 
 - **Zero scripting** — content creators don't need to learn a programming language. Just write what you want to happen.
 - **Local AI** — image generation and code generation run entirely on your hardware. No cloud bills, no data leaving your machine.
+
+---
+
+## Roadmap
+
+- **🌐 Multi-language UI** — translate the editor interface into multiple languages.
+- **🖥 Linux & macOS Editor** — full editor releases for Linux and macOS (Android and iOS in read-only playback mode only).
+- **📦 Quest Export as ZIP** — package a complete quest into a single ZIP archive for distribution and playback.
+- **💾 Save System** — save/load game progress with multiple slots.
+- **🎨 Improved AI Generation** — better image generation and code generation quality.
+- **🖼 Background Editor** — create layered backgrounds with parallax and animations.

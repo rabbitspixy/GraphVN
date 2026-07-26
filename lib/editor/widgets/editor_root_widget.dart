@@ -46,14 +46,22 @@ class _EditorRootWidgetState extends State<EditorRootWidget> {
             width: 50,
             color: Colors.grey[200],
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                buildPageButton(EditorPage.project, Icons.folder_open),
-                buildPageButton(EditorPage.graph, Icons.hub),
-                buildPageButton(EditorPage.variables, Icons.data_object),
-                buildPageButton(EditorPage.aiAgent, Icons.auto_awesome),
-                buildPageButton(EditorPage.aiRuntime, Icons.download_for_offline),
-                buildPageButton(EditorPage.settings, Icons.settings),
+                Column(
+                  children: [
+                    buildPageButton(EditorPage.project, Icons.folder_open),
+                    buildPageButton(EditorPage.graph, Icons.hub),
+                    buildPageButton(EditorPage.variables, Icons.data_object),
+                    buildPageButton(EditorPage.aiAgent, Icons.auto_awesome),
+                  ],
+                ),
+                const Spacer(),
+                Column(
+                  children: [
+                    buildPageButton(EditorPage.aiRuntime, Icons.download_for_offline),
+                    buildPageButton(EditorPage.settings, Icons.settings),
+                  ],
+                ),
               ],
             ),
           ),

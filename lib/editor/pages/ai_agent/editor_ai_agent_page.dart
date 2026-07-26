@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -22,8 +23,28 @@ class EditorAiAgentPage extends StatefulWidget {
 }
 
 class _EditorAiAgentPageState extends State<EditorAiAgentPage> {
+  final TextEditingController _styleController = TextEditingController();
+  StreamSubscription<String>? _subscription;
   int _totalTasks = 0;
   int _completedTasks = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _styleController.text = GameState.aiImageStyle;
+    _subscription = GameState.stateUpdatedEvents.listen((_) {
+      if (_styleController.text != GameState.aiImageStyle) {
+        _styleController.text = GameState.aiImageStyle;
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _subscription?.cancel();
+    _styleController.dispose();
+    super.dispose();
+  }
 
   void _runAiAgent() async {
     _totalTasks = 0;
@@ -86,6 +107,22 @@ class _EditorAiAgentPageState extends State<EditorAiAgentPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: TextField(
+              controller: _styleController,
+              decoration: const InputDecoration(
+                labelText: 'AI Image Style',
+                hintText: 'e.g. anime, realistic, pixel art, ...',
+                border: OutlineInputBorder(),
+              ),
+              maxLines: 3,
+              onChanged: (value) {
+                GameState.aiImageStyle = value;
+              },
+            ),
+          ),
+          const SizedBox(height: 24),
           ElevatedButton(
             onPressed: _runAiAgent,
             style: ElevatedButton.styleFrom(
