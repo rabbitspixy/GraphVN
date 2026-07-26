@@ -1,4 +1,4 @@
-[![GraphVN](assets/logo.webp)](https://github.com/spix-rayt/graph_vn)
+[![GraphVN](assets/logo.webp)](https://github.com/spix-rayt/GraphVN)
 
 An AI-powered Cross-platform Visual Novel Engine built with Flutter.
 
@@ -35,7 +35,7 @@ This is early-stage software — rough around the edges, actively changing, and 
 
 ## Quick Start
 
-- Download pre-built binaries from the [releases page](https://github.com/spix-rayt/graph_vn/releases)
+- Download pre-built binaries from the [releases page](https://github.com/spix-rayt/GraphVN/releases)
 - Run graph_vn.exe
 - Press **F1** to toggle between **editor mode** and **play mode**.
 - Place nodes on the canvas, connect them with transitions.
