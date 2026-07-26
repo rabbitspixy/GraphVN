@@ -49,6 +49,7 @@ dependencies:
   window_manager: ^0.5.2
   archive: ^4.0.9
   crypto: ^3.0.7
+  pub_semver: ^2.2.0
 
 dev_dependencies:
   flutter_test:

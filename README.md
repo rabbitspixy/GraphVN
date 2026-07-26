@@ -1,8 +1,8 @@
 [![GraphVN](assets/logo.webp)](https://github.com/spix-rayt/graph_vn)
 
-**Write your game logic in natural language. The engine handles the code.**
+An AI-powered Cross-platform Visual Novel Engine built with Flutter.
 
-[![Flutter](https://img.shields.io/badge/Flutter-3.10+-blue)]()
+<a href="https://github.com/flutter/flutter">![](https://img.shields.io/badge/Built%20in-Flutter-%23369FE7)
 [![Platform](https://img.shields.io/badge/platform-Windows%20|%20macOS%20|%20Linux%20|%20Android%20|%20iOS-lightgrey)]()
 [![Status](https://img.shields.io/badge/status-active%20development-orange)]()
 
@@ -15,7 +15,7 @@
 
 ## What is GraphVN?
 
-**GraphVN** is a cross-platform visual novel engine built on Flutter. Instead of writing scripts, you build your story as a **graph**: nodes connected by transitions, drawn on an interactive canvas. All game logic — actions, conditions, dynamic text insertions — is written in **plain natural language**. The engine translates it into executable code behind the scenes.
+**GraphVN** is a game engine and companion editor designed specifically for creating visual novels and puzzle-driven text adventures. Instead of writing scripts, you build your story as a **graph**: nodes connected by transitions, drawn on an interactive canvas. All game logic — actions, conditions, dynamic text insertions — is written in **plain natural language**. The engine translates it into executable code behind the scenes.
 
 Want the player's health to increase by 50 when they enter a room? Just type _"increase player health by 50"_. Want to show how many coins the player has in the middle of a sentence? Type `{{ show coins }}` and the engine fills in the value. No scripting. No boilerplate.
 

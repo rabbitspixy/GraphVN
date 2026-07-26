@@ -12,6 +12,7 @@ class ProjectData {
   final CodeRepository codeRepository;
   final List<NamedValuesType> namedValueTypes;
   final String aiImageStyle;
+  final String appVersion;
 
   ProjectData({
     required this.nodes,
@@ -20,6 +21,7 @@ class ProjectData {
     required this.codeRepository,
     required this.namedValueTypes,
     this.aiImageStyle = '',
+    required this.appVersion,
   });
 
   ProjectProto toProto() {
@@ -30,6 +32,7 @@ class ProjectData {
     result.codeRepository = codeRepository.toProto();
     result.namedValueTypes.addAll(namedValueTypes.map((x) => x.toProto()));
     result.aiImageStyle = aiImageStyle;
+    result.appVersion = appVersion;
     return result;
   }
 
@@ -41,6 +44,7 @@ class ProjectData {
         codeRepository: CodeRepository.fromProto(proto.codeRepository),
         namedValueTypes: [ for (var t in proto.namedValueTypes) NamedValuesType.fromProto(t) ],
         aiImageStyle: proto.aiImageStyle,
+        appVersion: proto.appVersion,
     );
   }
 }

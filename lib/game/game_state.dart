@@ -9,6 +9,7 @@ import 'package:graph_vn/game/struct.dart';
 import 'package:graph_vn/game/transition_position.dart';
 import 'package:graph_vn/settings/app_settings.dart';
 import 'package:graph_vn/app_constants.dart';
+import 'package:graph_vn/app_version.dart';
 import 'package:graph_vn/game/game_node.dart';
 import 'package:graph_vn/game/game_transition.dart';
 import 'package:graph_vn/game/project_data.dart';
@@ -92,6 +93,7 @@ class GameState {
     ProjectData projectData;
     try {
       projectData = ProjectData.fromProto(proto);
+      AppVersion.checkIsSupportedVersion(projectData.appVersion);
     } catch (e) {
       logger.e("Error loading project $projectDir", error: e);
       _stateUpdatedEventsController.add('');
@@ -144,6 +146,7 @@ class GameState {
       codeRepository: codeRepository,
       namedValueTypes: namedValueTypes.all(),
       aiImageStyle: aiImageStyle,
+      appVersion: AppVersion.current.toString(),
     );
     final file = File("./${AppConstants.projectsDir}/$projectDir/main.bin");
     final dir = file.parent;

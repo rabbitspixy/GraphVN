@@ -7,6 +7,7 @@ message ProjectProto {
   CodeRepositoryProto codeRepository = 4;
   repeated NamedValueTypeProto namedValueTypes = 5;
   string aiImageStyle = 6;
+  string appVersion = 7;
 }
 
 message GameTransitionProto {
