@@ -8,6 +8,11 @@
 
 ---
 
+> ⚠️ **Proof-of-Concept / Experimental**
+> GraphVN is **not ready for creating real games**. It is a concept prototype — features are incomplete, breaking changes happen frequently, and data loss is possible. Use it only to evaluate the idea.
+
+---
+
 ## What is GraphVN?
 
 **GraphVN** is a cross-platform visual novel engine built on Flutter. Instead of writing scripts, you build your story as a **graph**: nodes connected by transitions, drawn on an interactive canvas. All game logic — actions, conditions, dynamic text insertions — is written in **plain natural language**. The engine translates it into executable code behind the scenes.
