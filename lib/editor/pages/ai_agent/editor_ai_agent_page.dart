@@ -25,8 +25,6 @@ class EditorAiAgentPage extends StatefulWidget {
 class _EditorAiAgentPageState extends State<EditorAiAgentPage> {
   final TextEditingController _styleController = TextEditingController();
   StreamSubscription<String>? _subscription;
-  int _totalTasks = 0;
-  int _completedTasks = 0;
 
   @override
   void initState() {
@@ -47,23 +45,16 @@ class _EditorAiAgentPageState extends State<EditorAiAgentPage> {
   }
 
   void _runAiAgent() async {
-    _totalTasks = 0;
-    _completedTasks = 0;
-
-    await showDialog<void>(
+    final totalTasks = await showDialog<int>(
       context: context,
       barrierDismissible: false,
-      builder: (dialogContext) => _AiAgentProgressDialog(
-        totalTasks: _totalTasks,
-        completedTasks: _completedTasks,
-        onTaskCompleted: () => setState(() => _completedTasks++),
-      ),
+      builder: (dialogContext) => const _AiAgentProgressDialog(),
     );
-    
-    if (_totalTasks > 0 && mounted) {
+
+    if (totalTasks != null && totalTasks > 0 && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('AI агент завершил работу. Обработано: $_totalTasks задач'),
+          content: Text('AI агент завершил работу. Обработано: $totalTasks задач'),
         ),
       );
     }
@@ -167,42 +158,44 @@ class _EditorAiAgentPageState extends State<EditorAiAgentPage> {
 }
 
 class _AiAgentProgressDialog extends StatefulWidget {
-  final int totalTasks;
-  final int completedTasks;
-  final void Function() onTaskCompleted;
-
-  const _AiAgentProgressDialog({
-    required this.totalTasks,
-    required this.completedTasks,
-    required this.onTaskCompleted,
-  });
+  const _AiAgentProgressDialog();
 
   @override
   State<_AiAgentProgressDialog> createState() => _AiAgentProgressDialogState();
 }
 
 class _AiAgentProgressDialogState extends State<_AiAgentProgressDialog> {
-  late int _totalTasks;
-  late int _completedTasks;
+  int _totalTasks = 0;
+  int _completedTasks = 0;
 
   @override
   void initState() {
     super.initState();
-    _totalTasks = widget.totalTasks;
-    _completedTasks = widget.completedTasks;
     _startProcessing();
+  }
+
+  void _onTaskCompleted() => setState(() => _completedTasks++);
+
+  List<Future<void> Function()> _wrapWithProgress(
+      List<Future<void> Function()> tasks) {
+    return [
+      for (final task in tasks) () async {
+        await task();
+        _onTaskCompleted();
+      },
+    ];
   }
 
   Future<void> _startProcessing() async {
     try {
       await _processAllTasks();
       if (mounted) {
-        Navigator.pop(context);
+        Navigator.pop(context, _totalTasks);
       }
     } catch (e) {
       logger.e("AI agent request error", error: e);
       if (mounted) {
-        Navigator.pop(context);
+        Navigator.pop(context, _totalTasks);
       }
     }
   }
@@ -227,7 +220,7 @@ class _AiAgentProgressDialogState extends State<_AiAgentProgressDialog> {
     
     if (textGenerationTasks.isNotEmpty) {
       await AiServers.ensureLlamaCppIsRunning();
-      await runInParallel(textGenerationTasks, 4);
+      await runInParallel(_wrapWithProgress(textGenerationTasks), 4);
     }
 
     for (final node in GameState.nodes.values) {
@@ -238,7 +231,7 @@ class _AiAgentProgressDialogState extends State<_AiAgentProgressDialog> {
 
     if (imageGenerationTasks.isNotEmpty) {
       await AiServers.ensureStableDiffusionCppIsRunning();
-      await runInParallel(imageGenerationTasks, 1);
+      await runInParallel(_wrapWithProgress(imageGenerationTasks), 1);
     }
   }
 
@@ -254,7 +247,6 @@ class _AiAgentProgressDialogState extends State<_AiAgentProgressDialog> {
         } else {
           logger.w("No code generated for actions of node ${node.id}");
         }
-        widget.onTaskCompleted();
       });
     }
     
@@ -273,7 +265,6 @@ class _AiAgentProgressDialogState extends State<_AiAgentProgressDialog> {
         } else {
           logger.w("No code generated for trigger of node ${node.id}");
         }
-        widget.onTaskCompleted();
       });
     }
     
@@ -299,7 +290,6 @@ class _AiAgentProgressDialogState extends State<_AiAgentProgressDialog> {
         } else {
           logger.w("No code generated for replaceable $replaceable of node ${node.id}");
         }
-        widget.onTaskCompleted();
       });
     }
     
@@ -325,7 +315,6 @@ class _AiAgentProgressDialogState extends State<_AiAgentProgressDialog> {
                   ..llmGeneratedPrompt = imagePrompt
             );
           }
-          widget.onTaskCompleted();
         });
       }
     }
@@ -345,7 +334,6 @@ class _AiAgentProgressDialogState extends State<_AiAgentProgressDialog> {
         } else {
           logger.w("No code generated for conditions of transition ${transition.id}");
         }
-        widget.onTaskCompleted();
       });
     }
     
@@ -364,7 +352,6 @@ class _AiAgentProgressDialogState extends State<_AiAgentProgressDialog> {
         } else {
           logger.w("No code generated for actions of transition ${transition.id}");
         }
-        widget.onTaskCompleted();
       });
     }
     
@@ -385,7 +372,6 @@ class _AiAgentProgressDialogState extends State<_AiAgentProgressDialog> {
         await imageFile.parent.create(recursive: true);
         await imageFile.writeAsBytes(imageBytes);
         node.imagePath = imagePath;
-        widget.onTaskCompleted();
       });
     }
 
