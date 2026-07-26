@@ -6,6 +6,7 @@ import 'package:graph_vn/ai/ai_servers.dart';
 import 'package:graph_vn/ai/image_generation/generate_image_metadata.dart';
 import 'package:graph_vn/ai/image_generation/sd_cpp_client.dart';
 import 'package:graph_vn/ai/llm/image_prompt_generator.dart';
+import 'package:graph_vn/editor/widgets/help_button.dart';
 import 'package:graph_vn/ai/llm/js_code_generator.dart';
 import 'package:graph_vn/app_constants.dart';
 import 'package:graph_vn/common/substring_util.dart';
@@ -94,65 +95,82 @@ class _EditorAiAgentPageState extends State<EditorAiAgentPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: TextField(
-              controller: _styleController,
-              decoration: const InputDecoration(
-                labelText: 'AI Image Style',
-                hintText: 'e.g. anime, realistic, pixel art, ...',
-                border: OutlineInputBorder(),
+    return Stack(
+      children: [
+        Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: TextField(
+                  controller: _styleController,
+                  decoration: const InputDecoration(
+                    labelText: 'AI Image Style',
+                    hintText: 'e.g. anime, realistic, pixel art, ...',
+                    border: OutlineInputBorder(),
+                  ),
+                  maxLines: 3,
+                  onChanged: (value) {
+                    GameState.aiImageStyle = value;
+                  },
+                ),
               ),
-              maxLines: 3,
-              onChanged: (value) {
-                GameState.aiImageStyle = value;
-              },
-            ),
-          ),
-          const SizedBox(height: 24),
-          ElevatedButton(
-            onPressed: _runAiAgent,
-            style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+              const SizedBox(height: 24),
+              ElevatedButton(
+                onPressed: _runAiAgent,
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 24, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: const [
+                    Icon(Icons.play_arrow),
+                    SizedBox(width: 8),
+                    Text('Запустить AI'),
+                  ],
+                ),
               ),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: const [
-                Icon(Icons.play_arrow),
-                SizedBox(width: 8),
-                Text('Запустить AI агент'),
-              ],
-            ),
-          ),
-          const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: _clearGeneratedCode,
-            style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: _clearGeneratedCode,
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 24, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  backgroundColor: Colors.red,
+                  foregroundColor: Colors.white,
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: const [
+                    Icon(Icons.clear),
+                    SizedBox(width: 8),
+                    Text('Очистить сгенерированный код'),
+                  ],
+                ),
               ),
-              backgroundColor: Colors.red,
-              foregroundColor: Colors.white,
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: const [
-                Icon(Icons.clear),
-                SizedBox(width: 8),
-                Text('Очистить сгенерированный код'),
-              ],
-            ),
+            ],
           ),
-        ],
-      ),
+        ),
+        Positioned(
+          top: 4,
+          left: 4,
+          child: HelpButton(helpTexts: [
+            'На этой странице можно запустить генерацию кода и изображений через AI',
+            'Для перегенерации кода, в текст действия, условия или отображения, нужно добавить любое изменение, например символ пробела в конце',
+            'Для перегенерации изображения, в узле нужно стереть путь к изображению',
+            'Генерация работает через локальный запуск AI моделей в отдельном процессе',
+            'Для успешного запуска должны быть скачаны все AI компоненты',
+          ]),
+        ),
+      ],
     );
   }
 }

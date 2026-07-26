@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:graph_vn/editor/modals/confirm_dialog.dart';
 import 'package:graph_vn/editor/pages/graph/editor_canvas.dart';
+import 'package:graph_vn/editor/widgets/help_button.dart';
 import 'package:graph_vn/game/game_node.dart';
 import 'package:graph_vn/game/game_state.dart';
 import 'package:graph_vn/game/game_transition.dart';
@@ -51,55 +52,76 @@ class EditorGraphPageState extends State<EditorGraphPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Stack(
       children: [
-        Expanded(
-          flex: 65,
-          child: CallbackShortcuts(
-              bindings: <ShortcutActivator, VoidCallback>{
-                const SingleActivator(LogicalKeyboardKey.delete): () async {
-                  final node = GameState.selectedNode;
-                  if (node != null) {
-                    if (await showConfirmDialog(context, "Удалить узел?")) {
-                      GameState.deleteNode(node.id);
-                    }
-                  }
-                  final transition = GameState.selectedTransition;
-                  if (transition != null) {
-                    if (await showConfirmDialog(context, "Удалить переход?")) {
-                      GameState.deleteTransition(transition.id);
-                    }
-                  }
-                },
+        Row(
+          children: [
+            Expanded(
+              flex: 65,
+              child: CallbackShortcuts(
+                  bindings: <ShortcutActivator, VoidCallback>{
+                    const SingleActivator(LogicalKeyboardKey.delete): () async {
+                      final node = GameState.selectedNode;
+                      if (node != null) {
+                        if (await showConfirmDialog(context, "Удалить узел?")) {
+                          GameState.deleteNode(node.id);
+                        }
+                      }
+                      final transition = GameState.selectedTransition;
+                      if (transition != null) {
+                        if (await showConfirmDialog(
+                            context, "Удалить переход?")) {
+                          GameState.deleteTransition(transition.id);
+                        }
+                      }
+                    },
 
-                const SingleActivator(LogicalKeyboardKey.home): () async {
-                  _canvasKey.currentState?.resetOffset();
-                },
+                    const SingleActivator(LogicalKeyboardKey.home): () async {
+                      _canvasKey.currentState?.resetOffset();
+                    },
 
-                const SingleActivator(LogicalKeyboardKey.keyC): () async {
-                  _canvasKey.currentState?.centerSelectedNode();
-                },
-              },
-              child: EditorCanvas(
-                key: _canvasKey,
-                selectedNode: GameState.selectedNode,
-                selectedTransition: GameState.selectedTransition,
-                onSelect: _onSelectHandler,
-              )
-          ),
-        ),
-        Expanded(
-          flex: 35,
-          child: Container(
-            height: double.infinity,
-            color: Color.fromARGB(255, 230, 230, 230),
-            padding: const EdgeInsets.all(8.0),
-            child: GameState.selectedNode != null
-                ? NodeEditor(node: GameState.selectedNode!, onChange: _onNodeEdited,)
-                : GameState.selectedTransition != null
-                    ? TransitionEditor(transition: GameState.selectedTransition!, onChange: _onTransitionEdited,)
+                    const SingleActivator(LogicalKeyboardKey.keyC): () async {
+                      _canvasKey.currentState?.centerSelectedNode();
+                    },
+                  },
+                  child: EditorCanvas(
+                    key: _canvasKey,
+                    selectedNode: GameState.selectedNode,
+                    selectedTransition: GameState.selectedTransition,
+                    onSelect: _onSelectHandler,
+                  )
+              ),
+            ),
+            Expanded(
+              flex: 35,
+              child: Container(
+                height: double.infinity,
+                color: Color.fromARGB(255, 230, 230, 230),
+                padding: const EdgeInsets.all(8.0),
+                child: GameState.selectedNode != null
+                    ? NodeEditor(
+                  node: GameState.selectedNode!, onChange: _onNodeEdited,)
+                    : GameState.selectedTransition != null
+                    ? TransitionEditor(
+                  transition: GameState.selectedTransition!,
+                  onChange: _onTransitionEdited,)
                     : const SizedBox.shrink(),
-          ),
+              ),
+            ),
+          ],
+        ),
+        Positioned(
+          top: 4,
+          left: 4,
+          child: HelpButton(helpTexts: [
+            'Это холст с графом квеста',
+            'Граф состоит из узлов и переходов между ними',
+            'Добавить узел - Двойной клик ЛКМ',
+            'Создание перехода между узлами - ПКМ (или Ctrl+ЛКМ или двойной клик ЛКМ по узлу)',
+            'Перемещение холста - Зажать СКМ',
+            'Вернуться в центр холста - HOME',
+            'Удалить узел/переход - DELETE',
+          ]),
         ),
       ],
     );
