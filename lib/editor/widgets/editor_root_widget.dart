@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:graph_vn/editor/pages/ai_agent/editor_ai_agent_page.dart';
+import 'package:graph_vn/editor/pages/ai_runtime/editor_ai_runtime_components_page.dart';
 import 'package:graph_vn/editor/pages/graph/editor_graph_page.dart';
 import 'package:graph_vn/editor/pages/project/editor_project_page.dart';
 import 'package:graph_vn/editor/pages/settings/editor_settings_page.dart';
@@ -51,6 +52,7 @@ class _EditorRootWidgetState extends State<EditorRootWidget> {
                 buildPageButton(EditorPage.graph, Icons.hub),
                 buildPageButton(EditorPage.variables, Icons.data_object),
                 buildPageButton(EditorPage.aiAgent, Icons.auto_awesome),
+                buildPageButton(EditorPage.aiRuntime, Icons.download_for_offline),
                 buildPageButton(EditorPage.settings, Icons.settings),
               ],
             ),
@@ -64,6 +66,7 @@ class _EditorRootWidgetState extends State<EditorRootWidget> {
               const EditorGraphPage(),
               const EditorVariablesPage(),
               const EditorAiAgentPage(),
+              const EditorAiRuntimeComponentsPage(),
               const EditorSettingsPage(),
             ],
           ),
@@ -79,5 +82,6 @@ enum EditorPage {
   graph,
   variables,
   aiAgent,
+  aiRuntime,
   settings,
 }

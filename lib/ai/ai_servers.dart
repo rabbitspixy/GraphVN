@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:graph_vn/app_constants.dart';
+
 class AiServers {
   static Process? _llamaProcess;
   static bool _llamaRunning = false;
@@ -20,8 +22,8 @@ class AiServers {
     }
 
     _llamaProcess = await Process.start(
-      'airuntime/llama-b10107-bin-win-vulkan-x64/llama-server.exe',
-      ['-m', 'airuntime/models/Qwen3.5-4B.Q8_0.gguf', '-ngl', '99', '-c', '16384'],
+      '${AppConstants.aiRuntimeDir}/llama-b10107-bin-win-vulkan-x64/llama-server.exe',
+      ['-m', '${AppConstants.aiRuntimeDir}/models/Qwen3.5-4B.Q8_0.gguf', '-ngl', '99', '-c', '16384'],
     );
 
     _llamaRunning = true;
@@ -62,12 +64,12 @@ class AiServers {
     }
 
     _sdProcess = await Process.start(
-      'airuntime/sd-master-5114672-bin-win-vulkan-x64/sd-server.exe',
+      '${AppConstants.aiRuntimeDir}/sd-master-5114672-bin-win-vulkan-x64/sd-server.exe',
       [
         '-v',
-        '--diffusion-model', r'airuntime\models\z_image_turbo-Q4_K.gguf',
-        '--vae', r'airuntime\models\ae.safetensors',
-        '--llm', r'airuntime\models\Qwen3-4B-UD-Q6_K_XL.gguf',
+        '--diffusion-model', '${AppConstants.aiRuntimeDir}/models/z_image_turbo-Q4_K.gguf',
+        '--vae', '${AppConstants.aiRuntimeDir}/models/ae.safetensors',
+        '--llm', '${AppConstants.aiRuntimeDir}/models/Qwen3-4B-UD-Q6_K_XL.gguf',
         '--cfg-scale', '1.0',
         '--offload-to-cpu',
         '--diffusion-fa',
