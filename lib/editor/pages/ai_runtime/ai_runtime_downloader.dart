@@ -6,46 +6,13 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:graph_vn/app_constants.dart';
 
-// === Константы моделей ===
-
-const _vaeUrl = 'https://huggingface.co/Comfy-Org/z_image_turbo/resolve/main/split_files/vae/ae.safetensors';
-const _vaeFile = 'ae.safetensors';
-const _vaeSha256 = 'afc8e28272cd15db3919bacdb6918ce9c1ed22e96cb12c4d5ed0fba823529e38';
-
-const _llmMainUrl = 'https://huggingface.co/unsloth/Qwen3.5-4B-GGUF/resolve/main/Qwen3.5-4B-Q8_0.gguf';
-const _llmMainFile = 'Qwen3.5-4B.Q8_0.gguf';
-const _llmMainSha256 = '10cc391b403021dd11c614679d2fd92f611c3681d29e29651b717316965d61e1';
-
-const _llmSecondUrl = 'https://huggingface.co/unsloth/Qwen3-4B-GGUF/resolve/main/Qwen3-4B-UD-Q6_K_XL.gguf';
-const _llmSecondFile = 'Qwen3-4B-UD-Q6_K_XL.gguf';
-const _llmSecondSha256 = 'ac0767b5e9c9f16efe57ce422253a33747970c166c3131c4d4d59d20511f07e1';
-
-const _zImageTurboUrl = 'https://huggingface.co/leejet/Z-Image-Turbo-GGUF/resolve/main/z_image_turbo-Q4_K.gguf';
-const _zImageTurboFile = 'z_image_turbo-Q4_K.gguf';
-const _zImageTurboSha256 = '14b375ab4f226bc5378f68f37e899ef3c2242b8541e61e2bc1aff40976086fbd';
-
-// === Константы zip-архивов ===
-
-const _llamaZipUrl = 'https://github.com/ggml-org/llama.cpp/releases/download/b10107/llama-b10107-bin-win-vulkan-x64.zip';
-// const _llamaZipSha256 = 'c5b3a5ee8319b1eccbb748a54390aa806bbf7d1aceeea452e4c57921d113e53e';
-const _llamaDirName = 'llama-b10107-bin-win-vulkan-x64';
-
-const _sdZipUrl = 'https://github.com/leejet/stable-diffusion.cpp/releases/download/master-789-5114672/sd-master-5114672-bin-win-vulkan-x64.zip';
-// const _sdZipSha256 = 'cb5fb173430147d83fa3439040be1e1d97906c2e8fb3a06cc8afb761ea98ba17';
-const _sdDirName = 'sd-master-5114672-bin-win-vulkan-x64';
-
-// === Статус ===
-
 enum AiRuntimeDownloadStatus { missing, checking, downloading, unpacking, installed }
-
-// === Элемент ===
 
 class AiRuntimeItem {
   final String name;
   final String description;
   final Future<void> Function(AiRuntimeItem item) action;
 
-  // TODO: заполнить пути к файлам
   final String? filePath;
 
   AiRuntimeDownloadStatus _status = AiRuntimeDownloadStatus.missing;
@@ -102,7 +69,6 @@ class AiRuntimeItem {
   }
 
   Future<void> start() async {
-    setStatus(AiRuntimeDownloadStatus.checking);
     await action(this);
   }
 }
@@ -130,38 +96,38 @@ class AiRuntimeDownloader {
         AiRuntimeItem(
           name: 'VAE',
           description: 'VAE for Z-Image-Turbo',
-          filePath: '${AppConstants.aiRuntimeDir}/models/ae.safetensors',
-          action: (item) => _downloadModel(item, _vaeUrl, _vaeFile, _vaeSha256),
+          filePath: '${AppConstants.aiRuntimeDir}/models/${ZImageTurboConstants.vaeFileName}',
+          action: (item) => _downloadModel(item, ZImageTurboConstants.vaeUrl, ZImageTurboConstants.vaeFileName, ZImageTurboConstants.vaeSha256),
         ),
         AiRuntimeItem(
-          name: 'Qwen3.5-4B.Q8_0.gguf',
+          name: 'Qwen3.5 4B',
           description: 'Языковая модель для генерации текста',
-          filePath: '${AppConstants.aiRuntimeDir}/models/Qwen3.5-4B.Q8_0.gguf',
-          action: (item) => _downloadModel(item, _llmMainUrl, _llmMainFile, _llmMainSha256),
+          filePath: '${AppConstants.aiRuntimeDir}/models/${AppConstants.llmMainFile}',
+          action: (item) => _downloadModel(item, AppConstants.llmMainUrl, AppConstants.llmMainFile, AppConstants.llmMainSha256),
         ),
         AiRuntimeItem(
-          name: 'Qwen3-4B-UD-Q6_K_XL.gguf',
+          name: 'Qwen3 4B',
           description: 'Языковая модель для генерации изображений',
-          filePath: '${AppConstants.aiRuntimeDir}/models/Qwen3-4B-UD-Q6_K_XL.gguf',
-          action: (item) => _downloadModel(item, _llmSecondUrl, _llmSecondFile, _llmSecondSha256),
+          filePath: '${AppConstants.aiRuntimeDir}/models/${ZImageTurboConstants.llmFileName}',
+          action: (item) => _downloadModel(item, ZImageTurboConstants.llmUrl, ZImageTurboConstants.llmFileName, ZImageTurboConstants.llmSha256),
         ),
         AiRuntimeItem(
-          name: 'z_image_turbo-Q4_K.gguf',
+          name: 'Z-Image-Turbo',
           description: 'Модель генерации изображений',
-          filePath: '${AppConstants.aiRuntimeDir}/models/z_image_turbo-Q4_K.gguf',
-          action: (item) => _downloadModel(item, _zImageTurboUrl, _zImageTurboFile, _zImageTurboSha256),
+          filePath: '${AppConstants.aiRuntimeDir}/models/${ZImageTurboConstants.zImageTurboFileName}',
+          action: (item) => _downloadModel(item, ZImageTurboConstants.zImageTurboUrl, ZImageTurboConstants.zImageTurboFileName, ZImageTurboConstants.zImageTurboSha256),
         ),
         AiRuntimeItem(
           name: 'llama.cpp',
           description: 'Библиотеки и исполняемые файлы llama.cpp',
-          filePath: '${AppConstants.aiRuntimeDir}/llama-b10107-bin-win-vulkan-x64',
-          action: (item) => _downloadAndExtractZip(item, _llamaZipUrl, _llamaDirName),
+          filePath: '${AppConstants.aiRuntimeDir}/${AppConstants.llamaDirName}',
+          action: (item) => _downloadAndExtractZip(item, AppConstants.llamaZipUrl, AppConstants.llamaDirName),
         ),
         AiRuntimeItem(
           name: 'sd.cpp',
           description: 'Библиотеки и исполняемые файлы stable-diffusion.cpp',
-          filePath: '${AppConstants.aiRuntimeDir}/sd-master-5114672-bin-win-vulkan-x64',
-          action: (item) => _downloadAndExtractZip(item, _sdZipUrl, _sdDirName),
+          filePath: '${AppConstants.aiRuntimeDir}/${AppConstants.sdDirName}',
+          action: (item) => _downloadAndExtractZip(item, AppConstants.sdZipUrl, AppConstants.sdDirName),
         ),
       ];
 
@@ -170,6 +136,7 @@ class AiRuntimeDownloader {
   // === Общие методы ===
 
   static Future<void> _downloadModel(AiRuntimeItem item, String url, String filename, String sha256) async {
+    item.setStatus(AiRuntimeDownloadStatus.checking);
     final dir = Directory('${AppConstants.aiRuntimeDir}/models');
     await dir.create(recursive: true);
     final path = '${dir.path}/$filename';
@@ -187,6 +154,7 @@ class AiRuntimeDownloader {
   }
 
   static Future<void> _downloadAndExtractZip(AiRuntimeItem item, String url, String targetDir) async {
+    item.setStatus(AiRuntimeDownloadStatus.checking);
     final dir = Directory('${AppConstants.aiRuntimeDir}/$targetDir');
 
     if (await _dirExistsAndNotEmpty(dir.path)) {

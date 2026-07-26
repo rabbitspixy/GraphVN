@@ -22,8 +22,8 @@ class AiServers {
     }
 
     _llamaProcess = await Process.start(
-      '${AppConstants.aiRuntimeDir}/llama-b10107-bin-win-vulkan-x64/llama-server.exe',
-      ['-m', '${AppConstants.aiRuntimeDir}/models/Qwen3.5-4B.Q8_0.gguf', '-ngl', '99', '-c', '16384'],
+      '${AppConstants.aiRuntimeDir}/${AppConstants.llamaDirName}/llama-server.exe',
+      ['-m', '${AppConstants.aiRuntimeDir}/models/${AppConstants.llmMainFile}', '-ngl', '99', '-c', '16384'],
     );
 
     _llamaRunning = true;
@@ -64,12 +64,12 @@ class AiServers {
     }
 
     _sdProcess = await Process.start(
-      '${AppConstants.aiRuntimeDir}/sd-master-5114672-bin-win-vulkan-x64/sd-server.exe',
+      '${AppConstants.aiRuntimeDir}/${AppConstants.sdDirName}/sd-server.exe',
       [
         '-v',
-        '--diffusion-model', '${AppConstants.aiRuntimeDir}/models/z_image_turbo-Q4_K.gguf',
-        '--vae', '${AppConstants.aiRuntimeDir}/models/ae.safetensors',
-        '--llm', '${AppConstants.aiRuntimeDir}/models/Qwen3-4B-UD-Q6_K_XL.gguf',
+        '--diffusion-model', '${AppConstants.aiRuntimeDir}/models/${ZImageTurboConstants.zImageTurboFileName}',
+        '--vae', '${AppConstants.aiRuntimeDir}/models/${ZImageTurboConstants.vaeFileName}',
+        '--llm', '${AppConstants.aiRuntimeDir}/models/${ZImageTurboConstants.llmFileName}',
         '--cfg-scale', '1.0',
         '--offload-to-cpu',
         '--diffusion-fa',
