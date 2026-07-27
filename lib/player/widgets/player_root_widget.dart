@@ -138,7 +138,7 @@ class _PlayerRootWidgetState extends State<PlayerRootWidget> {
               children: [
                 SpeakerNarrativeBlock(onTextFinished: _onTextFinished),
                 const SizedBox(height: 12),
-                ValueListenableBuilder<List<ChoiseButton>>(
+                ValueListenableBuilder<List<ChoiceButton>>(
                   valueListenable: Player.buttons,
                   builder: (context, transitionList, child) {
                     return TransitionButtons(

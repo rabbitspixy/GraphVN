@@ -5,6 +5,7 @@ import 'package:flutter_js/flutter_js.dart';
 import 'package:graph_vn/common/js_util.dart';
 import 'package:graph_vn/game/code_repository.dart';
 import 'package:graph_vn/game/named_value_type_repository.dart';
+import 'package:graph_vn/game/project_files.dart';
 import 'package:graph_vn/game/struct.dart';
 import 'package:graph_vn/game/transition_position.dart';
 import 'package:graph_vn/settings/app_settings.dart';
@@ -18,10 +19,10 @@ import 'package:graph_vn/generated-proto/data.pb.dart';
 import 'dart:ui';
 
 import 'package:graph_vn/main.dart';
-import 'package:protobuf/protobuf.dart';
 
 class GameState {
   static String projectDir = "";
+  static ProjectFiles? projectFiles;
 
   static final Map<String, GameNode> nodes = <String, GameNode>{};
   static final List<GameTransition> transitions = List.empty(growable: true);
@@ -51,6 +52,7 @@ class GameState {
 
   static void closeProject() {
     GameState.projectDir = "";
+    projectFiles = null;
     nodes.clear();
     transitions.clear();
     selectedNode = null;
@@ -68,37 +70,31 @@ class GameState {
     _stateUpdatedEventsController.add('');
   }
 
-  static void load(String projectDir) {
+  static void load(String projectDir) async {
     logger.i("loading project $projectDir");
-    _load(projectDir);
+    closeProject();
+
+    try {
+      await _load(projectDir);
+    } catch (e) {
+      logger.e("Error loading project $projectDir", error: e);
+      closeProject();
+      appSettings = appSettings.copyWith(lastOpenedProjectDir: null);
+    }
     logger.i("project $projectDir loaded");
   }
 
-  static void _load(String projectDir) {
-    closeProject();
+  static Future<void> _load(String dir) async {
+    final files = await ProjectFiles.create("${AppConstants.projectsDir}/$dir");
 
-    final file = File("./${AppConstants.projectsDir}/$projectDir/main.bin");
-    if (!file.existsSync()) {
-      GameState.projectDir = projectDir;
-      _stateUpdatedEventsController.add('');
-      return;
+    final mainBin = files.readFile("main.bin");
+    if (mainBin == null) {
+      throw Exception("main.bin not found");
     }
-    ProjectProto proto;
-    try {
-      proto = ProjectProto.fromBuffer(file.readAsBytesSync());
-    } catch (e) {
-      logger.e("Error loading project $projectDir", error: e);
-      return;
-    }
-    ProjectData projectData;
-    try {
-      projectData = ProjectData.fromProto(proto);
-      AppVersion.checkIsSupportedVersion(projectData.appVersion);
-    } catch (e) {
-      logger.e("Error loading project $projectDir", error: e);
-      _stateUpdatedEventsController.add('');
-      return;
-    }
+    ProjectProto proto = ProjectProto.fromBuffer(mainBin);
+    ProjectData projectData = ProjectData.fromProto(proto);
+    AppVersion.checkIsSupportedVersion(projectData.appVersion);
+
     nodes.addAll(projectData.nodes);
     transitions.addAll(projectData.transitions);
     structs.addAll(projectData.structs);
@@ -108,8 +104,8 @@ class GameState {
     namedValueTypes.addAll(projectData.namedValueTypes);
     updateAllTransitionPositions();
 
-    //this should be done last
-    GameState.projectDir = projectDir;
+    GameState.projectDir = dir;
+    GameState.projectFiles = files;
     _stateUpdatedEventsController.add('');
     if (appSettings.lastOpenedProjectDir != GameState.projectDir) {
       appSettings = appSettings.copyWith(lastOpenedProjectDir: GameState.projectDir);
@@ -135,6 +131,9 @@ class GameState {
 
   static void save() {
     if (!isProjectLoaded()) {
+      return;
+    }
+    if (projectFiles?.isReadOnly() == true) {
       return;
     }
     logger.i('start saving project');

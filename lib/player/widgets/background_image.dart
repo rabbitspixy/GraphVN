@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:graph_vn/game/game_state.dart';
 import 'package:graph_vn/player/player_models.dart';
 import 'package:graph_vn/player/player.dart';
 
@@ -16,7 +17,8 @@ class _BackgroundImageWidgetState extends State<BackgroundImageWidget>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
-  PlayerImageInfo? _currentInfo;
+  PlayerBackgroundImage? _currentBackgroundImage;
+  MemoryImage? _memoryImage;
   final Random _random = Random();
 
   @override
@@ -24,16 +26,21 @@ class _BackgroundImageWidgetState extends State<BackgroundImageWidget>
     super.initState();
     _controller = AnimationController(vsync: this);
     _animation = const AlwaysStoppedAnimation(0.0);
-    Player.imageInfoNotifier.addListener(_onImageInfoChanged);
-    _onImageInfoChanged();
+    Player.backgroundImageNotifier.addListener(_onBackgroundImageChanged);
+    _onBackgroundImageChanged();
   }
 
-  void _onImageInfoChanged() {
-    final newInfo = Player.imageInfoNotifier.value;
-    if (_currentInfo?.path != newInfo.path) {
-      _currentInfo = newInfo;
-      if (newInfo.animationDuration > 0) {
-        _startAnimations(newInfo);
+  void _onBackgroundImageChanged() {
+    final background = Player.backgroundImageNotifier.value;
+    if (_currentBackgroundImage?.imageHash != background.imageHash) {
+      _currentBackgroundImage = background;
+      if (background.imageBytes != null) {
+        _memoryImage = MemoryImage(background.imageBytes!);
+      } else {
+        _memoryImage = null;
+      }
+      if (background.animationDuration > 0) {
+        _startAnimations(background);
       } else {
         _animation = const AlwaysStoppedAnimation(0.0);
         _controller.stop();
@@ -42,7 +49,7 @@ class _BackgroundImageWidgetState extends State<BackgroundImageWidget>
     }
   }
 
-  void _startAnimations(PlayerImageInfo info) {
+  void _startAnimations(PlayerBackgroundImage info) {
     _controller.stop();
     _controller.reset();
     _controller.duration = Duration(milliseconds: info.animationDuration);
@@ -54,13 +61,13 @@ class _BackgroundImageWidgetState extends State<BackgroundImageWidget>
   @override
   void dispose() {
     _controller.dispose();
-    Player.imageInfoNotifier.removeListener(_onImageInfoChanged);
+    Player.backgroundImageNotifier.removeListener(_onBackgroundImageChanged);
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final info = _currentInfo ?? PlayerImageInfo(path: '');
+    final info = _currentBackgroundImage ?? PlayerBackgroundImage();
     return AnimatedBuilder(
       animation: _controller,
       builder: (context, child) {
@@ -75,14 +82,14 @@ class _BackgroundImageWidgetState extends State<BackgroundImageWidget>
           scale: scale,
           child: Transform.translate(
             offset: offset,
-            child: (info.path == null || info.path!.isEmpty)
+            child: (_memoryImage == null)
                 ? Container(
                     color: Color.fromARGB(255, info.red, info.green, info.blue),
                   )
                 : Container(
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: FileImage(File(info.path!)),
+                        image: _memoryImage!,
                         fit: BoxFit.cover,
                       ),
                     ),

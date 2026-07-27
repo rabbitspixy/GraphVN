@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:graph_vn/player/player_models.dart';
 
 class TransitionButtons extends StatefulWidget {
-  final List<ChoiseButton> transitions;
+  final List<ChoiceButton> transitions;
   final int selectedIndex;
   final bool show;
   final ValueChanged<int> onHover;

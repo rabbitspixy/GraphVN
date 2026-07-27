@@ -11,10 +11,10 @@ import 'package:graph_vn/player/player_models.dart';
 import 'package:graph_vn/game/game_state.dart';
 
 class Player {
-  static final ValueNotifier<PlayerImageInfo> imageInfoNotifier = ValueNotifier<PlayerImageInfo>(PlayerImageInfo(path: ''));
+  static final ValueNotifier<PlayerBackgroundImage> backgroundImageNotifier = ValueNotifier<PlayerBackgroundImage>(PlayerBackgroundImage());
   static final ValueNotifier<String> speakerName = ValueNotifier<String>('');
   static final ValueNotifier<String> narrativeText = ValueNotifier<String>('');
-  static final ValueNotifier<List<ChoiseButton>> buttons = ValueNotifier<List<ChoiseButton>>([]);
+  static final ValueNotifier<List<ChoiceButton>> buttons = ValueNotifier<List<ChoiceButton>>([]);
   static final ValueNotifier<VariablesDiffDebug> variablesDiffDebug = ValueNotifier(VariablesDiffDebug(previous: {}, current: {}));
   static final ValueNotifier<int> narrativeVersion = ValueNotifier<int>(0);
 
@@ -201,14 +201,18 @@ class Player {
 
     buttons.value = allowedTransitionsForCurrentState()
         .where((t) => t.isButton)
-        .map((t) => ChoiseButton(text: t.text, transitionId: t.id))
+        .map((t) => ChoiceButton(text: t.text, transitionId: t.id))
         .toList();
     
     if (node.imagePath.isNotEmpty) {
-      final file = File("projects/${GameState.projectDir}/images/${node.imagePath}");
-      if (file.existsSync()) {
-        imageInfoNotifier.value = PlayerImageInfo(
-          path: file.path,
+      var imageBytes = GameState.projectFiles?.readFile("images/${node.imagePath}");
+      if (imageBytes != null) {
+        backgroundImageNotifier.value = PlayerBackgroundImage(
+          imageBytes: imageBytes
+        );
+      } else {
+        backgroundImageNotifier.value = PlayerBackgroundImage(
+          imageBytes: null
         );
       }
     }
@@ -245,7 +249,7 @@ class Player {
   }
 
   static void clearState() {
-    imageInfoNotifier.value = PlayerImageInfo();
+    backgroundImageNotifier.value = PlayerBackgroundImage();
     speakerName.value = "";
     narrativeText.value = "";
     buttons.value = [];

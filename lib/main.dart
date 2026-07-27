@@ -20,6 +20,17 @@ void main() async {
   GameState.loadLastSavedProject();
   Player.progressState();
   initWindowCloseHandler();
+
+  WindowOptions windowOptions = WindowOptions(
+    size: Size(800, 600),
+    center: true,
+    fullScreen: true,
+  );
+  windowManager.waitUntilReadyToShow(windowOptions, () async {
+    await windowManager.show();
+    await windowManager.focus();
+  });
+
   runApp(const RootWidget());
 }
 
@@ -45,7 +56,7 @@ class RootWidget extends StatefulWidget {
 
 class _RootWidgetState extends State<RootWidget> {
   final _rootFocusScope = FocusScopeNode(debugLabel: "My Custom Root Focus Node");
-  bool _showEditor = false;
+  bool _showEditor = true;
 
   void _toggleEditor() {
     if (_showEditor) {

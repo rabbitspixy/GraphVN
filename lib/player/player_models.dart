@@ -1,13 +1,15 @@
+import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:graph_vn/common/hash_util.dart';
 
 class GameStill {
-  final PlayerImageInfo Function() imageInfo;
+  final PlayerBackgroundImage Function() imageInfo;
   final String Function() text;
   final VoidCallback? onEnter;
   final VoidCallback? onLeave;
-  final List<ChoiseButton> buttons;
+  final List<ChoiceButton> buttons;
 
   GameStill({
     required this.imageInfo,
@@ -18,18 +20,19 @@ class GameStill {
   });
 }
 
-class ChoiseButton {
+class ChoiceButton {
   final String text;
   final String transitionId;
 
-  ChoiseButton({
+  ChoiceButton({
     required this.text,
     required this.transitionId,
   });
 }
 
-class PlayerImageInfo {
-  final String? path;
+class PlayerBackgroundImage {
+  final Uint8List? imageBytes;
+  final String? imageHash;
   final int red;
   final int green;
   final int blue;
@@ -37,15 +40,16 @@ class PlayerImageInfo {
   final double scale;
   final int animationDuration;
 
-  PlayerImageInfo({
-    this.path,
+  PlayerBackgroundImage({
+    this.imageBytes,
     this.red = 0,
     this.green = 0,
     this.blue = 0,
     this.shakeIntensity = 0.0,
     this.scale = 1.0,
     this.animationDuration = 0,
-  });
+  })
+  : imageHash = sha256StringOfNullable(imageBytes);
 }
 
 class VariablePreviousCurrentValue {
