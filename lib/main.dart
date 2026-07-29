@@ -39,8 +39,8 @@ void initWindowCloseHandler() {
     try {
       GameState.save();
       saveAppSettings();
-    } catch (e, s) {
-      logger.e('project saving error', error: e, stackTrace: s);
+    } catch (e, st) {
+      logger.e('project saving error', error: e, stackTrace: st);
       return false;
     }
     return true;

@@ -8,9 +8,10 @@ class LLMGateway {
       .openai()
       .baseUrl('http://127.0.0.1:8080/v1')
       .apiKey('sk-no-key-required')
-      .temperature(0.3)
-      .topP(0.9)
-      .topK(50)
+      .temperature(0.5) //TODO: need benchmark
+      .topP(0.95) //TODO: need benchmark
+      .topK(5) //TODO: need benchmark
+      .timeout(Duration(minutes: 10))
       .build();
 
   static final ollama = ai()
@@ -23,7 +24,14 @@ class LLMGateway {
   static Future<String?> request(String prompt) async {
     final ai = await llamaCpp;
     final messages = [ChatMessage.user(prompt)];
-    final response = await ai.chat(messages);
+    ChatResponse response;
+    try {
+      response = await ai.chat(messages);
+    } catch (e, st) {
+      logger.d("AI request\n$prompt");
+      logger.e("AI chat error", error: e, stackTrace: st);
+      rethrow;
+    }
     final responseText = response.text;
     final responseThinking = response.thinking;
     logger.d("AI request\n$prompt");

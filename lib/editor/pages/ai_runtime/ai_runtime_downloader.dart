@@ -94,25 +94,25 @@ class AiRuntimeDownloader {
 
   static List<AiRuntimeItem> _initItems() => [
         AiRuntimeItem(
-          name: 'VAE',
+          name: ZImageTurboConstants.vaeFileName,
           description: 'VAE for Z-Image-Turbo',
           filePath: '${AppConstants.aiRuntimeDir}/models/${ZImageTurboConstants.vaeFileName}',
           action: (item) => _downloadModel(item, ZImageTurboConstants.vaeUrl, ZImageTurboConstants.vaeFileName, ZImageTurboConstants.vaeSha256),
         ),
         AiRuntimeItem(
-          name: 'Qwen3.5 4B',
+          name: AppConstants.llmMainFile,
           description: 'Языковая модель для генерации текста',
           filePath: '${AppConstants.aiRuntimeDir}/models/${AppConstants.llmMainFile}',
           action: (item) => _downloadModel(item, AppConstants.llmMainUrl, AppConstants.llmMainFile, AppConstants.llmMainSha256),
         ),
         AiRuntimeItem(
-          name: 'Qwen3 4B',
+          name: ZImageTurboConstants.llmFileName,
           description: 'Языковая модель для генерации изображений',
           filePath: '${AppConstants.aiRuntimeDir}/models/${ZImageTurboConstants.llmFileName}',
           action: (item) => _downloadModel(item, ZImageTurboConstants.llmUrl, ZImageTurboConstants.llmFileName, ZImageTurboConstants.llmSha256),
         ),
         AiRuntimeItem(
-          name: 'Z-Image-Turbo',
+          name: ZImageTurboConstants.zImageTurboFileName,
           description: 'Модель генерации изображений',
           filePath: '${AppConstants.aiRuntimeDir}/models/${ZImageTurboConstants.zImageTurboFileName}',
           action: (item) => _downloadModel(item, ZImageTurboConstants.zImageTurboUrl, ZImageTurboConstants.zImageTurboFileName, ZImageTurboConstants.zImageTurboSha256),

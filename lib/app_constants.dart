@@ -4,10 +4,21 @@ class AppConstants {
   static final aiRuntimeDir = 'airuntime';
 
 
+  static final llmParallelInference = 4;
 
-  static final llmMainUrl = 'https://huggingface.co/unsloth/Qwen3.5-4B-GGUF/resolve/main/Qwen3.5-4B-Q8_0.gguf';
-  static final llmMainFile = 'Qwen3.5-4B.Q8_0.gguf';
-  static final llmMainSha256 = '10cc391b403021dd11c614679d2fd92f611c3681d29e29651b717316965d61e1';
+  //Qwen3.5 too much thinking :( maybe it can be fixed by prompting. will try...
+
+  // static final llmMainUrl = 'https://huggingface.co/unsloth/Qwen3.5-4B-GGUF/resolve/main/Qwen3.5-4B-Q8_0.gguf';
+  // static final llmMainFile = 'Qwen3.5-4B.Q8_0.gguf';
+  // static final llmMainSha256 = '10cc391b403021dd11c614679d2fd92f611c3681d29e29651b717316965d61e1';
+
+  // static final llmMainUrl = 'https://huggingface.co/unsloth/Qwen3.5-9B-GGUF/resolve/main/Qwen3.5-9B-UD-Q5_K_XL.gguf';
+  // static final llmMainFile = 'Qwen3.5-9B-UD-Q5_K_XL.gguf';
+  // static final llmMainSha256 = '96cf42ddb97f9572410a72b9ed6f2299b1e887ee08da4c2a6c01e897cfa9f673';
+
+  static final llmMainUrl = 'https://huggingface.co/unsloth/Ornith-1.0-9B-GGUF/resolve/main/Ornith-1.0-9B-UD-Q4_K_XL.gguf';
+  static final llmMainFile = 'Ornith-1.0-9B-UD-Q4_K_XL.gguf';
+  static final llmMainSha256 = '3e865c778cf254af1b5d0fd3e9d4876718279df543c3ef801039c4ff7010edb0';
 
   static final llamaZipUrl = 'https://github.com/ggml-org/llama.cpp/releases/download/b10107/llama-b10107-bin-win-vulkan-x64.zip';
   static final llamaZipSha256 = 'c5b3a5ee8319b1eccbb748a54390aa806bbf7d1aceeea452e4c57921d113e53e';

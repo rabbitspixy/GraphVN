@@ -42,8 +42,8 @@ class Player {
         useTransition: useTransition,
         goToNode: goToNode,
       );
-    } catch (e) {
-      logger.e("Progress state error", error: e);
+    } catch (e, st) {
+      logger.e("Progress state error", error: e, stackTrace: st);
       //TODO: GameState.rollbackTo(checkpoint);
     }
   }

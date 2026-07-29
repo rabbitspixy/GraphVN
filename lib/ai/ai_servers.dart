@@ -23,7 +23,25 @@ class AiServers {
 
     _llamaProcess = await Process.start(
       '${AppConstants.aiRuntimeDir}/${AppConstants.llamaDirName}/llama-server.exe',
-      ['-m', '${AppConstants.aiRuntimeDir}/models/${AppConstants.llmMainFile}', '-ngl', '99', '-c', '16384'],
+      [
+        //TODO: need review. a lot of unnecessary things
+        '-m',
+        '${AppConstants.aiRuntimeDir}/models/${AppConstants.llmMainFile}',
+        '-ngl', '99',
+        '-lv', '4',
+        '--no-mmap',
+        '--split-mode', 'none',
+        '--ctx-size', '65536',
+        '--parallel', AppConstants.llmParallelInference.toString(),
+        '--batch-size', '1024',
+        '-ctk', 'q8_0',
+        '-ctv', 'q8_0',
+        '--no-mmproj',
+        '-fa', 'on',
+      ],
+      environment: {
+        'GGML_VK_FORCE_MAX_ALLOCATION_SIZE': '2147483648',
+      }
     );
 
     _llamaRunning = true;

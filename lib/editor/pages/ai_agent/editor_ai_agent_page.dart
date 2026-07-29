@@ -26,6 +26,8 @@ class EditorAiAgentPage extends StatefulWidget {
 class _EditorAiAgentPageState extends State<EditorAiAgentPage> {
   final TextEditingController _styleController = TextEditingController();
   StreamSubscription<String>? _subscription;
+  bool _generateCode = true;
+  bool _generateImages = true;
 
   @override
   void initState() {
@@ -49,7 +51,10 @@ class _EditorAiAgentPageState extends State<EditorAiAgentPage> {
     final totalTasks = await showDialog<int>(
       context: context,
       barrierDismissible: false,
-      builder: (dialogContext) => const _AiAgentProgressDialog(),
+      builder: (dialogContext) => _AiAgentProgressDialog(
+        generateCode: _generateCode,
+        generateImages: _generateImages,
+      ),
     );
 
     if (totalTasks != null && totalTasks > 0 && mounted) {
@@ -106,7 +111,7 @@ class _EditorAiAgentPageState extends State<EditorAiAgentPage> {
                 child: TextField(
                   controller: _styleController,
                   decoration: const InputDecoration(
-                    labelText: 'AI Image Style',
+                    labelText: 'Images style guide',
                     hintText: 'e.g. anime, realistic, pixel art, ...',
                     border: OutlineInputBorder(),
                   ),
@@ -117,6 +122,23 @@ class _EditorAiAgentPageState extends State<EditorAiAgentPage> {
                 ),
               ),
               const SizedBox(height: 24),
+              CheckboxListTile(
+                value: _generateCode,
+                onChanged: (v) => setState(() => _generateCode = v ?? true),
+                title: const Text('Генерировать код'),
+                controlAffinity: ListTileControlAffinity.leading,
+                dense: true,
+                contentPadding: EdgeInsets.zero,
+              ),
+              CheckboxListTile(
+                value: _generateImages,
+                onChanged: (v) => setState(() => _generateImages = v ?? true),
+                title: const Text('Генерировать изображения'),
+                controlAffinity: ListTileControlAffinity.leading,
+                dense: true,
+                contentPadding: EdgeInsets.zero,
+              ),
+              const SizedBox(height: 8),
               ElevatedButton(
                 onPressed: _runAiAgent,
                 style: ElevatedButton.styleFrom(
@@ -176,7 +198,13 @@ class _EditorAiAgentPageState extends State<EditorAiAgentPage> {
 }
 
 class _AiAgentProgressDialog extends StatefulWidget {
-  const _AiAgentProgressDialog();
+  final bool generateCode;
+  final bool generateImages;
+
+  const _AiAgentProgressDialog({
+    required this.generateCode,
+    required this.generateImages,
+  });
 
   @override
   State<_AiAgentProgressDialog> createState() => _AiAgentProgressDialogState();
@@ -210,8 +238,8 @@ class _AiAgentProgressDialogState extends State<_AiAgentProgressDialog> {
       if (mounted) {
         Navigator.pop(context, _totalTasks);
       }
-    } catch (e) {
-      logger.e("AI agent request error", error: e);
+    } catch (e, st) {
+      logger.e("AI agent request error", error: e, stackTrace: st);
       if (mounted) {
         Navigator.pop(context, _totalTasks);
       }
@@ -221,28 +249,37 @@ class _AiAgentProgressDialogState extends State<_AiAgentProgressDialog> {
   Future<void> _processAllTasks() async {
     final textGenerationTasks = <Future<void> Function()>[];
     final imageGenerationTasks = <Future<void> Function()>[];
-    
-    for (final node in GameState.nodes.values) {
-      textGenerationTasks.addAll(_createNodeActionTasks(node));
-      textGenerationTasks.addAll(_createNodeTriggerTasks(node));
-      textGenerationTasks.addAll(_createNodeReplaceableTasks(node));
-      textGenerationTasks.addAll(_createNodeImagePromptTasks(node));
+
+    if (widget.generateCode) {
+      for (final node in GameState.nodes.values) {
+        textGenerationTasks.addAll(_createNodeActionTasks(node));
+        textGenerationTasks.addAll(_createNodeTriggerTasks(node));
+        textGenerationTasks.addAll(_createNodeReplaceableTasks(node));
+      }
+
+      for (final transition in GameState.transitions) {
+        textGenerationTasks.addAll(_createTransitionConditionTasks(transition));
+        textGenerationTasks.addAll(_createTransitionActionTasks(transition));
+      }
     }
 
-    for (final transition in GameState.transitions) {
-      textGenerationTasks.addAll(_createTransitionConditionTasks(transition));
-      textGenerationTasks.addAll(_createTransitionActionTasks(transition));
+    if (widget.generateImages) {
+      for (final node in GameState.nodes.values) {
+        textGenerationTasks.addAll(_createNodeImagePromptTasks(node));
+      }
     }
 
     setState(() => _totalTasks = textGenerationTasks.length);
-    
+
     if (textGenerationTasks.isNotEmpty) {
       await AiServers.ensureLlamaCppIsRunning();
-      await runInParallel(_wrapWithProgress(textGenerationTasks), 4);
+      await runInParallel(_wrapWithProgress(textGenerationTasks), AppConstants.llmParallelInference);
     }
 
-    for (final node in GameState.nodes.values) {
-      imageGenerationTasks.addAll(_createNodeImageGenerationTasks(node));
+    if (widget.generateImages) {
+      for (final node in GameState.nodes.values) {
+        imageGenerationTasks.addAll(_createNodeImageGenerationTasks(node));
+      }
     }
 
     setState(() => _totalTasks = textGenerationTasks.length + imageGenerationTasks.length);
@@ -302,6 +339,9 @@ class _AiAgentProgressDialogState extends State<_AiAgentProgressDialog> {
       final cleanReplaceable = replaceable.replaceAll("{{", "").replaceAll("}}", "");
       
       tasks.add(() async {
+        if (GameState.codeRepository.replaceables.containsKey(replaceable)) {
+          return;
+        }
         final code = await JsCodeGenerator.writeReplaceable(cleanReplaceable);
         if (code != null) {
           GameState.codeRepository.replaceables[replaceable] = code;

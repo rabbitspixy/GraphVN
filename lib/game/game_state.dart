@@ -76,8 +76,8 @@ class GameState {
 
     try {
       await _load(projectDir);
-    } catch (e) {
-      logger.e("Error loading project $projectDir", error: e);
+    } catch (e, st) {
+      logger.e("Error loading project $projectDir", error: e, stackTrace: st);
       closeProject();
       appSettings = appSettings.copyWith(lastOpenedProjectDir: null);
     }
@@ -89,7 +89,10 @@ class GameState {
 
     final mainBin = files.readFile("main.bin");
     if (mainBin == null) {
-      throw Exception("main.bin not found");
+      GameState.projectDir = dir;
+      GameState.projectFiles = files;
+      _stateUpdatedEventsController.add('');
+      return;
     }
     ProjectProto proto = ProjectProto.fromBuffer(mainBin);
     ProjectData projectData = ProjectData.fromProto(proto);
