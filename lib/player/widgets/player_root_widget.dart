@@ -71,6 +71,7 @@ class _PlayerRootWidgetState extends State<PlayerRootWidget> {
   }
 
   void _onEnter() {
+    if (Player.onScreenClick()) return;
     if (!_showButtons) return;
     final buttons = Player.buttons.value;
     if (_selectedIndex >= 0 && _selectedIndex < buttons.length) {
@@ -96,29 +97,30 @@ class _PlayerRootWidgetState extends State<PlayerRootWidget> {
     final stack = Stack(
       children: [
         const BackgroundImageWidget(),
-        Positioned(
-          top: 16,
-          left: 16,
-          child: ValueListenableBuilder<VariablesDiffDebug>(
-            valueListenable: Player.variablesDiffDebug,
-            builder: (context, diffDebug, child) {
-              final textSpan = diffDebug.getChangedVariablesTableText();
+        if (GameState.isEditorEnabled())
+          Positioned(
+            top: 16,
+            left: 16,
+            child: ValueListenableBuilder<VariablesDiffDebug>(
+              valueListenable: Player.variablesDiffDebug,
+              builder: (context, diffDebug, child) {
+                final textSpan = diffDebug.getChangedVariablesTableText();
 
-              return Container(
-                padding: const EdgeInsets.all(8.0),
-                decoration: BoxDecoration(
-                  color: const Color.fromARGB(120, 0, 0, 0),
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                child: RichText(
-                  text: textSpan,
-                  textAlign: TextAlign.left,
-                  softWrap: true,
-                ),
-              );
-            },
+                return Container(
+                  padding: const EdgeInsets.all(8.0),
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(120, 0, 0, 0),
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: RichText(
+                    text: textSpan,
+                    textAlign: TextAlign.left,
+                    softWrap: true,
+                  ),
+                );
+              },
+            ),
           ),
-        ),
         Positioned(
           bottom: 0,
           left: 0,

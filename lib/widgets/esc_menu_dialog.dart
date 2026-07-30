@@ -1,10 +1,11 @@
 import 'dart:ui' show ImageFilter;
 
 import 'package:flutter/material.dart';
+import 'package:graph_vn/game/game_state.dart';
 
 enum EscMenuAction { toggleEditor, restart, exit }
 
-Future<EscMenuAction?> showEscMenuDialog(BuildContext context, bool isEditorOn) {
+Future<EscMenuAction?> showEscMenuDialog(BuildContext context) {
   return showGeneralDialog<EscMenuAction>(
     context: context,
     barrierDismissible: true,
@@ -12,15 +13,13 @@ Future<EscMenuAction?> showEscMenuDialog(BuildContext context, bool isEditorOn) 
     barrierColor: Colors.transparent,
     transitionDuration: const Duration(milliseconds: 200),
     pageBuilder: (context, animation, secondaryAnimation) {
-      return _EscMenuOverlay(isEditorOn: isEditorOn);
+      return const _EscMenuOverlay();
     },
   );
 }
 
 class _EscMenuOverlay extends StatelessWidget {
-  final bool isEditorOn;
-
-  const _EscMenuOverlay({required this.isEditorOn});
+  const _EscMenuOverlay();
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +38,7 @@ class _EscMenuOverlay extends StatelessWidget {
         ),
         Center(
           child: SingleChildScrollView(
-            child: _MenuCard(isEditorOn: isEditorOn),
+            child: const _MenuCard(),
           ),
         ),
       ],
@@ -48,9 +47,7 @@ class _EscMenuOverlay extends StatelessWidget {
 }
 
 class _MenuCard extends StatelessWidget {
-  final bool isEditorOn;
-
-  const _MenuCard({required this.isEditorOn});
+  const _MenuCard();
 
   @override
   Widget build(BuildContext context) {
@@ -83,19 +80,19 @@ class _MenuCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 28),
-          if (!isEditorOn)
+          if (!GameState.showEditor.value && GameState.isEditorEnabled())
             _MenuButton(
               label: 'Редактор',
               hotkey: 'F1',
               onTap: () => Navigator.pop(context, EscMenuAction.toggleEditor),
             ),
-          if (isEditorOn)
+          if (GameState.showEditor.value)
             _MenuButton(
               label: 'Играть',
               hotkey: 'F1',
               onTap: () => Navigator.pop(context, EscMenuAction.toggleEditor),
             ),
-          if (!isEditorOn)
+          if (!GameState.showEditor.value)
             _MenuButton(
               label: 'Начать заново',
               hotkey: 'Shift+F5',

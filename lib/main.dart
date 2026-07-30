@@ -19,7 +19,6 @@ void main() async {
   await windowManager.ensureInitialized();
   jsTest();
   GameState.loadLastSavedProject();
-  Player.progressState();
   initWindowCloseHandler();
 
   WindowOptions windowOptions = WindowOptions(
@@ -57,20 +56,13 @@ class RootWidget extends StatefulWidget {
 
 class _RootWidgetState extends State<RootWidget> {
   final _rootFocusScope = FocusScopeNode(debugLabel: "My Custom Root Focus Node");
-  bool _showEditor = true;
   bool _isEscMenuOpen = false;
   BuildContext? _navigatorContext;
 
   void _toggleEditor() {
-    if (_showEditor) {
+    GameState.toggleEditorMode();
+    if (!GameState.showEditor.value) {
       Player.progressState();
-      setState(() {
-        _showEditor = false;
-      });
-    } else {
-      setState(() {
-        _showEditor = true;
-      });
     }
   }
 
@@ -92,12 +84,17 @@ class _RootWidgetState extends State<RootWidget> {
   }
 
   Widget _project() {
-    return IndexedStack(
-      index: _showEditor ? 0 : 1,
-      children: [
-        const EditorRootWidget(),
-        const PlayerRootWidget(),
-      ],
+    return ValueListenableBuilder<bool>(
+      valueListenable: GameState.showEditor,
+      builder: (context, showEditor, _) {
+        return IndexedStack(
+          index: showEditor && GameState.isEditorEnabled() ? 0 : 1,
+          children: [
+            const EditorRootWidget(),
+            const PlayerRootWidget(),
+          ],
+        );
+      },
     );
   }
 
@@ -121,7 +118,7 @@ class _RootWidgetState extends State<RootWidget> {
               const SingleActivator(LogicalKeyboardKey.escape): () async {
                 if (_isEscMenuOpen) return;
                 _isEscMenuOpen = true;
-                final action = await showEscMenuDialog(_navigatorContext!, _showEditor);
+                final action = await showEscMenuDialog(_navigatorContext!);
                 _isEscMenuOpen = false;
                 if (action == null) return;
                 switch (action) {

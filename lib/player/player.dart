@@ -18,19 +18,30 @@ class Player {
   static final ValueNotifier<VariablesDiffDebug> variablesDiffDebug = ValueNotifier(VariablesDiffDebug(previous: {}, current: {}));
   static final ValueNotifier<int> narrativeVersion = ValueNotifier<int>(0);
 
-  static void onScreenClick() {
-    useRandomTransitionIfAllowed();
+  static bool animationInProgress = false;
+
+  static bool onScreenClick() {
+    if (animationInProgress) {
+      animationInProgress = false;
+      return true;
+    } else {
+      final randomTransitionUsed = useRandomTransitionIfAllowed();
+      return randomTransitionUsed;
+    }
   }
 
-  static void useRandomTransitionIfAllowed() {
+  static bool useRandomTransitionIfAllowed() {
     final allowedTransitions = allowedTransitionsForCurrentState();
     if (allowedTransitions.any((x) => x.isButton)) {
-      return;
+      return false;
     }
     final allowedEmptyTransitions = allowedTransitions.where((x) => !x.isButton).toList();
     final randomTransition = selectRandomTransition(allowedEmptyTransitions);
     if (randomTransition != null) {
       progressState(useTransition: randomTransition.id);
+      return true;
+    } else {
+      return false;
     }
   }
 

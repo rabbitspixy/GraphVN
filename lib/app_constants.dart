@@ -1,6 +1,7 @@
 class AppConstants {
   static final transitionDeviationMagnitude = 30.0;
   static final projectsDir = 'projects';
+  static final gamesDir = 'games';
   static final aiRuntimeDir = 'airuntime';
 
 

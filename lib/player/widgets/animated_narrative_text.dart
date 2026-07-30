@@ -26,8 +26,18 @@ class _AnimatedNarrativeTextState extends State<AnimatedNarrativeText> {
     _timer?.cancel();
     _displayedText = '';
     _currentIndex = 0;
+    Player.animationInProgress = true;
     _timer = Timer.periodic(const Duration(milliseconds: 20), (timer) {
       final fullText = Player.narrativeText.value;
+      if (!Player.animationInProgress) {
+        timer.cancel();
+        setState(() {
+          _displayedText = fullText;
+          _currentIndex = fullText.length;
+        });
+        widget.onTextFinished?.call();
+        return;
+      }
       if (_currentIndex < fullText.length) {
         setState(() {
           _displayedText += fullText[_currentIndex];
@@ -35,6 +45,7 @@ class _AnimatedNarrativeTextState extends State<AnimatedNarrativeText> {
         });
       } else {
         timer.cancel();
+        Player.animationInProgress = false;
         widget.onTextFinished?.call();
       }
     });

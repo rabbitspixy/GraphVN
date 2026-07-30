@@ -8,6 +8,7 @@ import 'package:graph_vn/game/named_value_type_repository.dart';
 import 'package:graph_vn/game/project_files.dart';
 import 'package:graph_vn/game/struct.dart';
 import 'package:graph_vn/game/transition_position.dart';
+import 'package:graph_vn/player/player.dart';
 import 'package:graph_vn/settings/app_settings.dart';
 import 'package:graph_vn/app_constants.dart';
 import 'package:graph_vn/app_version.dart';
@@ -18,10 +19,12 @@ import 'package:graph_vn/game/variables.dart';
 import 'package:graph_vn/generated-proto/data.pb.dart';
 import 'dart:ui';
 
+import 'package:flutter/foundation.dart';
 import 'package:graph_vn/main.dart';
 
 class GameState {
-  static String projectDir = "";
+  static ValueNotifier<bool> showEditor = ValueNotifier<bool>(true);
+  static String? projectDir;
   static ProjectFiles? projectFiles;
 
   static final Map<String, GameNode> nodes = <String, GameNode>{};
@@ -47,11 +50,30 @@ class GameState {
         .map((d) => d.path.split(Platform.pathSeparator).last)
         .toList();
   }
+
+  static List<String> getGameFiles() {
+    final dir = Directory("./${AppConstants.gamesDir}");
+    if (!dir.existsSync()) {
+      return [];
+    }
+    return dir
+        .listSync()
+        .whereType<File>()
+        .where((f) => f.path.endsWith('.zip'))
+        .map((f) => f.path)
+        .toList();
+  }
+
+  static void loadGameForPlaying(String zipPath) {
+    logger.i('load game from zip: $zipPath');
+    _loadGameForPlaying(zipPath);
+  }
   
   static final _stateUpdatedEventsController = StreamController<String>.broadcast();
   static final stateUpdatedEvents = _stateUpdatedEventsController.stream;
 
   static void closeProject() {
+    showEditor.value = false;
     GameState.projectDir = "";
     projectFiles = null;
     nodes.clear();
@@ -63,7 +85,7 @@ class GameState {
     aiImageStyle = '';
     gameDescriptionForAI = '';
     namedValueTypes = NamedValueTypeRepository();
-    currentNode = "";
+    restart();
 
     if (appSettings.lastOpenedProjectDir != GameState.projectDir) {
       appSettings = appSettings.copyWith(lastOpenedProjectDir: GameState.projectDir);
@@ -72,12 +94,12 @@ class GameState {
     _stateUpdatedEventsController.add('');
   }
 
-  static void load(String projectDir) async {
+  static void loadProjectForEditing(String projectDir) async {
     logger.i("loading project $projectDir");
     closeProject();
 
     try {
-      await _load(projectDir);
+      await _loadProjectForEditing(projectDir);
     } catch (e, st) {
       logger.e("Error loading project $projectDir", error: e, stackTrace: st);
       closeProject();
@@ -86,14 +108,34 @@ class GameState {
     logger.i("project $projectDir loaded");
   }
 
-  static Future<void> _load(String dir) async {
+  static Future<void> _loadProjectForEditing(String dir) async {
     final files = await ProjectFiles.create("${AppConstants.projectsDir}/$dir");
+    _loadGameState(files);
 
+    GameState.projectDir = dir;
+    GameState.projectFiles = files;
+    showEditor.value = true;
+    _stateUpdatedEventsController.add('');
+    if (appSettings.lastOpenedProjectDir != GameState.projectDir) {
+      appSettings = appSettings.copyWith(lastOpenedProjectDir: GameState.projectDir);
+    }
+  }
+
+  static Future<void> _loadGameForPlaying(String zipPath) async {
+    final files = await ProjectFiles.create(zipPath);
+    _loadGameState(files);
+
+    GameState.projectDir = null;
+    GameState.projectFiles = files;
+    showEditor.value = false;
+    _stateUpdatedEventsController.add('');
+    appSettings = appSettings.copyWith(lastOpenedProjectDir: null);
+    Player.progressState();
+  }
+
+  static void _loadGameState(ProjectFiles files) {
     final mainBin = files.readFile("main.bin");
     if (mainBin == null) {
-      GameState.projectDir = dir;
-      GameState.projectFiles = files;
-      _stateUpdatedEventsController.add('');
       return;
     }
     ProjectProto proto = ProjectProto.fromBuffer(mainBin);
@@ -109,21 +151,14 @@ class GameState {
     namedValueTypes = NamedValueTypeRepository();
     namedValueTypes.addAll(projectData.namedValueTypes);
     updateAllTransitionPositions();
-
-    GameState.projectDir = dir;
-    GameState.projectFiles = files;
-    _stateUpdatedEventsController.add('');
-    if (appSettings.lastOpenedProjectDir != GameState.projectDir) {
-      appSettings = appSettings.copyWith(lastOpenedProjectDir: GameState.projectDir);
-    }
   }
 
   static void loadLastSavedProject() {
     final proj = appSettings.lastOpenedProjectDir;
-    if (proj == null) {
+    if (proj == null || proj.isEmpty) {
       return;
     }
-    load(proj);
+    loadProjectForEditing(proj);
   }
 
   static void createAndLoadNewProject(String projectDir) {
@@ -132,7 +167,7 @@ class GameState {
       throw Exception('Project directory already exists: $projectDir');
     }
     dir.createSync(recursive: true);
-    load(projectDir);
+    loadProjectForEditing(projectDir);
   }
 
   static void save() {
@@ -190,7 +225,11 @@ class GameState {
   }
 
   static bool isProjectLoaded() {
-    return projectDir.isNotEmpty;
+    return projectFiles != null;
+  }
+
+  static bool isEditorEnabled() {
+    return projectFiles?.isReadOnly() != true;
   }
 
   static void addTransition(GameTransition transition) {
@@ -321,6 +360,13 @@ class GameState {
       codeRepository.replaceInCode(oldJsName, newJsName);
       jsRuntime.evaluate("variables[$newJsName] = variables[$oldJsName]; delete variables[$oldJsName];");
     }
+  }
+
+  static void toggleEditorMode() {
+    if (!isEditorEnabled()) {
+      showEditor.value = false;
+    }
+    GameState.showEditor.value = !GameState.showEditor.value;
   }
 
   static void updateAllTransitionPositions() {
