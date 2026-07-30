@@ -170,6 +170,9 @@ class Player {
     if (result.rawResult.runtimeType == String) {
       return result.rawResult;
     }
+    if (result.rawResult.runtimeType == int) {
+      return result.rawResult.toString();
+    }
     throw Exception("JS getText() invalid:\n$js\n\nrawResult=(${result.rawResult.runtimeType})${result.rawResult}");
   }
 

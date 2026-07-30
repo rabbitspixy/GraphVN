@@ -33,6 +33,7 @@ class GameState {
   static String currentNode = "";
   static CodeRepository codeRepository = CodeRepository();
   static String aiImageStyle = '';
+  static String gameDescriptionForAI = '';
   static JavascriptRuntime jsRuntime = getJavascriptRuntime();
 
   static List<String> getProjectFolders() {
@@ -60,6 +61,7 @@ class GameState {
     structs.clear();
     codeRepository = CodeRepository();
     aiImageStyle = '';
+    gameDescriptionForAI = '';
     namedValueTypes = NamedValueTypeRepository();
     currentNode = "";
 
@@ -103,6 +105,7 @@ class GameState {
     structs.addAll(projectData.structs);
     codeRepository = projectData.codeRepository;
     aiImageStyle = projectData.aiImageStyle;
+    gameDescriptionForAI = projectData.gameDescriptionForAI;
     namedValueTypes = NamedValueTypeRepository();
     namedValueTypes.addAll(projectData.namedValueTypes);
     updateAllTransitionPositions();
@@ -148,6 +151,7 @@ class GameState {
       codeRepository: codeRepository,
       namedValueTypes: namedValueTypes.all(),
       aiImageStyle: aiImageStyle,
+      gameDescriptionForAI: gameDescriptionForAI,
       appVersion: AppVersion.current.toString(),
     );
     final file = File("./${AppConstants.projectsDir}/$projectDir/main.bin");
@@ -278,6 +282,10 @@ class GameState {
       return "variable";
     }
     return "${struct.name} - ${variable.name}";
+  }
+
+  static GameNode? findNodeById(String id) {
+    return nodes.values.where((x) => x.id == id).firstOrNull;
   }
 
   static GameNode? findNodeByLabel(String label) {

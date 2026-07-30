@@ -25,6 +25,7 @@ class EditorAiAgentPage extends StatefulWidget {
 
 class _EditorAiAgentPageState extends State<EditorAiAgentPage> {
   final TextEditingController _styleController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
   StreamSubscription<String>? _subscription;
   bool _generateCode = true;
   bool _generateImages = true;
@@ -33,9 +34,13 @@ class _EditorAiAgentPageState extends State<EditorAiAgentPage> {
   void initState() {
     super.initState();
     _styleController.text = GameState.aiImageStyle;
+    _descriptionController.text = GameState.gameDescriptionForAI;
     _subscription = GameState.stateUpdatedEvents.listen((_) {
       if (_styleController.text != GameState.aiImageStyle) {
         _styleController.text = GameState.aiImageStyle;
+      }
+      if (_descriptionController.text != GameState.gameDescriptionForAI) {
+        _descriptionController.text = GameState.gameDescriptionForAI;
       }
     });
   }
@@ -44,6 +49,7 @@ class _EditorAiAgentPageState extends State<EditorAiAgentPage> {
   void dispose() {
     _subscription?.cancel();
     _styleController.dispose();
+    _descriptionController.dispose();
     super.dispose();
   }
 
@@ -118,6 +124,22 @@ class _EditorAiAgentPageState extends State<EditorAiAgentPage> {
                   maxLines: 3,
                   onChanged: (value) {
                     GameState.aiImageStyle = value;
+                  },
+                ),
+              ),
+              const SizedBox(height: 24),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: TextField(
+                  controller: _descriptionController,
+                  decoration: const InputDecoration(
+                    labelText: 'Game description for AI',
+                    hintText: 'Describe your game world, genre, tone, etc.',
+                    border: OutlineInputBorder(),
+                  ),
+                  maxLines: 5,
+                  onChanged: (value) {
+                    GameState.gameDescriptionForAI = value;
                   },
                 ),
               ),
@@ -361,10 +383,22 @@ class _AiAgentProgressDialogState extends State<_AiAgentProgressDialog> {
       if (node.generateImageMetadata.every((m) => File("./${AppConstants.projectsDir}/${GameState.projectDir}/images/ai/${m.id}.jpg").existsSync())) {
         tasks.add(() async {
           final imagePrompt = await ImagePromptGenerator.writePrompt(
+              GameState.gameDescriptionForAI,
               GameState.aiImageStyle,
               node.text,
-              GameState.findTransitions(to: node.id).where((t) => t.isButton).map((t) => t.text).toList(),
-              GameState.findTransitions(from: node.id).where((t) => t.isButton).map((t) => t.text).toList()
+              GameState.findTransitions(to: node.id)
+                  .where((t) => t.isButton)
+                  .map((t) => t.text)
+                  .toList(),
+              GameState.findTransitions(from: node.id)
+                  .where((t) => t.isButton)
+                  .map((t) => t.text)
+                  .toList(),
+              GameState.findTransitions(to: node.id)
+                  .map((t) => GameState.findNodeById(t.from)).nonNulls
+                  .where((n) => !n.isEmptyNode)
+                  .map((n) => n.text)
+                  .toList()
           );
           if (imagePrompt != null) {
             node.generateImageMetadata.add(

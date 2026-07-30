@@ -8,6 +8,7 @@ message ProjectProto {
   repeated NamedValueTypeProto namedValueTypes = 5;
   string aiImageStyle = 6;
   string appVersion = 7;
+  string gameDescriptionForAI = 8;
 }
 
 message GameTransitionProto {

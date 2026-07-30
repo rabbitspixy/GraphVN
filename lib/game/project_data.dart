@@ -13,6 +13,7 @@ class ProjectData {
   final List<NamedValuesType> namedValueTypes;
   final String aiImageStyle;
   final String appVersion;
+  final String gameDescriptionForAI;
 
   ProjectData({
     required this.nodes,
@@ -22,6 +23,7 @@ class ProjectData {
     required this.namedValueTypes,
     this.aiImageStyle = '',
     required this.appVersion,
+    this.gameDescriptionForAI = '',
   });
 
   ProjectProto toProto() {
@@ -33,6 +35,7 @@ class ProjectData {
     result.namedValueTypes.addAll(namedValueTypes.map((x) => x.toProto()));
     result.aiImageStyle = aiImageStyle;
     result.appVersion = appVersion;
+    result.gameDescriptionForAI = gameDescriptionForAI;
     return result;
   }
 
@@ -45,6 +48,7 @@ class ProjectData {
         namedValueTypes: [ for (var t in proto.namedValueTypes) NamedValuesType.fromProto(t) ],
         aiImageStyle: proto.aiImageStyle,
         appVersion: proto.appVersion,
+        gameDescriptionForAI: proto.gameDescriptionForAI,
     );
   }
 }
