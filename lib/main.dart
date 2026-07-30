@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_window_close/flutter_window_close.dart';
 import 'package:graph_vn/editor/widgets/project_selector.dart';
+import 'package:graph_vn/game/game_state.dart';
 import 'package:graph_vn/js_test.dart';
 import 'package:graph_vn/settings/app_settings.dart';
-import 'package:graph_vn/game/game_state.dart';
+import 'package:graph_vn/widgets/esc_menu_dialog.dart';
 import 'package:logger/logger.dart';
 import 'package:window_manager/window_manager.dart';
 import 'player/player.dart';
@@ -57,6 +58,8 @@ class RootWidget extends StatefulWidget {
 class _RootWidgetState extends State<RootWidget> {
   final _rootFocusScope = FocusScopeNode(debugLabel: "My Custom Root Focus Node");
   bool _showEditor = true;
+  bool _isEscMenuOpen = false;
+  BuildContext? _navigatorContext;
 
   void _toggleEditor() {
     if (_showEditor) {
@@ -115,6 +118,22 @@ class _RootWidgetState extends State<RootWidget> {
           },
           child: CallbackShortcuts(
             bindings: <ShortcutActivator, VoidCallback>{
+              const SingleActivator(LogicalKeyboardKey.escape): () async {
+                if (_isEscMenuOpen) return;
+                _isEscMenuOpen = true;
+                final action = await showEscMenuDialog(_navigatorContext!, _showEditor);
+                _isEscMenuOpen = false;
+                if (action == null) return;
+                switch (action) {
+                  case EscMenuAction.toggleEditor:
+                    _toggleEditor();
+                  case EscMenuAction.restart:
+                    GameState.restart();
+                    Player.progressState();
+                  case EscMenuAction.exit:
+                    windowManager.close();
+                }
+              },
               const SingleActivator(LogicalKeyboardKey.f1): () async {
                 _toggleEditor();
               },
@@ -128,9 +147,14 @@ class _RootWidgetState extends State<RootWidget> {
                 _toggleFullscreen();
               },
             },
-            child: GameState.isProjectLoaded()
-                ? _project()
-                : const ProjectSelector(),
+            child: Builder(
+              builder: (innerContext) {
+                _navigatorContext = innerContext;
+                return GameState.isProjectLoaded()
+                    ? _project()
+                    : const ProjectSelector();
+              },
+            ),
           ),
         ),
       ),
