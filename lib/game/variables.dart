@@ -71,7 +71,7 @@ abstract class Variable {
   Variable();
 
   String initialValueAsText();
-  String initialValueAsJsCode(); //TODO: escape js string
+  String initialValueAsJsCode();
   String currentValueAsText();
 
   VariableProto toProto();

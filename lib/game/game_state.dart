@@ -170,12 +170,12 @@ class GameState {
     loadProjectForEditing(projectDir);
   }
 
-  static void save() {
+  static bool save() {
     if (!isProjectLoaded()) {
-      return;
+      return false;
     }
     if (projectFiles?.isReadOnly() == true) {
-      return;
+      return false;
     }
     logger.i('start saving project');
 
@@ -197,6 +197,7 @@ class GameState {
     var projectDataProto = projectData.toProto();
     file.writeAsBytesSync(projectDataProto.writeToBuffer());
     logger.i('saving project done');
+    return true;
   }
 
   static void saveAndCloseProject() {

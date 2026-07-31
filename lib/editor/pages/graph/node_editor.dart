@@ -125,7 +125,7 @@ class _NodeEditorState extends State<NodeEditor> {
         ),
         TextField(
           controller: _nameTextController,
-          maxLines: null,
+          maxLines: 1,
           decoration: const InputDecoration(border: OutlineInputBorder()),
         ),
         const SizedBox(height: 8),
@@ -139,7 +139,7 @@ class _NodeEditorState extends State<NodeEditor> {
         ),
         TextField(
           controller: _labelTextController,
-          maxLines: null,
+          maxLines: 1,
           decoration: const InputDecoration(border: OutlineInputBorder()),
         ),
         const SizedBox(height: 8),
@@ -151,7 +151,8 @@ class _NodeEditorState extends State<NodeEditor> {
         ),
         TextField(
           controller: _speakerTextController,
-          maxLines: null,
+          minLines: 1,
+          maxLines: 2,
           decoration: const InputDecoration(border: OutlineInputBorder()),
         ),
         const SizedBox(height: 8),
@@ -167,7 +168,7 @@ class _NodeEditorState extends State<NodeEditor> {
         ),
         TextField(
           controller: _textTextController,
-          maxLines: null,
+          maxLines: 18,
           decoration: const InputDecoration(border: OutlineInputBorder()),
         ),
         const SizedBox(height: 8),
@@ -179,7 +180,7 @@ class _NodeEditorState extends State<NodeEditor> {
         ),
         TextField(
           controller: _imagePathController,
-          maxLines: null,
+          maxLines: 1,
           decoration: const InputDecoration(border: OutlineInputBorder()),
         ),
         const SizedBox(height: 8),
@@ -196,7 +197,8 @@ class _NodeEditorState extends State<NodeEditor> {
         ),
         TextField(
           controller: _naturalLanguageTriggerController,
-          maxLines: null,
+          minLines: 1,
+          maxLines: 5,
           decoration: const InputDecoration(border: OutlineInputBorder()),
         ),
         const SizedBox(height: 8),
@@ -212,7 +214,8 @@ class _NodeEditorState extends State<NodeEditor> {
         ),
         TextField(
           controller: _naturalLanguageActionController,
-          maxLines: null,
+          minLines: 1,
+          maxLines: 5,
           decoration: const InputDecoration(border: OutlineInputBorder()),
         ),
         const SizedBox(height: 8),
@@ -224,7 +227,7 @@ class _NodeEditorState extends State<NodeEditor> {
         ),
         TextField(
           controller: _gotoLabelTextController,
-          maxLines: null,
+          maxLines: 1,
           decoration: const InputDecoration(border: OutlineInputBorder()),
         ),
         const SizedBox(height: 8),

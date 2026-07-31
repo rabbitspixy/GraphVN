@@ -90,7 +90,8 @@ class _TransitionEditorState extends State<TransitionEditor> {
         ),
         TextField(
           controller: _controller,
-          maxLines: null,
+          minLines: 1,
+          maxLines: 4,
           decoration: const InputDecoration(border: OutlineInputBorder()),
         ),
         const SizedBox(height: 8),
@@ -126,7 +127,8 @@ class _TransitionEditorState extends State<TransitionEditor> {
         ),
         TextField(
           controller: _naturalLanguageConditionController,
-          maxLines: null,
+          minLines: 1,
+          maxLines: 5,
           decoration: const InputDecoration(border: OutlineInputBorder()),
         ),
         const SizedBox(height: 8),
@@ -141,7 +143,8 @@ class _TransitionEditorState extends State<TransitionEditor> {
         ),
         TextField(
           controller: _naturalLanguageActionController,
-          maxLines: null,
+          minLines: 1,
+          maxLines: 5,
           decoration: const InputDecoration(border: OutlineInputBorder()),
         ),
         const SizedBox(height: 8),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_window_close/flutter_window_close.dart';
+import 'package:graph_vn/editor/modals/status_dialog.dart';
 import 'package:graph_vn/editor/widgets/project_selector.dart';
 import 'package:graph_vn/game/game_state.dart';
 import 'package:graph_vn/js_test.dart';
@@ -56,7 +57,6 @@ class RootWidget extends StatefulWidget {
 
 class _RootWidgetState extends State<RootWidget> {
   final _rootFocusScope = FocusScopeNode(debugLabel: "My Custom Root Focus Node");
-  bool _isEscMenuOpen = false;
   BuildContext? _navigatorContext;
 
   void _toggleEditor() {
@@ -116,10 +116,7 @@ class _RootWidgetState extends State<RootWidget> {
           child: CallbackShortcuts(
             bindings: <ShortcutActivator, VoidCallback>{
               const SingleActivator(LogicalKeyboardKey.escape): () async {
-                if (_isEscMenuOpen) return;
-                _isEscMenuOpen = true;
                 final action = await showEscMenuDialog(_navigatorContext!);
-                _isEscMenuOpen = false;
                 if (action == null) return;
                 switch (action) {
                   case EscMenuAction.toggleEditor:
@@ -138,7 +135,10 @@ class _RootWidgetState extends State<RootWidget> {
                 LogicalKeyboardKey.keyS,
                 control: true,
               ): () async {
-                GameState.save();
+                final saved = GameState.save();
+                if (saved) {
+                  showStatusDialog(_navigatorContext!, "Проект сохранен", StatusDialogType.done);
+                }
               },
               const SingleActivator(LogicalKeyboardKey.f11): () async {
                 _toggleFullscreen();

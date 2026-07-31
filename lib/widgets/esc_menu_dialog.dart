@@ -1,6 +1,7 @@
 import 'dart:ui' show ImageFilter;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:graph_vn/game/game_state.dart';
 
 enum EscMenuAction { toggleEditor, restart, exit }
@@ -8,7 +9,7 @@ enum EscMenuAction { toggleEditor, restart, exit }
 Future<EscMenuAction?> showEscMenuDialog(BuildContext context) {
   return showGeneralDialog<EscMenuAction>(
     context: context,
-    barrierDismissible: true,
+    barrierDismissible: false,
     barrierLabel: 'esc_menu',
     barrierColor: Colors.transparent,
     transitionDuration: const Duration(milliseconds: 200),
@@ -26,8 +27,7 @@ class _EscMenuOverlay extends StatelessWidget {
     return Stack(
       children: [
         Positioned.fill(
-          child: GestureDetector(
-            onTap: () => Navigator.pop(context),
+          child: IgnorePointer(
             child: ClipRect(
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
@@ -37,8 +37,19 @@ class _EscMenuOverlay extends StatelessWidget {
           ),
         ),
         Center(
-          child: SingleChildScrollView(
-            child: const _MenuCard(),
+          child: Focus(
+            autofocus: true,
+            onKeyEvent: (node, event) {
+              if (event is KeyDownEvent &&
+                  event.logicalKey == LogicalKeyboardKey.escape) {
+                Navigator.pop(context);
+                return KeyEventResult.handled;
+              }
+              return KeyEventResult.ignored;
+            },
+            child: SingleChildScrollView(
+              child: const _MenuCard(),
+            ),
           ),
         ),
       ],
