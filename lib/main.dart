@@ -3,10 +3,12 @@ import 'package:flutter_window_close/flutter_window_close.dart';
 import 'package:graph_vn/editor/modals/status_dialog.dart';
 import 'package:graph_vn/editor/widgets/project_selector.dart';
 import 'package:graph_vn/game/game_state.dart';
+import 'package:graph_vn/gamepad_event_system.dart';
 import 'package:graph_vn/js_test.dart';
 import 'package:graph_vn/settings/app_settings.dart';
 import 'package:graph_vn/widgets/esc_menu_dialog.dart';
 import 'package:logger/logger.dart';
+import 'package:universal_gamepad/universal_gamepad.dart';
 import 'package:window_manager/window_manager.dart';
 import 'player/player.dart';
 import 'package:flutter/services.dart';
@@ -21,6 +23,7 @@ void main() async {
   jsTest();
   GameState.loadLastSavedProject();
   initWindowCloseHandler();
+  listenGamepadEvents();
 
   WindowOptions windowOptions = WindowOptions(
     size: Size(800, 600),
@@ -98,6 +101,20 @@ class _RootWidgetState extends State<RootWidget> {
     );
   }
 
+  void _showMenu() async {
+    final action = await showEscMenuDialog(_navigatorContext!);
+    if (action == null) return;
+    switch (action) {
+      case EscMenuAction.toggleEditor:
+        _toggleEditor();
+      case EscMenuAction.restart:
+        GameState.restart();
+        Player.progressState();
+      case EscMenuAction.exit:
+        windowManager.close();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -113,44 +130,43 @@ class _RootWidgetState extends State<RootWidget> {
               });
             }
           },
-          child: CallbackShortcuts(
-            bindings: <ShortcutActivator, VoidCallback>{
-              const SingleActivator(LogicalKeyboardKey.escape): () async {
-                final action = await showEscMenuDialog(_navigatorContext!);
-                if (action == null) return;
-                switch (action) {
-                  case EscMenuAction.toggleEditor:
-                    _toggleEditor();
-                  case EscMenuAction.restart:
-                    GameState.restart();
-                    Player.progressState();
-                  case EscMenuAction.exit:
-                    windowManager.close();
-                }
-              },
-              const SingleActivator(LogicalKeyboardKey.f1): () async {
-                _toggleEditor();
-              },
-              const SingleActivator(
-                LogicalKeyboardKey.keyS,
-                control: true,
-              ): () async {
-                final saved = GameState.save();
-                if (saved) {
-                  showStatusDialog(_navigatorContext!, "Проект сохранен", StatusDialogType.done);
-                }
-              },
-              const SingleActivator(LogicalKeyboardKey.f11): () async {
-                _toggleFullscreen();
-              },
+          child: NotificationListener(
+            onNotification: (GamepadButtonPressNotification event) {
+              if (event.button == GamepadButton.start) {
+                _showMenu();
+                return true;
+              }
+              return false;
             },
-            child: Builder(
-              builder: (innerContext) {
-                _navigatorContext = innerContext;
-                return GameState.isProjectLoaded()
-                    ? _project()
-                    : const ProjectSelector();
+            child: CallbackShortcuts(
+              bindings: <ShortcutActivator, VoidCallback>{
+                const SingleActivator(LogicalKeyboardKey.escape): () async {
+                  _showMenu();
+                },
+                const SingleActivator(LogicalKeyboardKey.f1): () async {
+                  _toggleEditor();
+                },
+                const SingleActivator(
+                  LogicalKeyboardKey.keyS,
+                  control: true,
+                ): () async {
+                  final saved = GameState.save();
+                  if (saved) {
+                    showStatusDialog(_navigatorContext!, "Проект сохранен", StatusDialogType.done);
+                  }
+                },
+                const SingleActivator(LogicalKeyboardKey.f11): () async {
+                  _toggleFullscreen();
+                },
               },
+              child: Builder(
+                builder: (innerContext) {
+                  _navigatorContext = innerContext;
+                  return GameState.isProjectLoaded()
+                      ? _project()
+                      : const ProjectSelector();
+                },
+              ),
             ),
           ),
         ),

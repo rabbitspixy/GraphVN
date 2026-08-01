@@ -9,6 +9,7 @@
 #include <flutter_js/flutter_js_plugin.h>
 #include <flutter_window_close/flutter_window_close_plugin.h>
 #include <screen_retriever_linux/screen_retriever_linux_plugin.h>
+#include <universal_gamepad/gamepad_plugin.h>
 #include <window_manager/window_manager_plugin.h>
 
 void fl_register_plugins(FlPluginRegistry* registry) {
@@ -21,6 +22,9 @@ void fl_register_plugins(FlPluginRegistry* registry) {
   g_autoptr(FlPluginRegistrar) screen_retriever_linux_registrar =
       fl_plugin_registry_get_registrar_for_plugin(registry, "ScreenRetrieverLinuxPlugin");
   screen_retriever_linux_plugin_register_with_registrar(screen_retriever_linux_registrar);
+  g_autoptr(FlPluginRegistrar) universal_gamepad_registrar =
+      fl_plugin_registry_get_registrar_for_plugin(registry, "GamepadPlugin");
+  gamepad_plugin_register_with_registrar(universal_gamepad_registrar);
   g_autoptr(FlPluginRegistrar) window_manager_registrar =
       fl_plugin_registry_get_registrar_for_plugin(registry, "WindowManagerPlugin");
   window_manager_plugin_register_with_registrar(window_manager_registrar);

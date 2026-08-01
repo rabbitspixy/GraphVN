@@ -9,6 +9,7 @@ import 'package:graph_vn/game/game_transition.dart';
 import 'package:graph_vn/main.dart';
 import 'package:graph_vn/player/player_models.dart';
 import 'package:graph_vn/game/game_state.dart';
+import 'package:universal_gamepad/universal_gamepad.dart';
 
 class Player {
   static final ValueNotifier<PlayerBackgroundImage> backgroundImageNotifier = ValueNotifier<PlayerBackgroundImage>(PlayerBackgroundImage());

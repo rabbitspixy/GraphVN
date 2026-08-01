@@ -24,6 +24,7 @@ Generated directories (`lib/generated-proto/`, `lib/**/generated/`) are gitignor
 
 - [Общая информация о всём проекте](knowledge_base/main.md)
 - [Хранение квеста через Protobuf](knowledge_base/persist.md)
+- [Поддержка кнопок геймпада](knowledge_base/gamepad.md)
 
 ## Tests
 

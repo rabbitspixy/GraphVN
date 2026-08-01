@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:graph_vn/game/game_state.dart';
+import 'package:graph_vn/gamepad_event_system.dart';
 import 'package:graph_vn/player/player_models.dart';
+import 'package:universal_gamepad/universal_gamepad.dart';
 import 'background_image.dart';
 import 'transition_buttons.dart';
 import '../player.dart';
@@ -159,20 +161,37 @@ class _PlayerRootWidgetState extends State<PlayerRootWidget> {
       ],
     );
 
-    return CallbackShortcuts(
-      bindings: <ShortcutActivator, VoidCallback>{
-        const SingleActivator(LogicalKeyboardKey.f5, shift: true): () async {
-          GameState.restart();
-          Player.progressState();
-        },
-        const SingleActivator(LogicalKeyboardKey.arrowUp): _onArrowUp,
-        const SingleActivator(LogicalKeyboardKey.arrowDown): _onArrowDown,
-        const SingleActivator(LogicalKeyboardKey.enter): _onEnter,
+    return NotificationListener<GamepadButtonPressNotification>(
+      onNotification: (GamepadButtonPressNotification event) {
+        if (event.button == GamepadButton.a) {
+          _onEnter();
+          return true;
+        }
+        if (event.button == GamepadButton.dpadDown) {
+          _onArrowDown();
+          return true;
+        }
+        if (event.button == GamepadButton.dpadUp) {
+          _onArrowUp();
+          return true;
+        }
+        return false;
       },
-      child: Focus(
-        focusNode: _focusNode,
-        autofocus: true,
-        child: GestureDetector(onTap: _onTap, child: stack),
+      child: CallbackShortcuts(
+        bindings: <ShortcutActivator, VoidCallback>{
+          const SingleActivator(LogicalKeyboardKey.f5, shift: true): () async {
+            GameState.restart();
+            Player.progressState();
+          },
+          const SingleActivator(LogicalKeyboardKey.arrowUp): _onArrowUp,
+          const SingleActivator(LogicalKeyboardKey.arrowDown): _onArrowDown,
+          const SingleActivator(LogicalKeyboardKey.enter): _onEnter,
+        },
+        child: Focus(
+          focusNode: _focusNode,
+          autofocus: true,
+          child: GestureDetector(onTap: _onTap, child: stack),
+        ),
       ),
     );
   }

@@ -6,6 +6,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   flutter_js
   flutter_window_close
   screen_retriever_linux
+  universal_gamepad
   window_manager
 )
 
