@@ -3,6 +3,8 @@ import 'dart:ui' show ImageFilter;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:graph_vn/game/game_state.dart';
+import 'package:graph_vn/gamepad_event_system.dart';
+import 'package:universal_gamepad/universal_gamepad.dart';
 
 enum EscMenuAction { toggleEditor, restart, exit }
 
@@ -19,8 +21,79 @@ Future<EscMenuAction?> showEscMenuDialog(BuildContext context) {
   );
 }
 
-class _EscMenuOverlay extends StatelessWidget {
+class _MenuItem {
+  final String label;
+  final String? hotkey;
+  final VoidCallback onTap;
+
+  _MenuItem({
+    required this.label,
+    this.hotkey,
+    required this.onTap,
+  });
+}
+
+class _EscMenuOverlay extends StatefulWidget {
   const _EscMenuOverlay();
+
+  @override
+  State<_EscMenuOverlay> createState() => _EscMenuOverlayState();
+}
+
+class _EscMenuOverlayState extends State<_EscMenuOverlay> {
+  int _selectedIndex = 0;
+  late List<_MenuItem> _items;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _items = _buildItems();
+  }
+
+  List<_MenuItem> _buildItems() {
+    return <_MenuItem>[
+      if (GameState.showEditor.value)
+        _MenuItem(
+          label: 'Играть',
+          hotkey: 'F1',
+          onTap: () => Navigator.pop(context, EscMenuAction.toggleEditor),
+        )
+      else if (GameState.isEditorEnabled())
+        _MenuItem(
+          label: 'Редактор',
+          hotkey: 'F1',
+          onTap: () => Navigator.pop(context, EscMenuAction.toggleEditor),
+        ),
+      if (!GameState.showEditor.value)
+        _MenuItem(
+          label: 'Начать заново',
+          hotkey: 'Shift+F5',
+          onTap: () => Navigator.pop(context, EscMenuAction.restart),
+        ),
+      _MenuItem(
+        label: 'Выйти',
+        onTap: () => Navigator.pop(context, EscMenuAction.exit),
+      ),
+    ];
+  }
+
+  void _move(int delta) {
+    final len = _items.length;
+    if (len == 0) return;
+    setState(() {
+      _selectedIndex = (_selectedIndex + delta).clamp(0, len - 1);
+    });
+  }
+
+  void _submit() {
+    if (_selectedIndex >= 0 && _selectedIndex < _items.length) {
+      _items[_selectedIndex].onTap();
+    }
+  }
+
+  void _close() {
+    Navigator.pop(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,18 +110,59 @@ class _EscMenuOverlay extends StatelessWidget {
           ),
         ),
         Center(
-          child: Focus(
-            autofocus: true,
-            onKeyEvent: (node, event) {
-              if (event is KeyDownEvent &&
-                  event.logicalKey == LogicalKeyboardKey.escape) {
-                Navigator.pop(context);
-                return KeyEventResult.handled;
+          child: NotificationListener<GamepadButtonPressNotification>(
+            onNotification: (GamepadButtonPressNotification event) {
+              if (event.button == GamepadButton.dpadUp) {
+                _move(-1);
+                return true;
               }
-              return KeyEventResult.ignored;
+              if (event.button == GamepadButton.dpadDown) {
+                _move(1);
+                return true;
+              }
+              if (event.button == GamepadButton.a) {
+                _submit();
+                return true;
+              }
+              if (event.button == GamepadButton.b) {
+                _close();
+                return true;
+              }
+              if (event.button == GamepadButton.start) {
+                _close();
+                return true;
+              }
+              return false;
             },
-            child: SingleChildScrollView(
-              child: const _MenuCard(),
+            child: CallbackShortcuts(
+              bindings: <ShortcutActivator, VoidCallback>{
+                const SingleActivator(LogicalKeyboardKey.arrowUp): () => _move(-1),
+                const SingleActivator(LogicalKeyboardKey.arrowDown): () => _move(1),
+                const SingleActivator(LogicalKeyboardKey.enter): _submit,
+                const SingleActivator(LogicalKeyboardKey.backspace): _close,
+              },
+              child: Focus(
+                autofocus: true,
+                onKeyEvent: (node, event) {
+                  if (event is KeyDownEvent &&
+                      event.logicalKey == LogicalKeyboardKey.escape) {
+                    Navigator.pop(context);
+                    return KeyEventResult.handled;
+                  }
+                  return KeyEventResult.ignored;
+                },
+                child: SingleChildScrollView(
+                  child: _MenuCard(
+                    items: _items,
+                    selectedIndex: _selectedIndex,
+                    onHover: (index) {
+                      if (index != _selectedIndex) {
+                        setState(() => _selectedIndex = index);
+                      }
+                    },
+                  ),
+                ),
+              ),
             ),
           ),
         ),
@@ -58,7 +172,15 @@ class _EscMenuOverlay extends StatelessWidget {
 }
 
 class _MenuCard extends StatelessWidget {
-  const _MenuCard();
+  final List<_MenuItem> items;
+  final int selectedIndex;
+  final ValueChanged<int> onHover;
+
+  const _MenuCard({
+    required this.items,
+    required this.selectedIndex,
+    required this.onHover,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -91,29 +213,17 @@ class _MenuCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 28),
-          if (!GameState.showEditor.value && GameState.isEditorEnabled())
-            _MenuButton(
-              label: 'Редактор',
-              hotkey: 'F1',
-              onTap: () => Navigator.pop(context, EscMenuAction.toggleEditor),
-            ),
-          if (GameState.showEditor.value)
-            _MenuButton(
-              label: 'Играть',
-              hotkey: 'F1',
-              onTap: () => Navigator.pop(context, EscMenuAction.toggleEditor),
-            ),
-          if (!GameState.showEditor.value)
-            _MenuButton(
-              label: 'Начать заново',
-              hotkey: 'Shift+F5',
-              onTap: () => Navigator.pop(context, EscMenuAction.restart),
-            ),
+          ...List.generate(items.length, (index) {
+            final item = items[index];
+            return _MenuButton(
+              label: item.label,
+              hotkey: item.hotkey,
+              isSelected: index == selectedIndex,
+              onTap: item.onTap,
+              onHover: () => onHover(index),
+            );
+          }),
           const SizedBox(height: 4),
-          _MenuButton(
-            label: 'Выйти',
-            onTap: () => Navigator.pop(context, EscMenuAction.exit),
-          ),
         ],
       ),
     );
@@ -123,12 +233,16 @@ class _MenuCard extends StatelessWidget {
 class _MenuButton extends StatefulWidget {
   final String label;
   final String? hotkey;
+  final bool isSelected;
   final VoidCallback onTap;
+  final VoidCallback onHover;
 
   const _MenuButton({
     required this.label,
     this.hotkey,
+    required this.isSelected,
     required this.onTap,
+    required this.onHover,
   });
 
   @override
@@ -140,19 +254,23 @@ class _MenuButtonState extends State<_MenuButton> {
 
   @override
   Widget build(BuildContext context) {
+    final highlighted = widget.isSelected || _isHovered;
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
       child: MouseRegion(
         cursor: SystemMouseCursors.click,
         onEnter: (_) => setState(() => _isHovered = true),
         onExit: (_) => setState(() => _isHovered = false),
+        onHover: (_) => widget.onHover(),
         child: GestureDetector(
           onTap: widget.onTap,
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 150),
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             decoration: BoxDecoration(
-                color: _isHovered ? Colors.white.withAlpha(25) : Colors.transparent,
+              color: highlighted
+                  ? Colors.white.withAlpha(25)
+                  : Colors.transparent,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
@@ -162,8 +280,9 @@ class _MenuButtonState extends State<_MenuButton> {
                   widget.label,
                   style: TextStyle(
                     fontSize: 17,
-                    color: _isHovered ? Colors.white : Colors.white,
-                    fontWeight: FontWeight.w500,
+                    color: highlighted ? Colors.white : Colors.white,
+                    fontWeight:
+                        highlighted ? FontWeight.bold : FontWeight.w500,
                     decoration: TextDecoration.none,
                   ),
                 ),
@@ -172,7 +291,9 @@ class _MenuButtonState extends State<_MenuButton> {
                     widget.hotkey!,
                     style: TextStyle(
                       fontSize: 13,
-                      color: _isHovered ? Colors.white.withAlpha(150) : Colors.white38,
+                      color: highlighted
+                          ? Colors.white.withAlpha(150)
+                          : Colors.white38,
                       decoration: TextDecoration.none,
                     ),
                   ),
