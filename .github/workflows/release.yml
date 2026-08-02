@@ -7,6 +7,10 @@ on:
         description: 'Release version (e.g. 0.2.0, without leading v)'
         required: true
         type: string
+      build_number:
+        description: 'Build number (e.g. 1)'
+        required: true
+        type: string
       prerelease:
         description: 'Mark as a prerelease'
         required: false
@@ -17,8 +21,29 @@ permissions:
   contents: write
 
 jobs:
+  verify:
+    name: Verify version consistency
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check versions in pubspec.yaml and app_version.dart
+        shell: bash
+        run: |
+          FULL_VERSION="${{ inputs.version }}+${{ inputs.build_number }}"
+          if ! grep -qF "version: $FULL_VERSION" pubspec.yaml; then
+            echo "::error::pubspec.yaml does not contain 'version: $FULL_VERSION'"
+            exit 1
+          fi
+          if ! grep -qF "Version.parse(\"$FULL_VERSION\")" lib/app_version.dart; then
+            echo "::error::app_version.dart does not contain 'Version.parse(\"$FULL_VERSION\")'"
+            exit 1
+          fi
+          echo "Version check OK: $FULL_VERSION"
+
   build:
     name: Build ${{ matrix.name }}
+    needs: verify
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -57,33 +82,33 @@ jobs:
         if: runner.os == 'Windows'
         run: choco install protobuf -y --no-progress
 
-      - name: Activate protoc-gen-dart
-        run: dart pub global activate protoc_plugin
-
       - name: Install dependencies
         run: flutter pub get
 
       - name: Generate code (dart_mappable)
         run: dart run build_runner build --delete-conflicting-outputs
 
-      - name: Generate protobuf code
-        shell: bash
+      - name: Generate protobuf code (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
         run: |
-          if [ "$RUNNER_OS" = "Linux" ]; then
-            export PATH="$HOME/.pub-cache/bin:$PATH"
-            protoc --dart_out=lib/generated-proto/ data.proto
-          else
-            protoc --dart_out=lib/generated-proto/ data.proto \
-              --plugin="protoc-gen-dart=$LOCALAPPDATA\\Pub\\Cache\\bin\\protoc-gen-dart.bat"
-          fi
+          New-Item -ItemType Directory -Force lib/generated-proto | Out-Null
+          protoc --dart_out=lib/generated-proto/ data.proto --plugin=protoc-gen-dart=tool\protoc-gen-dart.bat
+
+      - name: Generate protobuf code (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          chmod +x tool/protoc-gen-dart
+          mkdir -p lib/generated-proto
+          protoc --plugin=protoc-gen-dart=tool/protoc-gen-dart --dart_out=lib/generated-proto/ data.proto
 
       - name: Build (Windows)
         if: runner.os == 'Windows'
-        run: flutter build windows --release --build-name=${{ inputs.version }} --build-number=1
+        run: flutter build windows --release --build-name=${{ inputs.version }} --build-number=${{ inputs.build_number }}
 
       - name: Build (Linux)
         if: runner.os == 'Linux'
-        run: flutter build linux --release --build-name=${{ inputs.version }} --build-number=1
+        run: flutter build linux --release --build-name=${{ inputs.version }} --build-number=${{ inputs.build_number }}
 
       - name: Package (Windows)
         if: runner.os == 'Windows'

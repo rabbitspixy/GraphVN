@@ -8,7 +8,7 @@ if /i "%~1"=="build_runner" (
 ) else if /i "%~1"=="windows" (
     flutter run -d windows
 ) else if /i "%~1"=="protoc" (
-    protoc.exe --dart_out=lib/generated-proto/ data.proto --plugin=protoc-gen-dart="%LOCALAPPDATA%\Pub\Cache\bin\protoc-gen-dart.bat"
+    protoc --dart_out=lib/generated-proto/ data.proto --plugin=protoc-gen-dart=tool\protoc-gen-dart.bat
 ) else if /i "%~1 %~2"=="build windows" (
     flutter build windows
 ) else (
