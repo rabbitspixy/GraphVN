@@ -1,0 +1,129 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g. 0.2.0, without leading v)'
+        required: true
+        type: string
+      prerelease:
+        description: 'Mark as a prerelease'
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Windows
+            os: windows-latest
+            platform: windows-x64
+            archive_ext: zip
+          - name: Linux
+            os: ubuntu-latest
+            platform: linux-x64
+            archive_ext: tar.gz
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Install Linux build dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            clang cmake ninja-build pkg-config \
+            libgtk-3-dev liblzma-dev libstdc++-12-dev \
+            libudev-dev libusb-1.0-0-dev \
+            default-jdk-headless protobuf-compiler
+
+      - name: Install protoc (Windows)
+        if: runner.os == 'Windows'
+        run: choco install protobuf -y --no-progress
+
+      - name: Activate protoc-gen-dart
+        run: dart pub global activate protoc_plugin
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Generate code (dart_mappable)
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      - name: Generate protobuf code
+        shell: bash
+        run: |
+          if [ "$RUNNER_OS" = "Linux" ]; then
+            export PATH="$HOME/.pub-cache/bin:$PATH"
+            protoc --dart_out=lib/generated-proto/ data.proto
+          else
+            protoc --dart_out=lib/generated-proto/ data.proto \
+              --plugin="protoc-gen-dart=$LOCALAPPDATA\\Pub\\Cache\\bin\\protoc-gen-dart.bat"
+          fi
+
+      - name: Build (Windows)
+        if: runner.os == 'Windows'
+        run: flutter build windows --release --build-name=${{ inputs.version }} --build-number=1
+
+      - name: Build (Linux)
+        if: runner.os == 'Linux'
+        run: flutter build linux --release --build-name=${{ inputs.version }} --build-number=1
+
+      - name: Package (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force dist | Out-Null
+          Compress-Archive -Path "build\windows\x64\runner\Release\*" -DestinationPath "dist\GraphVN-${{ inputs.version }}-windows-x64.zip" -Force
+
+      - name: Package (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          mkdir -p dist
+          tar -czf "dist/GraphVN-${{ inputs.version }}-linux-x64.tar.gz" -C "build/linux/x64/release/bundle" .
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: GraphVN-${{ inputs.version }}-${{ matrix.platform }}.${{ matrix.archive_ext }}
+          path: dist/GraphVN-${{ inputs.version }}-${{ matrix.platform }}.${{ matrix.archive_ext }}
+
+  release:
+    name: Create GitHub Release
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ inputs.version }}
+          name: GraphVN v${{ inputs.version }}
+          body: |
+            GraphVN **v${{ inputs.version }}**
+
+            Portable builds:
+            - `GraphVN-${{ inputs.version }}-windows-x64.zip`
+            - `GraphVN-${{ inputs.version }}-linux-x64.tar.gz`
+          files: artifacts/**/*
+          prerelease: ${{ inputs.prerelease }}

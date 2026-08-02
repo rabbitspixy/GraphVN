@@ -1,4 +1,4 @@
-[![GraphVN](assets/logo.webp)](https://github.com/spix-rayt/GraphVN)
+[![GraphVN](assets/logo.webp)](https://github.com/rabbitspixy/GraphVN)
 
 An AI-powered Cross-platform Visual Novel Engine built with Flutter.
 
@@ -35,11 +35,22 @@ This is early-stage software — rough around the edges, actively changing, and 
 
 ## Quick Start
 
-- Download pre-built binaries from the [releases page](https://github.com/spix-rayt/GraphVN/releases)
-- Run graph_vn.exe
-- Press **F1** to toggle between **editor mode** and **play mode**.
-- Place nodes on the canvas, connect them with transitions.
-- Hit F1 to play your story.
+GraphVN offers two paths — create your own story, or dive straight into someone else's. Pick the one that fits you.
+
+### 🛠 Create a Quest
+
+1. **Download the binary** — grab the latest release for your platform from the [releases page](https://github.com/rabbitspixy/GraphVN/releases) and unzip it.
+2. **Open the editor** — Launch GraphVN and click **Editor**.
+3. **Start a new project** — give it a name and land on a fresh, infinite canvas.
+4. **Build your story** — place nodes and connect them with transitions to shape your narrative.
+5. **Playtest instantly** — press **F1** to flip into play mode and experience what you've built. Press **F1** again to return to the editor and keep refining.
+
+### 🎮 Play a Quest
+
+1. **Download the binary** — grab the latest release for your platform from the [releases page](https://github.com/rabbitspixy/GraphVN/releases) and unzip it.
+2. **Add a quest** — drop the quest `.zip` file into the `games/` folder. No such folder yet? Create one right next to the GraphVN binary.
+3. **Launch GraphVN** — click **Play**.
+4. **Select and enjoy** — choose a quest from the list and jump right in.
 
 ---
 
