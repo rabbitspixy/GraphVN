@@ -24,12 +24,19 @@ class TransitionPainter extends CustomPainter {
       final control = transition.pos.control + offset;
       final center = transition.pos.center + offset;
 
+      final line = end - start;
       paint.shader = LinearGradient(
         colors: _colorsOf(transition),
         begin: Alignment.centerLeft,
         end: Alignment.centerRight,
         transform: GradientRotation(transition.pos.direction),
-      ).createShader(Rect.fromPoints(start, end));
+      ).createShader(
+        Rect.fromCenter(
+          center: (start + end) / 2,
+          width: line.distance,
+          height: line.distance,
+        ),
+      );
 
       final path = Path()
         ..moveTo(start.dx, start.dy)
@@ -65,8 +72,8 @@ class TransitionPainter extends CustomPainter {
       ..lineTo(p3.dx, p3.dy);
   }
 
-  static final transitionButtonColors = [Colors.black.withAlpha(25), Colors.black.withAlpha(150), Colors.black.withAlpha(200)];
-  static final emptyTransitionColors = [Colors.black.withAlpha(25), Colors.black.withAlpha(40), Colors.black.withAlpha(75)];
+  static final transitionButtonColors = [Colors.black.withAlpha(20), Colors.black.withAlpha(80), Colors.black.withAlpha(180)];
+  static final emptyTransitionColors = [Colors.black.withAlpha(20), Colors.black.withAlpha(40), Colors.black.withAlpha(75)];
 
   List<Color> _colorsOf(GameTransition transition) {
     if (transition.isButton) {
