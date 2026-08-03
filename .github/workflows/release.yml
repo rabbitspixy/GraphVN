@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Release version (e.g. 0.2.0, without leading v)'
+        description: 'Release version (e.g. 0.1.0, without leading v)'
         required: true
         type: string
       build_number:
@@ -75,12 +75,12 @@ jobs:
           sudo apt-get install -y \
             clang cmake ninja-build pkg-config \
             libgtk-3-dev liblzma-dev libstdc++-12-dev \
-            libudev-dev libusb-1.0-0-dev \
+            libudev-dev libusb-1.0-0-dev libevdev-dev \
             default-jdk-headless protobuf-compiler
 
       - name: Install protoc (Windows)
         if: runner.os == 'Windows'
-        run: choco install protobuf -y --no-progress
+        run: choco install protoc -y --no-progress
 
       - name: Install dependencies
         run: flutter pub get
