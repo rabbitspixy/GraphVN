@@ -108,20 +108,24 @@ jobs:
 
       - name: Build (Linux)
         if: runner.os == 'Linux'
-        run: flutter build linux --release --build-name=${{ inputs.version }} --build-number=${{ inputs.build_number }}
+        run: |
+          flutter build linux --release --build-name=${{ inputs.version }} --build-number=${{ inputs.build_number }}
+          cp -f build/linux/x64/release/plugins/flutter_js/bundle/lib/libquickjs_c_bridge_plugin.so build/linux/x64/release/bundle/lib/
 
       - name: Package (Windows)
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force dist | Out-Null
-          Compress-Archive -Path "build\windows\x64\runner\Release\*" -DestinationPath "dist\GraphVN-${{ inputs.version }}-windows-x64.zip" -Force
+          Rename-Item -Path "build\windows\x64\runner\Release" -NewName "GraphVN-${{ inputs.version }}-windows-x64"
+          Compress-Archive -Path "build\windows\x64\runner\GraphVN-${{ inputs.version }}-windows-x64" -DestinationPath "dist\GraphVN-${{ inputs.version }}-windows-x64.zip" -Force
 
       - name: Package (Linux)
         if: runner.os == 'Linux'
         run: |
           mkdir -p dist
-          tar -czf "dist/GraphVN-${{ inputs.version }}-linux-x64.tar.gz" -C "build/linux/x64/release/bundle" .
+          mv build/linux/x64/release/bundle "build/linux/x64/release/GraphVN-${{ inputs.version }}-linux-x64"
+          tar -czf "dist/GraphVN-${{ inputs.version }}-linux-x64.tar.gz" -C "build/linux/x64/release/GraphVN-${{ inputs.version }}-linux-x64" .
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4

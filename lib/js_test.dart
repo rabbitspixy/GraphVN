@@ -5,6 +5,15 @@ import 'package:flutter_js/flutter_js.dart';
 import 'package:graph_vn/main.dart';
 
 void jsTest() async {
+  try {
+    _test();
+  } catch (e, st) {
+    logger.e("JS interpreter does not work correctly", error: e, stackTrace: st);
+    exit(0);
+  }
+}
+
+void _test() {
   WidgetsFlutterBinding.ensureInitialized();
   final jsRuntime = getJavascriptRuntime();
 
@@ -30,8 +39,6 @@ void jsTest() async {
 
 void _mustBeTrue(bool value) {
   if (!value) {
-    final e = Exception("JS interpreter does not work correctly");
-    logger.e("JS interpreter does not work correctly", error: e);
-    exit(0);
+    throw Exception("JS interpreter does not work correctly");
   }
 }
